@@ -15,7 +15,7 @@ app.use("/public", express.static(process.cwd() + "/public"));
 // Email SMTP
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: process.env.PORT_SMTP,
+  port: process.env.SMTP_PORT,
   auth: {
       user: process.env.ACCOUNT,
       pass: process.env.PASS,

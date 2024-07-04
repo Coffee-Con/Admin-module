@@ -6,11 +6,15 @@
 
 PORT= html port
 
-EMAIL= email address
+SMTP_HOST = SMTP host
 
-PASS= email pass
+SMTP_PORT = SMTP Port
 
-Sender= send email address
+ACCOUNT= e-mail address
+
+PASS= e-mail pass
+
+SENDER= send e-mail address
 
 ### run by termmal:
 
