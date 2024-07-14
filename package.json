@@ -11,6 +11,8 @@
   "license": "ARR",
   "dependencies": {
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "csv-parser": "^3.0.0",
     "dotenv": "^8.6.0",
     "express": "^4.19.2",
     "multiparty": "^4.2.3",
