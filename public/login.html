@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="loginForm">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <button type="submit">Login</button>
+  </form>
+  <div id="message"></div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      // let
+      // Testing FormData
+      console.log(formData);
+      console.log(formData.get('email'));
+      console.log(formData.get('password'));
+      for (const entry of formData.entries()) {
+        console.log(entry);
+      }
+
+      const response = await fetch('/login', {
+          method: 'POST',
+          body: formData
+        });
+      const result = await response.text();
+      document.getElementById('message').innerText = result;
+      /*
+      const response = await fetch('/login', {
+        method: 'POST',
+        body: formData //error
+      });
+      const result = await response.text();
+      document.getElementById('message').innerText = result;
+      */
+    });
+  </script>
+</body>
+</html>
