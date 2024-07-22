@@ -15,8 +15,16 @@
     <div class="row">
       <div class="col-md-12">
         <div class="section-title">
-          <hr />
+          <hr>
           <form id="contact-form" method="POST" action="send" enctype="multipart/form-data">
+            <div class="form-group">
+              <select id="emailGroup" name="emailGroup" class="form-control" required>
+                <option value="">Select Email Group</option>
+                <option value="1">Group 1</option>
+                <option value="2">Group 2</option>
+                <option value="3">Group 3</option>
+              </select>
+            </div>
             <div class="form-group">
               <div class="row">
                 <div class="col-md-6">
@@ -29,21 +37,51 @@
               </div>
             </div>
             <div class="form-group">
+              <select id="subjectTemp" name="subjectTemp" class="form-control" required onchange="fillTemplate()">
+                <option value="">Select Template</option>
+                <option value="1">Template 1</option>
+                <option value="2">Template 2</option>
+                <option value="3">Template 3</option>
+              </select>
+            </div>
+            <div class="form-group">
               <input placeholder="Subject" id="subject" name="subject" type="text" class="form-control" required />
             </div>
             <div class="form-group">
-              <textarea placeholder="Message" id="message" name="message" class="form-control" rows="3"
-                required></textarea>
+              <textarea placeholder="Message" id="message" name="message" class="form-control" rows="3" style="height: 325px;" required></textarea>
             </div>
-            <button type="submit" value="submit" class="btn btn-primary">
-              Submit
-            </button>
+            <button type="submit" value="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
       </div>
     </div>
   </div>
   <script src="./index.js"></script>
+  <script>
+    function fillTemplate() {
+      var template = document.getElementById('subjectTemp').value;
+      var subjectInput = document.getElementById('subject');
+      var messageInput = document.getElementById('message');
+    
+      switch(template) {
+        case '1':
+          subjectInput.value = 'Urgent: Please update your company account information immediately';
+          messageInput.value = 'Dear [name],\n\nTo improve the security of our systems, we are updating all employee account information. Please click the following link and follow the prompts to complete the update: \n\n[link]\n\nPlease complete this within 24 hours or your account will be temporarily suspended.\nThank you for your cooperation.\n\nSincerely,\nIT Support Team';
+          break;
+        case '2':
+          subjectInput.value = 'Unusual activity in your account';
+          messageInput.value = 'Dear [name],\n\nWe have detected some unusual activity in your bank account. To ensure the security of your account, please click the following link and verify your account information immediately:\n\n[link]\n\nIf you do not complete the verification within 48 hours, your account will be temporarily frozen.\n\nThank you for your understanding and cooperation.\n\nSincerely,\nBank Security Team';
+          break;
+        case '3':
+          subjectInput.value = 'Your account needs to be verified';
+          messageInput.value = 'Dear [name],\n\nWe have recently updated our security policy. To ensure that your account is not affected, please click the following link and verify your account:\n\n[link]\n\nIf you do not complete the verification within 72 hours, your account will be temporarily locked.\n\nThank you for your cooperation.\n\nSincerely,\nCustomer Service Team';
+          break;
+        default:
+          subjectInput.value = '';
+          messageInput.value = '';
+      }
+    }
+    </script>
 </body>
 
 </html>
