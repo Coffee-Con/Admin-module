@@ -21,41 +21,33 @@ transporter.verify(function (error, success) {
   }
 });
 
-const sendMailHandler = (req, res) => {
+const sendMailHandler = async (req, res) => {
   let form = new multiparty.Form();
-  let data = {};
-  form.parse(req, function (err, fields) {
-    Object.keys(fields).forEach(function (property) {
-      data[property] = fields[property].toString();
-    });
-    // console.log(data);
-
-    // replace
-    const namePlaceholder = data.name;
-    const linkPlaceholder = "https://www.google.com";
-    // const linkPlaceholder = generateLink.generateLink(data.email);
-    console.log('Link:', linkPlaceholder);
-
-    const mail = {
-      from: process.env.SENDER,
-      to: `${data.name} <${data.email}>`, // receiver email,
-      subject: data.subject,
-      // text: data.message.replace('[name]', data.name),
-      text: data.message
-              .replace(/\[name\]/g, namePlaceholder)
-              .replace(/\[link\]/g, linkPlaceholder),
-    };
-    // console.log(mail);
-
-    transporter.sendMail(mail, (err, info) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send('Something went wrong.');
-      } else {
-        res.status(200).send('Email successfully sent to recipient!');
-      }
+  let data = await new Promise((resolve, reject) => {
+    form.parse(req, (err, fields) => {
+      if (err) reject(err);
+      let data = {};
+      Object.keys(fields).forEach(property => {
+        data[property] = fields[property].toString();
+      });
+      resolve(data);
     });
   });
+
+  const namePlaceholder = data.name;
+  const linkPlaceholder = await generateLink.generateLink(data.email);
+
+  const mail = {
+    from: process.env.SENDER,
+    to: `${data.name} <${data.email}>`, // receiver email
+    subject: data.subject,
+    text: data.message
+            .replace(/\[name\]/g, namePlaceholder)
+            .replace(/\[link\]/g, linkPlaceholder),
+  };
+
+  await transporter.sendMail(mail);
+  res.status(200).send('Email successfully sent to recipient!'); 
 };
 
 module.exports = { sendMailHandler };
