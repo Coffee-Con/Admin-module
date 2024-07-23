@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const mysql = require('mysql2');
 const dbConfig = require('./dbConfig');
+require('dotenv').config();
 
 const connection = mysql.createConnection(dbConfig);
 const port = process.env.PORT || 5001;

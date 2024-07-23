@@ -79,15 +79,15 @@
       switch(template) {
         case '1':
           subjectInput.value = 'Urgent: Please update your company account information immediately';
-          messageInput.value = 'Dear [name],\n\nTo improve the security of our systems, we are updating all employee account information. Please click the following link and follow the prompts to complete the update: \n\n[link]\n\nPlease complete this within 24 hours or your account will be temporarily suspended.\nThank you for your cooperation.\n\nSincerely,\nIT Support Team';
+          messageInput.value = 'Dear [name],\n\nTo improve the security of our systems, we are updating all employee account information. Please click the following link and follow the prompts to complete the update: \n\n[click]([link])\n\nPlease complete this within 24 hours or your account will be temporarily suspended.\nThank you for your cooperation.\n\nSincerely,\n\nIT Support Team';
           break;
         case '2':
           subjectInput.value = 'Unusual activity in your account';
-          messageInput.value = 'Dear [name],\n\nWe have detected some unusual activity in your bank account. To ensure the security of your account, please click the following link and verify your account information immediately:\n\n[link]\n\nIf you do not complete the verification within 48 hours, your account will be temporarily frozen.\n\nThank you for your understanding and cooperation.\n\nSincerely,\nBank Security Team';
+          messageInput.value = 'Dear [name],\n\nWe have detected some unusual activity in your bank account. To ensure the security of your account, please click the following link and verify your account information immediately:\n\n[click]([link])\n\nIf you do not complete the verification within 48 hours, your account will be temporarily frozen.\n\nThank you for your understanding and cooperation.\n\nSincerely,\n\nBank Security Team';
           break;
         case '3':
           subjectInput.value = 'Your account needs to be verified';
-          messageInput.value = 'Dear [name],\n\nWe have recently updated our security policy. To ensure that your account is not affected, please click the following link and verify your account:\n\n[link]\n\nIf you do not complete the verification within 72 hours, your account will be temporarily locked.\n\nThank you for your cooperation.\n\nSincerely,\nCustomer Service Team';
+          messageInput.value = 'Dear [name],\n\nWe have recently updated our security policy. To ensure that your account is not affected, please click the following link and verify your account:\n\n[click]([link])\n\nIf you do not complete the verification within 72 hours, your account will be temporarily locked.\n\nThank you for your cooperation.\n\nSincerely,\n\nCustomer Service Team';
           break;
         default:
           subjectInput.value = '';

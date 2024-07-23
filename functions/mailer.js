@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const multiparty = require('multiparty');
+const marked = require('marked');
 const generateLink = require('./generateLink');
 require('dotenv').config();
 
@@ -37,13 +38,18 @@ const sendMailHandler = async (req, res) => {
   const namePlaceholder = data.name;
   const linkPlaceholder = await generateLink.generateLink(data.email);
 
+  content = data.message
+              .replace(/\[name\]/g, namePlaceholder)
+              .replace(/\[link\]/g, linkPlaceholder);
+
+  const htmlContent = marked.marked(content);
+
   const mail = {
     from: process.env.SENDER,
     to: `${data.name} <${data.email}>`, // receiver email
     subject: data.subject,
-    text: data.message
-            .replace(/\[name\]/g, namePlaceholder)
-            .replace(/\[link\]/g, linkPlaceholder),
+    text: content,
+    html: htmlContent
   };
 
   await transporter.sendMail(mail);
