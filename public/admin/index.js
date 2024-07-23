@@ -11,6 +11,10 @@ const sendMail = (mail) => {
     method: "post",
     body: mail,
   }).then((response) => {
-    return response.json();
+    return response.text(); // 更改为返回文本
+  }).then((data) => {
+    document.getElementById("result-message").innerHTML = data;
+  }).catch((error) => {
+    document.getElementById("result-message").innerHTML = "An error occurred: " + error;
   });
 };

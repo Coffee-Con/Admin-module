@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <title>Generate Phishing Link</title>
+</head>
+<body>
+  <div class="container">
+    <h1 style="margin-top: 2em;">Generate Phishing Link</h1>
+    <hr>
+    <form id="linkForm">
+      <div class="form-group">
+        <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Generate Link</button>
+    </form>
+    <div id="result" style="margin-top: 2em;"></div>
+  </div>
+
+  <script>
+    document.getElementById('linkForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const response = await fetch('/generate-link', {
+        method: 'POST',
+        body: formData
+      });
+      const result = await response.text();
+      document.getElementById('result').innerHTML = result;
+    });
+  </script>
+</body>
+</html>
