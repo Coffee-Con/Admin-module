@@ -231,6 +231,36 @@ app.post('/confirmTemp', upload.none(), (req, res) => {
     res.json({ success: true, id: results.insertId });
   });
 });
+
+// Route to get templates
+app.get('/templates', (req, res) => {
+  const query = 'SELECT id, content FROM email_template'; // Adjust column names as needed
+
+  connection.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+    // console.log('Templates:', results);
+    res.json(results);
+  });
+});
+
+// Route to get a single template by ID
+app.get('/template/:id', (req, res) => {
+  const templateId = req.params.id;
+  const query = 'SELECT content FROM email_template WHERE id = ?';
+
+  connection.query(query, templateId, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Template not found' });
+    }
+    res.json(results[0]);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
