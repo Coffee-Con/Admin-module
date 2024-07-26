@@ -15,12 +15,14 @@
     "csv-parser": "^3.0.0",
     "dotenv": "^8.6.0",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "marked": "^13.0.2",
     "multer": "^1.4.5-lts.1",
     "multiparty": "^4.2.3",
     "mysql2": "^3.10.2",
     "nodemailer": "^6.9.14",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "ollama": "^0.5.6"
   },
   "engines": {
     "node": "12.14.1"
