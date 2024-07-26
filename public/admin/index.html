@@ -10,17 +10,10 @@
 </head>
 
 <body>
-  <header style="margin-top: 30px;">
-    <div style="display: flex; justify-content: center;">
-      <button style="margin-right: 15px; margin-left: 15px;">Send Email</button>
-      <button style="margin-right: 15px; margin-left: 15px;">Add Template</button>
-      <button style="margin-right: 15px; margin-left: 15px;">Question Bank</button>
-    </div>
-  </header>
   <div style="position: absolute;">
-    <button style="position: absolute; top: 250px;">Send Email</button>
-    <button style="position: absolute; top: 350px;">Add Template</button>
-    <button style="position: absolute; top: 450px;">Question Bank</button>
+    <a href="javascript:void(0)" style="position: absolute; top: 250px;">Send Email</a>
+    <a href="../GenerateEmailTemp.html" style="position: absolute; top: 350px;">Add Template</a>
+    <a href="javascript:void(0)" style="position: absolute; top: 450px;">Question Bank</a>
   </div>
   <div class="container">
     <h1 style="margin-top: 2em;">Admin module - Send Email</h1>
@@ -32,9 +25,6 @@
             <div class="form-group">
               <select id="emailGroup" name="emailGroup" class="form-control">
                 <option value="">Select Email Group</option>
-                <option value="1">Group 1</option>
-                <option value="2">Group 2</option>
-                <option value="3">Group 3</option>
               </select>
             </div>
             <div class="form-group">
@@ -71,30 +61,43 @@
   <div id="result-message" class="mt-3"></div> <!-- 反馈信息区 -->
   <script src="./index.js"></script>
   <script>
-    function fillTemplate() {
-      var template = document.getElementById('subjectTemp').value;
-      var subjectInput = document.getElementById('subject');
-      var messageInput = document.getElementById('message');
-    
-      switch(template) {
-        case '1':
-          subjectInput.value = 'Urgent: Please update your company account information immediately';
-          messageInput.value = 'Dear [name],\n\nTo improve the security of our systems, we are updating all employee account information. Please click the following link and follow the prompts to complete the update: \n\n[click]([link])\n\nPlease complete this within 24 hours or your account will be temporarily suspended.\nThank you for your cooperation.\n\nSincerely,\n\nIT Support Team';
-          break;
-        case '2':
-          subjectInput.value = 'Unusual activity in your account';
-          messageInput.value = 'Dear [name],\n\nWe have detected some unusual activity in your bank account. To ensure the security of your account, please click the following link and verify your account information immediately:\n\n[click]([link])\n\nIf you do not complete the verification within 48 hours, your account will be temporarily frozen.\n\nThank you for your understanding and cooperation.\n\nSincerely,\n\nBank Security Team';
-          break;
-        case '3':
-          subjectInput.value = 'Your account needs to be verified';
-          messageInput.value = 'Dear [name],\n\nWe have recently updated our security policy. To ensure that your account is not affected, please click the following link and verify your account:\n\n[click]([link])\n\nIf you do not complete the verification within 72 hours, your account will be temporarily locked.\n\nThank you for your cooperation.\n\nSincerely,\n\nCustomer Service Team';
-          break;
-        default:
-          subjectInput.value = '';
-          messageInput.value = '';
+    async function loadTemplates() {
+      const response = await fetch('/templates');
+      const templates = await response.json();
+
+      const selectElement = document.getElementById('subjectTemp');
+      selectElement.innerHTML = '<option value="">Select Template</option>'; // Reset options
+
+      templates.forEach(template => {
+        const option = document.createElement('option');
+        option.value = template.id;
+        option.textContent = `Template ${template.id} - ${template.content.subject}`; // Customize text as needed
+        selectElement.appendChild(option);
+      });
+    }
+
+    async function fillTemplate() {
+      const templateId = document.getElementById('subjectTemp').value;
+      const subjectInput = document.getElementById('subject');
+      const messageInput = document.getElementById('message');
+
+      if (templateId) {
+        const response = await fetch(`/template/${templateId}`);
+        const template = await response.json();
+        // console.log("template:", template);
+        
+        subjectInput.value = template.content.subject;
+        // console.log("subject:", template.content.subject);
+        messageInput.value = template.content.content ;
+        // console.log("content;", template.content.content);
+      } else {
+        subjectInput.value = '';
+        messageInput.value = '';
       }
     }
-    </script>
+
+    document.addEventListener('DOMContentLoaded', loadTemplates);
+  </script>
 </body>
 
 </html>
