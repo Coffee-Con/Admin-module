@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <title>Login</title>
+</head>
+<body>
+  <div class="container">
+    <h1 style="margin-top: 2em;">Forget Password</h1>
+    <hr>
+    <div class="row">
+      <div class="col-md-12 section-title">
+        <form id="loginForm">
+          <div class="form-group">
+            <!-- <label for="email">Email:</label> -->
+            <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <!-- <label for="password">Password:</label> -->
+            <input placeholder="Verification Code" type="VerificationCode" id="VerificationCode" name="VerificationCode" class="form-control" required>
+            <img src="img/code.png">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Verification</button>
+        </form>
+      </div>
+    </div>
+    <!-- for testing -->
+    <div id="message"></div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      const response = await fetch('/login', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.redirected) {
+        window.location.href = response.url; // 手动处理重定向
+      } else {
+        const result = await response.text();
+        document.getElementById('message').innerText = result;
+      }
+    });
+  </script>
+  <!--
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      // let
+      // Testing FormData
+      console.log(formData);
+      console.log(formData.get('email'));
+      console.log(formData.get('password'));
+      for (const entry of formData.entries()) {
+        console.log(entry);
+      }
+
+      const response = await fetch('/login', {
+          method: 'POST',
+          body: formData
+        });
+      const result = await response.text();
+      document.getElementById('message').innerText = result;
+      /*
+      const response = await fetch('/login', {
+        method: 'POST',
+        body: formData //error
+      });
+      const result = await response.text();
+      document.getElementById('message').innerText = result;
+      */
+    });
+  </script>
+  -->
+</body>
+</html>
