@@ -29,55 +29,5 @@
     <!-- for testing -->
     <div id="message"></div>
   </div>
-
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-
-      const response = await fetch('/login', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.redirected) {
-        window.location.href = response.url; // 手动处理重定向
-      } else {
-        const result = await response.text();
-        document.getElementById('message').innerText = result;
-      }
-    });
-  </script>
-  <!--
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-      // let
-      // Testing FormData
-      console.log(formData);
-      console.log(formData.get('email'));
-      console.log(formData.get('password'));
-      for (const entry of formData.entries()) {
-        console.log(entry);
-      }
-
-      const response = await fetch('/login', {
-          method: 'POST',
-          body: formData
-        });
-      const result = await response.text();
-      document.getElementById('message').innerText = result;
-      /*
-      const response = await fetch('/login', {
-        method: 'POST',
-        body: formData //error
-      });
-      const result = await response.text();
-      document.getElementById('message').innerText = result;
-      */
-    });
-  </script>
-  -->
 </body>
 </html>
