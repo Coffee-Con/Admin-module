@@ -1,12 +1,16 @@
 const express = require('express');
 const mysql = require('mysql2');
+
 const multer  = require('multer');
-const upload = multer();
+const upload = multer({ dest: 'uploads/' });
+
 const crypto = require('crypto');
 const dbConfig = require('./functions/dbConfig'); // 导入数据库配置
 const mailer = require('./functions/mailer'); // 导入邮件发送模块
 // const ollama = require('ollama'); // AI
 const { default: ollama } = require('ollama');
+const addUsers = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
+// const upload = require('./functions/middlewares/upload'); // 导入上传文件中间件
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -70,6 +74,28 @@ app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间
   });
 });
 
+// Register
+// Handle file upload
+app.post('/addUsers', upload.single('csvfile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  console.log('File uploaded:', req.file);
+
+  const filePath = req.file.path;
+
+  console.log('File uploaded:', filePath);
+  // Use the Add_User_by_csv.js script
+  addUsers.addUsers(filePath, connection, (err, result) => {
+    if (err) {
+      console.error('Error adding users:', err);
+      return res.status(500).send('Error adding users.');
+    }
+    // res.send('Users added successfully!');
+    res.send(result);
+  });
+});
+
 /*
 // 用户页面
 app.get('/user', (req, res) => {
@@ -96,7 +122,6 @@ app.get('/admin/index', (req, res) => {
 
 
 // click
-
 app.use(express.json());
 // 生成钓鱼链接页面
 app.get('/generate-link', (req, res) => {
