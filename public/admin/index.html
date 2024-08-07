@@ -23,6 +23,17 @@
           <hr>
           <form id="contact-form" method="POST" action="send" enctype="multipart/form-data">
             <div class="form-group">
+              <div class="row">
+                <div class="col-md-6">
+                  <input placeholder="SenderName" id="sendername" name="sendername" type="text" class="form-control"/>
+                </div>
+                <div class="col-md-6">
+                  <input placeholder="SenderEmail" id="senderemail" type="email" name="senderemail" class="form-control"
+                    aria-describedby="emailHelp"/>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
               <select id="emailGroup" name="emailGroup" class="form-control">
                 <option value="">Select Email Group</option>
               </select>
@@ -39,7 +50,7 @@
               </div>
             </div>
             <div class="form-group">
-              <select id="subjectTemp" name="subjectTemp" class="form-control" required onchange="fillTemplate()">
+              <select id="subjectTemp" name="subjectTemp" class="form-control" onchange="fillTemplate()">
                 <option value="">Select Template</option>
               </select>
             </div>
