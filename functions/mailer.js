@@ -44,8 +44,11 @@ const sendMailHandler = async (req, res) => {
 
   const htmlContent = marked.marked(content);
 
+  // var sender_name = data.sendername;
+  // var sender = data.senderemail;
+
   const mail = {
-    from: `${process.env.SENDER_NAME} <${process.env.SENDER}>`, // sender address
+    from: `${data.sendername} <${data.senderemail}>`, // sender address
     to: `${data.name} <${data.email}>`, // receiver email
     subject: data.subject,
     text: content,
