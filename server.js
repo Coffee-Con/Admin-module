@@ -286,6 +286,29 @@ app.get('/template/:id', (req, res) => {
   });
 });
 
+// History
+// 设置 EJS 作为视图引擎
+app.set('view engine', 'ejs');
+
+app.get('/click-events-history', (req, res) => {
+  const query = `
+    SELECT ce.time, u.Name, u.Email
+    FROM click_event ce
+    JOIN click_key ck ON ce.key = ck.key
+    JOIN user u ON ck.userid = u.UserID
+    ORDER BY ce.time DESC;
+  `;
+
+  connection.query(query, (error, results) => {
+    if (error) {
+      return res.status(500).send('Database query error');
+    }
+
+    // 渲染到 EJS 模板
+    res.render('click-events-history', { events: results });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
