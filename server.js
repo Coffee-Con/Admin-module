@@ -309,6 +309,35 @@ app.get('/click-events-history', (req, res) => {
   });
 });
 
+app.get('/click-risk', (req, res) => {
+  const query = `
+    SELECT COUNT(*) AS click_count_last_month
+    FROM click_event
+    WHERE time >= NOW() - INTERVAL 1 MONTH;
+  `;
+
+  connection.query(query, (error, results) => {
+    if (error) {
+      return res.status(500).send('Database query error');
+    }
+
+    const clickCount = results[0].click_count_last_month;
+    let riskLevel;
+
+    // 设置风险等级
+    if (clickCount === 0) {
+      riskLevel = '低风险';
+    } else if (clickCount === 1) {
+      riskLevel = '中风险';
+    } else if (clickCount > 2) {
+      riskLevel = '高风险';
+    }
+
+    // 渲染页面
+    res.render('click-risk', { clickCount, riskLevel });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
