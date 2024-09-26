@@ -1,0 +1,125 @@
+/* Center the heading */
+h1 {
+  text-align: center;
+  margin-top: 2em;
+  color: rgb(5, 143, 216);
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content horizontally */
+}
+/* Flexbox layout for the section */
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center horizontally if needed */
+}
+
+/* Styling for the image */
+
+/* Adjust the width of text inputs */
+.form-group input {
+  width: 300px; /* Adjust width as needed */
+  margin-top: 2em;
+  
+}
+
+/* Margin for form groups */
+.form-group1 {
+  margin-bottom: 1em;
+  margin-top: 1em;
+  display: flex;
+  align-items: flex-start; /* 垂直居中 */
+  flex-direction: column; 
+}
+
+.form-group2 {
+  margin-bottom: 1em;
+  margin-top: 3em;
+  display: flex;
+  align-items: flex-start; /* 垂直居中 */
+  flex-direction: column; 
+}
+
+.form-group1 label {
+  margin-right: 1em; /* 给标签和输入框之间添加一些间距 */
+  min-width: 130px; /* 为标签设置最小宽度，使其对齐 */
+}
+.form-group2 label {
+  margin-right: 1em;
+  min-width: 130px;
+}
+
+/* Margin for buttons */
+.btn {
+  margin-right: 5em;
+  margin-top: 5em; 
+}
+.background-area {
+  background-color: white; /* White background */
+  padding: 60px; /* Padding inside the area */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+  max-width: 800px; /* Limit width */
+  margin-top: 2em; /* Space from the top */
+  margin-left: 30em;
+}
+.centered-image {
+  display: block;
+  margin: 0 auto; 
+}
+body {
+  background-image: url('image.jpeg'); /* Replace with your image URL */
+  background-size: cover; /* Make the image cover the entire background */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  background-attachment: fixed; /* Keep the background fixed during scroll */
+}
+.btn-custom {
+  background-color: #6c757d; /* 设置按钮背景色为相同 */
+  color: white; /* 文字颜色 */
+  font-size: 16px; /* 字体大小 */
+  padding: 10px 20px; /* 按钮的内边距，控制大小 */
+  border: none; /* 去除边框 */
+  border-radius: 5px; /* 圆角效果 */
+  cursor: pointer; /* 鼠标悬停时变成手型 */
+}
+
+.btn-custom:hover {
+  background-color: #5a6268; /* 悬停时按钮颜色变化 */
+}
+
+.tooltip-button {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 160px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* 调整工具提示的位置 */
+  left: 50%;
+  margin-left: -80px; /* 居中工具提示 */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-button:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* 使导航栏中的按钮和第二个按钮的大小一致 */
+.navbar-brand {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+

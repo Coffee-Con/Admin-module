@@ -4,25 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
   <title>Login</title>
 </head>
 <body>
   <div class="container">
     <h1 style="margin-top: 2em;">Login</h1>
-    <hr>
-    <div class="row">
-      <div class="col-md-12 section-title">
+    <div>
+      <div class="section-title">
         <form id="loginForm">
-          <div class="form-group">
-            <!-- <label for="email">Email:</label> -->
-            <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <!-- <label for="password">Password:</label> -->
-            <input placeholder="Password" type="password" id="password" name="password" class="form-control" required>
-          </div>
+          <div class="background-area">
+            <div class="form-group1">
+              <label for="email" class="form-label">Email Address:</label>
+              <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group2">
+              <label for="password" type="email">Password:</label>
+              <input placeholder="Password" type="password" id="password" name="password" class="form-control" required>
+            </div>   
           <button type="submit" class="btn btn-primary">Login</button>
           <a href="forget.html" class="btn btn-primary">Forget password</a>
+          </div>
         </form>
       </div>
     </div>

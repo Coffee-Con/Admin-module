@@ -1,0 +1,160 @@
+/* Body styles with background gradient */
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Container with soft shadow and smooth corners */
+.container {
+  background-color: #ffffff;
+  padding: 2.5em;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
+  border-radius: 15px;
+  max-width: 700px;
+  width: 100%;
+  transition: box-shadow 0.3s ease;
+}
+
+.container:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); /* 增加悬停效果的阴影 */
+}
+
+h1 {
+  color: #4d88c7;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5em;
+  font-size: 2.2rem;
+  background: linear-gradient(90deg, #85abd4, #9378d1);
+  -webkit-background-clip: text; /* 添加WebKit前缀以支持Safari等浏览器 */
+  -moz-background-clip: text; /* 添加Mozilla前缀以支持Firefox浏览器 */
+  background-clip: text; /* 标准属性 */
+  color: transparent; /* Gradient text color */
+}
+
+/* Form inputs with smooth border and inner shadow */
+.form-group input,
+.form-group textarea {
+  border-radius: 10px;
+  border: 1px solid #ced4da;
+  padding: 15px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: calc(100% - 20px);
+  background-color: #f8f9fa;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.08); /* 内部阴影 */
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+  outline: none;
+}
+
+/* Button container with hover effects */
+.button-container .btn {
+  flex: 1;
+  margin-right: 10px;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  color: white;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+/* Media query adjustments for smaller screens */
+@media (max-width: 768px) {
+  .button-container {
+      flex-direction: column;
+  }
+
+  .btn-primary, .btn-success {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .btn-primary:last-child, .btn-success:last-child {
+      margin-bottom: 0;
+  }
+}
+
+/* Smooth border effect for navbar */
+.navbar {
+  background-color: #85abd4;
+  border-bottom: 3px solid #4d88c7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .nav-link {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.navbar .nav-link:hover {
+  color: #ffd700; /* Gold color on hover */
+}
+
+.navbar .nav-item .bi {
+  margin-right: 5px;
+  font-size: 1.1rem;
+}
+
+/* Button click animation */
+.btn:active {
+  animation: button-click 0.2s ease;
+}
+
+@keyframes button-click {
+  0% {
+      transform: scale(1);
+  }
+  50% {
+      transform: scale(0.95);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
+
+/* Status message with slide-in animation */
+#statusMessage {
+  animation: slide-in 0.5s ease;
+}
+
+@keyframes slide-in {
+  0% {
+      opacity: 0;
+      transform: translateY(-10px);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}

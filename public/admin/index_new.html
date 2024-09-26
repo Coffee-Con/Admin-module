@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <title>Admin module</title>
+  <style>
+    a {
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+
+    #sidebar {
+      width: 260px;
+      height: 100vh;
+      background-color: rgb(249 249 249);
+      color: var(#171717);
+
+      @media (min-width: 768px) {
+        position: relative;
+      }
+    }
+
+    #mainbody {
+      width: 100%;
+      height: 100vh;
+      background-color: rgb(255 255 255);
+      color: var(#171717);
+    }
+  </style>
+  <link rel="stylesheet" href="css/0.39b08be9.css" />
+  <link rel="stylesheet" href="css/13.b0806465.css" />
+  <link rel="stylesheet" href="css/2.f41ff901.css" />
+  <link rel="stylesheet" href="css/9.c242e6f1.css" />
+  <link rel="stylesheet" href="css/Chat.2c02f5b5.css" />
+  <link rel="stylesheet" href="css/dayjs.beb6c5d8.css" />
+  <link rel="stylesheet" href="css/Messages.e8d876d7.css" />
+  <link rel="stylesheet" href="css/Toaster.ebb080d6.css" />
+</head>
+
+<body>
+  <div style="display: flex;">
+    <div id="sidebar"
+      class="h-screen max-h-[100dvh] min-h-screen select-none md:relative w-[260px] bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-200 text-sm transition fixed z-50 top-0 left-0 rounded-r-2xl py-2.5 my-auto flex flex-col justify-between h-screen max-h-[100dvh] w-[260px] z-50 "
+      data-state="true">
+        <div class="px-2.5 flex justify-between space-x-1 text-gray-600 dark:text-gray-400"><a
+            id="sidebar-new-chat-button"
+            class="flex flex-1 justify-between rounded-xl px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-850 transition"
+            href="javascript:void(0)" draggable="false">
+            <div class="self-center mx-1.5"><img crossorigin="anonymous" src="/logo.png"
+                class="size-6 -translate-x-1.5 rounded-full" alt="logo"></div>
+            <div class="self-center font-medium text-sm text-gray-850 dark:text-white">新邮件</div>
+            <div class="self-center ml-auto"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                fill="currentColor" class="size-5">
+                <path
+                  d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z">
+                </path>
+                <path
+                  d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z">
+                </path>
+              </svg></div>
+          </a> <button
+            class="cursor-pointer px-2 py-2 flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition">
+            <div class="m-auto self-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="2" stroke="currentColor" class="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12">
+                </path>
+              </svg></div>
+          </button></div>
+        <div class="px-2.5 flex justify-center text-gray-800 dark:text-gray-200"><a
+            class="flex-grow flex space-x-3 rounded-xl px-2.5 py-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition"
+            href="javascript:void(0)" draggable="false">
+            <div class="self-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="2" stroke="currentColor" class="size-[1.1rem]">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z">
+                </path>
+              </svg></div>
+            <div class="flex self-center">
+              <div class="self-center font-medium text-sm">工作空间</div>
+            </div>
+          </a></div>
+        <div class="relative flex flex-col flex-1 overflow-y-auto">
+          
+          <!-- 搜索 -->
+          <div class="px-2 mt-0.5 mb-2 flex justify-center space-x-2">
+            <div class="flex w-full rounded-xl" id="chat-search">
+              <div class="self-center pl-3 py-2 rounded-l-xl bg-transparent"><svg xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                  <path fill-rule="evenodd"
+                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                    clip-rule="evenodd"></path>
+                </svg></div> <input
+                class="w-full rounded-r-xl py-1.5 pl-2.5 pr-4 text-sm bg-transparent dark:text-gray-300 outline-none"
+                placeholder="搜索">
+            </div>
+          </div>
+
+          <!-- 这里放history -->
+          <div class="pl-2 my-2 flex-1 flex flex-col space-y-1 overflow-y-auto scrollbar-hidden svelte-141e0sl">
+            <div class="w-full pl-2.5 text-xs text-gray-500 dark:text-gray-500 font-medium  pb-0.5">今天</div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pl-2.5 text-xs text-gray-500 dark:text-gray-500 font-medium  pb-0.5">昨天</div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pl-2.5 text-xs text-gray-500 dark:text-gray-500 font-medium  pb-0.5">七月</div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pl-2.5 text-xs text-gray-500 dark:text-gray-500 font-medium  pb-0.5">六月</div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pl-2.5 text-xs text-gray-500 dark:text-gray-500 font-medium  pb-0.5">五月</div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pl-2.5 text-xs text-gray-500 dark:text-gray-500 font-medium  pb-0.5">四月</div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pl-2.5 text-xs text-gray-500 dark:text-gray-500 font-medium  pb-0.5">三月</div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pl-2.5 text-xs text-gray-500 dark:text-gray-500 font-medium  pb-0.5">二月</div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+            <div class="w-full pl-2.5 text-xs text-gray-500 dark:text-gray-500 font-medium  pb-0.5">一月</div>
+            <div class="w-full pr-2 relative group">
+              <a class="w-full flex justify-between rounded-xl px-3 py-2  group-hover:bg-gray-100 dark:group-hover:bg-gray-950 whitespace-nowrap text-ellipsis"
+                href="javascript:void(0)" draggable="false">
+                <div class="flex self-center flex-1 w-full">
+                  <div class="text-left self-center overflow-hidden w-full h-[20px]">Header: Testing.</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="px-2.5">
+          <div class="flex flex-col"><button aria-controls="dRAmBRmG1R" aria-expanded="false" data-state="closed"
+              id="5YKrs6yE4z" tabindex="0" data-melt-dropdown-menu-trigger="" data-menu-trigger=""
+              type="button"></button><button
+              class="flex rounded-xl py-3 px-3.5 w-full hover:bg-gray-100 dark:hover:bg-gray-900 transition">
+              <div class="self-center mr-3"><img src="img/WechatIMG1489.jpg" class="max-w-[30px] object-cover rounded-full"
+                  alt="User profile"></div>
+              <div class="self-center font-semibold">Xi Zixun</div>
+            </button> </div>
+        </div>
+    </div>
+    <div id="main" class="min-h-screen max-h-screen md:max-w-[calc(100%-260px)] w-full max-w-full flex flex-col">
+      <nav id="nav" class="sticky py-2.5 top-0 flex flex-row justify-center z-30">
+        <div class="flex max-w-full w-full mx-auto pt-0.5 md:px-[1rem]">
+          <div class="flex items-center w-full max-w-full">
+            <div class="md:hidden mr-3 self-start flex flex-none items-center text-gray-600 dark:text-gray-400"><button
+                id="sidebar-toggle-button"
+                class="cursor-pointer px-2 py-2 flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition">
+                <div class="m-auto self-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="2" stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12">
+                    </path>
+                  </svg></div>
+              </button></div>
+            <div class="flex-1 overflow-hidden max-w-full">
+              <div class="flex flex-col w-full items-center md:items-start">
+                <div class="flex w-full max-w-fit">
+                  <div class="overflow-hidden w-full">
+                    <div class="mr-1 max-w-full"><button aria-controls="-RG6g4KjUJ" aria-expanded="false"
+                        data-state="closed" id="M-BMcOl0Xm" tabindex="0" data-melt-dropdown-menu-trigger=""
+                        data-menu-trigger="" type="button" class="relative w-full" aria-label="选择一个模版">
+                        <div
+                          class="flex w-full text-left px-0.5 outline-none bg-transparent truncate text-lg font-semibold placeholder-gray-400 focus:outline-none">
+                          选择一个模版 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="2.5" stroke="currentColor" class=" self-center ml-2 size-3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"></path>
+                          </svg></div>
+                      </button> </div>
+                  </div>
+                  <div class="self-center mr-2 disabled:text-gray-600 disabled:hover:text-gray-600">
+                    <div aria-label="添加模版" class="flex"><button class=""><svg xmlns="http://www.w3.org/2000/svg"
+                          fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-3.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"></path>
+                        </svg></button></div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-left mt-0.5 ml-1 text-[0.7rem] text-gray-500"><button>设为默认</button></div>
+            </div>
+            <div class="self-start flex flex-none items-center text-gray-600 dark:text-gray-400">
+              <div aria-label="新邮件" class="flex"><button id="new-chat-button"
+                  class="flex md:hidden cursor-pointer px-2 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition">
+                  <div class="m-auto self-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                      fill="currentColor" class="w-5 h-5">
+                      <path
+                        d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z">
+                      </path>
+                      <path
+                        d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z">
+                      </path>
+                    </svg></div>
+                </button></div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>

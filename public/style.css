@@ -1,0 +1,74 @@
+/* Center the heading */
+h1 {
+  text-align: center;
+  margin-top: 2em;
+  color:white;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content horizontally */
+}
+/* Flexbox layout for the section */
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center horizontally if needed */
+}
+
+/* Styling for the image */
+
+/* Adjust the width of text inputs */
+.form-group input {
+  width: 300px; /* Adjust width as needed */
+  margin-top: 2em;
+  
+}
+
+/* Margin for form groups */
+.form-group1 {
+  margin-bottom: 1em;
+  margin-top: 1em;
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  margin-bottom: 1em;
+}
+
+.form-group2 {
+  margin-bottom: 1em;
+  margin-top: 3em;
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  margin-bottom: 1em;
+}
+
+.form-group1 label {
+  margin-right: 1em; /* 给标签和输入框之间添加一些间距 */
+  min-width: 120px; /* 为标签设置最小宽度，使其对齐 */
+}
+.form-group2 label {
+  margin-right: 1em;
+  min-width: 120px;
+}
+
+/* Margin for buttons */
+.btn {
+  margin-right: 5em;
+  margin-top: 5em; 
+}
+.background-area {
+  background-color: white; /* White background */
+  padding: 100px; /* Padding inside the area */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+  max-width: 800px; /* Limit width */
+  margin-top: 2em; /* Space from the top */
+  margin-left: 30em;
+}
+body {
+  background-image: url('image.jpeg'); /* Replace with your image URL */
+  background-size: cover; /* Make the image cover the entire background */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  background-attachment: fixed; /* Keep the background fixed during scroll */
+}
