@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <title>History</title>
+  <title>Report</title>
 </head>
 <body>
   <h1>Click Events Risk Assessment</h1>
   <p>Clicks in the last month: <strong><%= clickCount %></strong></p>
   <p class="risk <% if (riskLevel === '低风险') { %>low<% } else if (riskLevel === '中风险') { %>medium<% } else { %>high<% } %>">
-    当前风险等级: <strong><%= riskLevel %></strong>
+    Current risk level: <strong><%= riskLevel %></strong>
   </p>
 </body>
 </html>
