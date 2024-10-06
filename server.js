@@ -7,6 +7,7 @@ const upload = multer({ dest: 'uploads/' });
 const crypto = require('crypto');
 const dbConfig = require('./functions/dbConfig'); // 导入数据库配置
 const mailer = require('./functions/mailer'); // 导入邮件发送模块
+
 // const ollama = require('ollama'); // AI
 const { default: ollama } = require('ollama');
 const addUsers = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
@@ -337,6 +338,16 @@ app.get('/click-risk', (req, res) => {
     res.render('click-risk', { clickCount, riskLevel });
   });
 });
+
+// Group
+const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers } = require('./functions/group'); // 导入Group模块
+app.use('/groups', groups);
+app.use('/create-group', createGroup);
+app.use('/add-group-member', addGroupMember);
+app.use('/remove-group-member', removeGroupMember);
+// app.use('/group-members', getGroupMembers);
+app.get('/group-members/:groupId', getGroupMembers);
+// Group end
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

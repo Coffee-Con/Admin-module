@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Group Management</h1>
+
+        <h2>Create Group</h2>
+        <div class="form-group">
+            <label for="groupName">Group Name</label>
+            <input type="text" id="groupName" placeholder="Enter group name">
+        </div>
+        <button onclick="createGroup()">Create Group</button>
+
+        <h2>Manage Group Members</h2>
+        <div class="form-group">
+            <label for="groupSelect">Select Group</label>
+            <select id="groupSelect" name="groupSelect" onchange="fetchGroupMembers(this.value)">
+                <option value="">Select a group</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="userId">User ID</label>
+            <input type="number" id="userId" placeholder="Enter user ID">
+        </div>
+
+        <button onclick="addGroupMember()">Add Member</button>
+        <button onclick="removeGroupMember()">Remove Member</button>
+
+        <h2>Group Members</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody id="membersTableBody">
+                <!-- Group members will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Create a new group
+        function createGroup() {
+            const groupName = document.getElementById('groupName').value;
+
+            if (!groupName) {
+                alert('Please enter a group name');
+                return;
+            }
+
+            fetch('/create-group', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ groupName })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Group created successfully with ID: ' + data.id);
+                loadGroups(); // Refresh group list
+            })
+            .catch(err => console.error('Error creating group:', err));
+        }
+
+        // Function to load groups and populate the dropdown
+        async function loadGroups() {
+            const response = await fetch('/groups');
+            const groups = await response.json();
+            console.log(groups);
+            
+            const groupSelect = document.getElementById('groupSelect'); // Get the select element
+            groupSelect.innerHTML = '<option value="">Select a group</option>'; // Reset options
+            
+            // Populate the dropdown with group options
+            groups.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group.GroupID; // Use GroupID as the value
+                option.textContent = group.GroupName; // Display GroupName as the text
+                groupSelect.appendChild(option); // Append the option to the select element
+            });
+        }
+
+        // Call the function on page load to populate the group dropdown
+        document.addEventListener('DOMContentLoaded', loadGroups);
+
+        // Function to add a member to a group
+        function addGroupMember() {
+            const groupId = document.getElementById('groupSelect').value;
+            const userId = document.getElementById('userId').value;
+
+            if (!groupId || !userId) {
+                alert('Please select a group and enter a user ID');
+                return;
+            }
+
+            fetch('/add-group-member', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ groupId, userId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Member added successfully');
+                    fetchGroupMembers(groupId); // Refresh member list
+                } else {
+                    alert('Error adding member');
+                }
+            })
+            .catch(err => console.error('Error adding group member:', err));
+        }
+
+        // Function to remove a member from a group
+        function removeGroupMember() {
+            const groupId = document.getElementById('groupSelect').value;
+            const userId = document.getElementById('userId').value;
+
+            if (!groupId || !userId) {
+                alert('Please select a group and enter a user ID');
+                return;
+            }
+
+            fetch('/remove-group-member', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ groupId, userId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Member removed successfully');
+                    fetchGroupMembers(groupId); // Refresh member list
+                } else {
+                    alert('Error removing member');
+                }
+            })
+            .catch(err => console.error('Error removing group member:', err));
+        }
+
+        // Function to fetch members of a selected group
+        function fetchGroupMembers(groupId) {
+            if (!groupId) {
+                alert('Please select a group');
+                return;
+            }
+
+            // console.log('Fetching members for group:', groupId); // Debugging
+
+            fetch(`/group-members/${groupId}`)
+                .then(response => {
+                    console.log('Response status:', response.status); // Debugging
+                    return response.json();
+                })
+                .then(members => {
+                    console.log('Fetched members:', members); // Debugging
+                    const membersTableBody = document.getElementById('membersTableBody');
+                    membersTableBody.innerHTML = ''; // Clear the table body
+
+                    members.forEach(member => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${member.UserID}</td>
+                            <td>${member.User}</td>
+                            <td>${member.Email}</td>
+                            <td>${member.Name}</td>
+                        `;
+                        membersTableBody.appendChild(row);
+                    });
+                })
+                .catch(err => console.error('Error fetching group members:', err));
+        }
+
+    </script>     
+</body>
+</html>
