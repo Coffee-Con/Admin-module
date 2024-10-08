@@ -24,39 +24,59 @@ transporter.verify(function (error, success) {
 
 const sendMailHandler = async (req, res) => {
   let form = new multiparty.Form();
-  let data = await new Promise((resolve, reject) => {
-    form.parse(req, (err, fields) => {
-      if (err) reject(err);
-      let data = {};
-      Object.keys(fields).forEach(property => {
-        data[property] = fields[property].toString();
+  
+  try {
+    let data = await new Promise((resolve, reject) => {
+      form.parse(req, (err, fields) => {
+        if (err) return reject(err);
+        
+        let data = {};
+        Object.keys(fields).forEach(property => {
+          data[property] = Array.isArray(fields[property]) ? fields[property] : fields[property];
+        });
+        resolve(data);
       });
-      resolve(data);
     });
-  });
 
-  const namePlaceholder = data.name;
-  const linkPlaceholder = await generateLink.generateLink(data.email);
+    // 获取名称和邮箱的数组
+    const nameArray = data['name[]'];
+    const emailArray = data['email[]'];
+    const message = data.message[0]; // 将 data.message 作为字符串处理
 
-  content = data.message
-              .replace(/\[name\]/g, namePlaceholder)
-              .replace(/\[link\]/g, linkPlaceholder);
+    // 确保名称和邮箱的数组长度相同
+    if (nameArray.length !== emailArray.length) {
+      return res.status(400).send('Names and emails count mismatch');
+    }
 
-  const htmlContent = marked.marked(content);
+    // 依次遍历每个收件人并发送邮件
+    for (let i = 0; i < nameArray.length; i++) {
+      const namePlaceholder = nameArray[i];
+      const linkPlaceholder = await generateLink.generateLink(emailArray[i]);
 
-  // var sender_name = data.sendername;
-  // var sender = data.senderemail;
+      // 用模板内容替换占位符
+      const content = message
+        .replace(/\[name\]/g, namePlaceholder)
+        .replace(/\[link\]/g, linkPlaceholder);
 
-  const mail = {
-    from: `${data.sendername} <${data.senderemail}>`, // sender address
-    to: `${data.name} <${data.email}>`, // receiver email
-    subject: data.subject,
-    text: content,
-    html: htmlContent
-  };
+      const htmlContent = marked.marked(content);
 
-  await transporter.sendMail(mail);
-  res.status(200).send('Email successfully sent to recipient!'); 
+      const mail = {
+        from: `${data.sendername} <${data.senderemail}>`,
+        to: `${namePlaceholder} <${emailArray[i]}>`,
+        subject: data.subject[0],  // 确保data.subject是字符串
+        text: content,
+        html: htmlContent
+      };
+
+      await transporter.sendMail(mail);
+    }
+
+    res.status(200).send('Email successfully sent to all recipients!'); 
+
+  } catch (error) {
+    console.error('Error sending emails:', error);
+    res.status(500).send('An error occurred while sending emails.');
+  }
 };
 
 module.exports = { sendMailHandler };
