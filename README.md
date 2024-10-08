@@ -18,7 +18,7 @@ SENDER= send e-mail address
 
 ### run by termmal:
 
-install node.js https://nodejs.org/en/download/package-manager
+install node.js v22.9.0 https://nodejs.org/en/download/package-manager
 
 npm install cors dotenv express multiparty nodemailer nodemon
 
