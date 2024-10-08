@@ -102,3 +102,4 @@ const readCSVAndInsertUsers = (filePath) => {
 
 // 读取并插入用户
 readCSVAndInsertUsers('user-import.csv');
+// module.exports = { addUsers: readCSVAndInsertUsers };
