@@ -34,21 +34,23 @@
               </div>
             </div>
             <div class="form-group">
-              <select id="emailGroup" name="emailGroup" class="form-control">
+              <select id="emailGroup" name="emailGroup" class="form-control" onchange="fillRecipient(this.value)">
                 <option value="">Select Email Group</option>
               </select>
             </div>
-            <div class="form-group">
-              <div class="row">
-                <div class="col-md-6">
-                  <input placeholder="Name" id="name" name="name" type="text" class="form-control" required />
-                </div>
-                <div class="col-md-6">
-                  <input placeholder="Email" id="email" type="email" name="email" class="form-control"
-                    aria-describedby="emailHelp" required />
+            <div id="recipient-fields">
+              <div class="form-group recipient">
+                <div class="row">
+                  <div class="col-md-6">
+                    <input placeholder="Name" name="name[]" type="text" class="form-control" required />
+                  </div>
+                  <div class="col-md-6">
+                    <input placeholder="Email" type="email" name="email[]" class="form-control" aria-describedby="emailHelp" required />
+                  </div>
                 </div>
               </div>
             </div>
+            <button type="button" class="btn btn-secondary" onclick="addRecipient()">Add Recipient</button>            
             <div class="form-group">
               <select id="subjectTemp" name="subjectTemp" class="form-control" onchange="fillTemplate()">
                 <option value="">Select Template</option>
@@ -104,7 +106,127 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadTemplates);
+    function addRecipient() {
+      const recipientFields = document.getElementById('recipient-fields');
+      const newRecipient = document.createElement('div');
+      newRecipient.className = 'form-group recipient';
+      newRecipient.innerHTML = `
+        <div class="row">
+          <div class="col-md-6">
+            <input placeholder="Name" name="name[]" type="text" class="form-control" required />
+          </div>
+          <div class="col-md-6">
+            <input placeholder="Email" type="email" name="email[]" class="form-control" aria-describedby="emailHelp" required />
+          </div>
+        </div>
+      `;
+      recipientFields.appendChild(newRecipient);
+    }
+
+    async function loadGroups() {
+      try {
+        const response = await fetch('/groups');
+        const groups = await response.json();
+
+        const groupSelect = document.getElementById('emailGroup');
+        groupSelect.innerHTML = '<option value="">Select Email Group</option>'; // Reset options
+
+        groups.forEach(group => {
+          const option = document.createElement('option');
+          option.value = group.GroupID;
+          option.textContent = group.GroupName;
+          groupSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error fetching groups:', error);
+        document.getElementById("result-message").innerHTML = "An error occurred while loading groups: " + error;
+      }
+    }
+    /*
+    async function fillRecipient(groupId) {
+      try {
+        const response = await fetch(`/fillRecipient/${groupId}`);
+        const recipients = await response.json();
+
+        // 清空当前的收件人字段
+        const recipientFields = document.getElementById('recipient-fields');
+        recipientFields.innerHTML = '';
+
+        // 循环遍历返回的收件人列表并创建新的收件人字段
+        recipients.forEach((recipient) => {
+          const newRecipient = document.createElement('div');
+          newRecipient.className = 'form-group recipient';
+          newRecipient.innerHTML = `
+            <div class="row">
+              <div class="col-md-6">
+                <input placeholder="Name" name="name[]" type="text" class="form-control" value="${recipient.Name}" required />
+              </div>
+              <div class="col-md-6">
+                <input placeholder="Email" type="email" name="email[]" class="form-control" value="${recipient.Email}" required />
+              </div>
+            </div>
+          `;
+          recipientFields.appendChild(newRecipient);
+        });
+      } catch (error) {
+        console.error('Error fetching recipients:', error);
+        document.getElementById("result-message").innerHTML = "An error occurred while loading recipients: " + error;
+      }
+    }
+    */
+    async function fillRecipient(groupId) {
+      try {
+        const response = await fetch(`/fillRecipient/${groupId}`);
+        const recipients = await response.json();
+
+        // 清空当前的收件人字段
+        const recipientFields = document.getElementById('recipient-fields');
+        recipientFields.innerHTML = '';
+
+        if (recipients.length === 0) {
+          // 如果组内没有成员，保留一行空的输入字段
+          const emptyRecipient = document.createElement('div');
+          emptyRecipient.className = 'form-group recipient';
+          emptyRecipient.innerHTML = `
+            <div class="row">
+              <div class="col-md-6">
+                <input placeholder="Name" name="name[]" type="text" class="form-control" required />
+              </div>
+              <div class="col-md-6">
+                <input placeholder="Email" type="email" name="email[]" class="form-control" required />
+              </div>
+            </div>
+          `;
+          recipientFields.appendChild(emptyRecipient);
+        } else {
+          // 循环遍历返回的收件人列表并创建新的收件人字段
+          recipients.forEach((recipient) => {
+            const newRecipient = document.createElement('div');
+            newRecipient.className = 'form-group recipient';
+            newRecipient.innerHTML = `
+              <div class="row">
+                <div class="col-md-6">
+                  <input placeholder="Name" name="name[]" type="text" class="form-control" value="${recipient.Name}" required />
+                </div>
+                <div class="col-md-6">
+                  <input placeholder="Email" type="email" name="email[]" class="form-control" value="${recipient.Email}" required />
+                </div>
+              </div>
+            `;
+            recipientFields.appendChild(newRecipient);
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching recipients:', error);
+        document.getElementById("result-message").innerHTML = "An error occurred while loading recipients: " + error;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTemplates();
+      loadGroups();
+    });
+
   </script>
 </body>
 
