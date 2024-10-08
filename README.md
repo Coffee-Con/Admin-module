@@ -2,7 +2,7 @@
 
 ## how to use
 
-### eidt .env file:
+### Create and eidt .env file:
 
 PORT= html port
 
