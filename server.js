@@ -260,7 +260,7 @@ app.post('/confirmTemp', upload.none(), (req, res) => {
 
 // Route to get templates
 app.get('/templates', (req, res) => {
-  const query = 'SELECT id, content FROM email_template'; // Adjust column names as needed
+  const query = 'SELECT id, content FROM email_template';
 
   connection.query(query, (err, results) => {
     if (err) {
@@ -284,6 +284,32 @@ app.get('/template/:id', (req, res) => {
       return res.status(404).json({ error: 'Template not found' });
     }
     res.json(results[0]);
+  });
+});
+
+// Route to get all groups
+app.get('/groups', (req, res) => {
+  const query = 'SELECT GroupID, GroupName FROM `group`';
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching groups:', err);
+      return res.status(500).json({ error: 'Failed to load groups', details: err });
+    }
+    res.json(results);
+  });
+});
+
+// Route to get recipients for a specific group
+app.get('/fillRecipient/:groupId', (req, res) => {
+  const groupId = req.params.groupId;
+  const query = 'SELECT u.Name, u.Email FROM `user` u JOIN `group_user` gu ON u.UserID = gu.UserID WHERE gu.GroupID = ?';
+  connection.query(query, [groupId], (err, results) => {
+    if (err) {
+      console.error('Error fetching recipients:', err);
+      return res.status(500).json({ error: 'Failed to load recipients', details: err });
+    }
+    console.log('Recipients:', results);
+    res.json(results);
   });
 });
 
