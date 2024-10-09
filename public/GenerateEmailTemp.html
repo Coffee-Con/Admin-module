@@ -24,8 +24,8 @@
       const userInput = document.getElementById('userInput').value;
       const responseElement = document.getElementById('response');
 
-      // clear the response element
-      responseElement.textContent = '';
+      // Clear the response element
+      responseElement.value = ''; // 使用 .value 清空内容
 
       const response = await fetch('/chat', {
         method: 'POST',
@@ -34,9 +34,9 @@
         },
         body: JSON.stringify({ message: userInput })
       });
-      
+
       const data = await response.json();
-      responseElement.textContent = data.message;
+      responseElement.value = data.message; // 使用 .value 设置内容
     }
 
     async function confirmTemp() {
