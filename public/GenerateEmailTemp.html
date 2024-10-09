@@ -41,7 +41,7 @@
 
     async function confirmTemp() {
       const Subject = document.getElementById('userInput').value;
-      const Content = document.getElementById('response').textContent;
+      const Content = document.getElementById("response").value; // 获取用户输入的内容
 
       const response = await fetch('/confirmTemp', {
         method: 'POST',
