@@ -1,6 +1,6 @@
 {
   "name": "Admin module",
-  "version": "Alpha 0.0.3",
+  "version": "Alpha 0.0.5",
   "description": "Admin module for the project",
   "main": "server.js",
   "scripts": {
