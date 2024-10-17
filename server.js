@@ -40,8 +40,8 @@ app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间
   const email = req.body.email;
   const password = req.body.password;
 
-  console.log('Email:', email);
-  console.log('Password:', password);
+  // console.log('Email:', email);
+  // console.log('Password:', password);
 
   const query = 'SELECT * FROM user WHERE Email = ?';
   connection.query(query, [email], (err, results) => {
@@ -243,11 +243,9 @@ app.post('/confirmTemp', upload.none(), (req, res) => {
   if (!Subject || !Content) {
     return res.status(400).json({ error: 'Subject and content are required.' });
   }
-
   // Insert data into the email_template table
   const query = 'INSERT INTO email_template (content) VALUES (?)';
   const contentJson = JSON.stringify({ subject: Subject, content: Content });
-  // console.log('Content:',contentJson);
 
   connection.query(query, contentJson, (error, results) => {
     if (error) {
