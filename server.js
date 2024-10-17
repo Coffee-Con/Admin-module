@@ -375,6 +375,10 @@ app.use('/remove-group-member', removeGroupMember);
 app.get('/group-members/:groupId', getGroupMembers);
 // Group end
 
+// Mobile API
+
+// Mobile API end
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
