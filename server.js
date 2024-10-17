@@ -353,11 +353,11 @@ app.get('/click-risk', (req, res) => {
 
     // 设置风险等级
     if (clickCount === 0) {
-      riskLevel = '低风险';
+      riskLevel = 'Low risk';
     } else if (clickCount === 1) {
-      riskLevel = '中风险';
+      riskLevel = 'Medium risk';
     } else if (clickCount > 2) {
-      riskLevel = '高风险';
+      riskLevel = 'High risk';
     }
 
     // 渲染页面
