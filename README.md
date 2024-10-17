@@ -16,6 +16,10 @@ PASS= e-mail pass
 
 SENDER= send e-mail address
 
+### install mysql8.0
+
+run .sql file https://github.com/Coffee-Con/Database/blob/main/mysql.sql
+
 ### run by termmal:
 
 install node.js v22.9.0 https://nodejs.org/en/download/package-manager
