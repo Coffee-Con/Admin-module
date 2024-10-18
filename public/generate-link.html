@@ -4,18 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="generate-link.css">
   <title>Generate Phishing Link</title>
+  <style>
+    .back-button {
+      position: relative;
+      top: 20px;
+      right: -10px;
+      background-color: transparent; /* Button background color */
+      color: black; /* Button text color */
+      border: none !important;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+    .back-button i {
+      margin-right: 5px;
+    }
+    
+    .back-button {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      z-index: 1000;
+    }
+
+    .back-button:hover {
+      background-color: lightgray; 
+      transform: translateY(-2px); 
+    }
+
+    .back-button:active {
+      transform: scale(0.95); 
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1 style="margin-top: 2em;">Generate Phishing Link</h1>
-    <hr>
-    <form id="linkForm">
-      <div class="form-group">
-        <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Generate Link</button>
-    </form>
+
+  <button class="back-button" onclick="window.location.href='public/admin/index.html'">
+    <i class="fa-solid fa-arrow-left"></i> <!-- 添加 Home 图标 -->
+    <span>Back</span>
+  </button>
+  
+
+  <div class="container my-5">
+    <h1 class="text-center" style="margin-top: 2em;">Generate Phishing Link
+      <i class="fas fa-question-circle" data-toggle="tooltip" title="Enter your email to receive a verification code." style="color: #007bff;"></i>
+    </h1>
+    
+    <div class="background-area">
+      <form id="linkForm">
+        <div class="form-group">
+          <label for="email" class="form-label">
+            <i class="fas fa-envelope" style="color:black; margin-right: 5px;"></i>
+            Email Address:
+          </label>
+          <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-sign-in-alt"></i> 
+          Generate Link
+        </button>
+      </form>
+    </div>
     <div id="result" style="margin-top: 2em;"></div>
   </div>
 
@@ -33,3 +83,4 @@
   </script>
 </body>
 </html>
+
