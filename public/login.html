@@ -3,34 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <title>Login</title>
+
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    .info-button {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      margin-left: 10px; /* 适当的左边距 */
+      color: rgb(5, 143, 216); /* 与链接相同的颜色 */
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1 style="margin-top: 2em;">Login</h1>
-    <hr>
-    <div class="row">
-      <div class="col-md-12 section-title">
+    <h1 style="margin-top: 2em;">
+      <i class="fas fa-user"></i> Login 
+      <button type="button" class="info-button" data-toggle="tooltip" data-placement="top" title="For help, please email wuyi.chen@uon.edu.au">
+        <i class="fas fa-info-circle"></i>
+      </button>
+    </h1>
+      <div class="layout">
+        <div class="text-container">
+          <div class="text-line text-line-1">Welcome to Phishing Simulator, the Simulation for Email</div>
+          <div class="text-line text-line-2">Phishing Scam Is Use For Company Base To Raise </div>
+          <div class="text-line text-line-3">Awareness of Email Phishing Scams.<br> To Access Full Usages,</div>
+          <div class="text-line text-line-4">Please Access <br><strong><u><a href="https://github.com/Coffee-Con/" target="_blank">https://github.com/Coffee-Con</a></u></strong></div>
+        </div>
         <form id="loginForm">
-          <div class="form-group">
-            <!-- <label for="email">Email:</label> -->
-            <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
+          <div class="background-area">
+            <img src="image/logo.png" alt="logo" class="centered-image"  width="100">
+            <!-- 邮箱输入框 -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group1">
+                  <label for="email" class="form-label">
+                    <i class="fas fa-envelope"></i> Email Address:
+                  </label>
+                  <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- 密码输入框 -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group2">
+                  <label for="password">
+                    <i class="fas fa-lock"></i> Password:
+                  </label>
+                  <input placeholder="Password" type="password" id="password" name="password" class="form-control" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <button type="submit" class="btn btn-primary w-100">
+                  <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+              </div>
+              <div class="col-md-6">
+                <a href="forget.html" class="btn btn-secondary w-100">
+                  <i class="fas fa-question-circle"></i> Forget Password
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <!-- <label for="password">Password:</label> -->
-            <input placeholder="Password" type="password" id="password" name="password" class="form-control" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Login</button>
-          <a href="forget.html" class="btn btn-primary">Forget password</a>
         </form>
       </div>
-    </div>
-    <!-- for testing -->
+    <!-- 用于显示信息 -->
     <div id="message"></div>
   </div>
 
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  
   <script>
+    // 启用工具提示
+    window.addEventListener('load', function() {
+        document.body.classList.add('loaded');
+    });
+
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const formData = new FormData(this);
@@ -48,36 +115,6 @@
       }
     });
   </script>
-  <!--
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-      // let
-      // Testing FormData
-      console.log(formData);
-      console.log(formData.get('email'));
-      console.log(formData.get('password'));
-      for (const entry of formData.entries()) {
-        console.log(entry);
-      }
 
-      const response = await fetch('/login', {
-          method: 'POST',
-          body: formData
-        });
-      const result = await response.text();
-      document.getElementById('message').innerText = result;
-      /*
-      const response = await fetch('/login', {
-        method: 'POST',
-        body: formData //error
-      });
-      const result = await response.text();
-      document.getElementById('message').innerText = result;
-      */
-    });
-  </script>
-  -->
 </body>
 </html>
