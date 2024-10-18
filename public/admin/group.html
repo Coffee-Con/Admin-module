@@ -95,13 +95,12 @@
             </select>
         </div>
 
-        <div class="form-group">
+        <div class="form-group"> <!-- need to change to select user name --> <!-- need a funtion to display all the user expcet in the group -->
             <label for="userId">User ID</label>
             <input type="number" id="userId" placeholder="Enter user ID">
         </div>
 
         <button onclick="addGroupMember()">Add Member</button>
-        <button onclick="removeGroupMember()">Remove Member</button>
 
         <h2>Group Members</h2>
         <table>
@@ -111,6 +110,7 @@
                     <th>Username</th>
                     <th>Email</th>
                     <th>Name</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="membersTableBody">
@@ -119,6 +119,7 @@
         </table>
     </div>
 
+    <!-- create a .js file to save the functions -->
     <script>
         // Create a new group
         function createGroup() {
@@ -196,12 +197,9 @@
         }
 
         // Function to remove a member from a group
-        function removeGroupMember() {
-            const groupId = document.getElementById('groupSelect').value;
-            const userId = document.getElementById('userId').value;
-
-            if (!groupId || !userId) {
-                alert('Please select a group and enter a user ID');
+        function removeGroupMember(userId, groupId) {
+            if (!userId || !groupId) {
+                alert('Invalid user or group');
                 return;
             }
 
@@ -229,15 +227,9 @@
                 return;
             }
 
-            // console.log('Fetching members for group:', groupId); // Debugging
-
             fetch(`/group-members/${groupId}`)
-                .then(response => {
-                    console.log('Response status:', response.status); // Debugging
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(members => {
-                    console.log('Fetched members:', members); // Debugging
                     const membersTableBody = document.getElementById('membersTableBody');
                     membersTableBody.innerHTML = ''; // Clear the table body
 
@@ -248,13 +240,15 @@
                             <td>${member.User}</td>
                             <td>${member.Email}</td>
                             <td>${member.Name}</td>
+                            <td>
+                                <button onclick="removeGroupMember('${member.UserID}', '${groupId}')">Remove</button> 
+                            </td> <!-- Add Remove button -->
                         `;
                         membersTableBody.appendChild(row);
                     });
                 })
                 .catch(err => console.error('Error fetching group members:', err));
         }
-
-    </script>     
+    </script>
 </body>
 </html>
