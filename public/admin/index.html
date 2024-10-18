@@ -48,25 +48,39 @@
       background-color: #f0f0f0; 
       transform: scale(1.05); 
     }
+
+    .button-Animation {
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease; 
+    }
+
+    .button-Animation:hover {
+      transform: scale(1.1);
+    }
   </style>
 </head>
 
 <body>
   <div class="left_section" id="left_section">
     <div style="display: flex;">
-      <a class="fas fa-envelope" style="color: black; font-weight: 400;"href="index.html">New Email</a>
+      <a class="fas fa-envelope button-Animation" style="color: black; font-weight: 400;"href="index.html">New Email</a>
       <div id="icon" style="margin-left: 90px; transition: transform 0.3s ease;" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
+        <i class="fas fa-bars button-Animation"></i>
       </div>
     </div>
     <div class="search-container">
       <input type="text" id="searchInput" placeholder="Search..." class="form-control" />
-      <button class="fas fa-search" style="border: none;" onclick="searchFunction()"></button>
+      <button class="fas fa-search button-Animation" style="border: none;" onclick="searchFunction()"></button>
     </div>
     <div id="searchHistory" style="margin-top: 20px;">
       <p>History:</p>
       <ul id="historyList" style="list-style-type: none; padding: 0;">
       </ul>
+    </div>
+    <div style="position: fixed; bottom: 10px;">
+      <button class="button-Animation fas fa-history" style="border: none; outline: none;" title="Click History" onclick="window.location.href='localhost:5003/click-events-history'"></button>
+      <button class="button-Animation fas fa-book" style="border: none; outline: none; margin-left: 145px;" title="Risk Report" onclick="window.location.href='localhost:5003/click-risk'"></button>
     </div>
   </div>
   <div class="right_section" id="right_section">
@@ -75,10 +89,10 @@
         <option value="">Select Template</option>
       </select>
       <a href="../GenerateEmailTemp.html" style="left: 55px;">
-        <i  style="color: black; font-size:10px;" class="fas fa-plus"></i>
+        <i  style="color: black; font-size:10px;" class="fas fa-plus button-Animation" title="Add Template"></i>
       </a>
       <a href="../QuestionBank.html" style="position: absolute; margin-left: 88rem;">
-        <i style="color: black; font-size: 10px;" class="fas fa-question"></i>
+        <i style="color: black; font-size: 10px;" class="fas fa-question button-Animation" title="Question Bank"></i>
       </a>
     </div>
     <h1 style="margin-top: 50px;">Admin module - Send Email</h1>
@@ -120,7 +134,7 @@
             <div class="form-group">
               <textarea placeholder="Message" id="message" name="message" class="form-control" rows="3" style="height: 325px;" required></textarea>
             </div>
-            <button type="submit" value="submit" class="btn btn-dark" onclick="addToHistory()" style="background-color: rgb(59, 129, 235); color: white;">Submit</button>
+            <button type="submit" value="submit" class="btn btn-dark button-Animation" onclick="addToHistory()" style="background-color: rgb(59, 129, 235); color: white;">Submit</button>
           </form>
         </div>
       </div>
