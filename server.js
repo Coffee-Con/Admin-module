@@ -101,6 +101,49 @@ app.post('/addUsers', upload.single('csvfile'), (req, res) => {
 // single register need UI
 // 待处理
 
+// captcha testing后续需修改位置 /* */
+const svgCaptcha = require('svg-captcha');
+const session = require('express-session');
+
+// 使用 session 中间件
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // 在开发环境下可以不使用 https
+}));
+
+// 创建验证码路由
+app.get('/captcha', (req, res) => {
+    const captcha = svgCaptcha.create({
+        noise: 2, // 噪点数量
+        color: true, // 生成彩色验证码
+        background: '#ccffcc', // 背景颜色
+        ignoreChars: '0o1i', // 忽略容易混淆的字符
+    });
+    
+    // 将验证码文本保存到 session 中
+    req.session.captcha = captcha.text;
+
+    // console.log(`生成的验证码: ${captcha.text}`);
+
+    // 返回 SVG 图片
+    res.type('svg');
+    res.status(200).send(captcha.data);
+});
+
+// 验证验证码
+app.post('/verify-captcha', (req, res) => {
+  const { captchaInput } = req.body;
+
+  // 将用户输入和存储的验证码都转换为小写进行比较
+  if (req.session.captcha && captchaInput.toLowerCase() === req.session.captcha.toLowerCase()) {
+      return res.status(200).send({ success: true, message: '验证码正确！' });
+  } else {
+      return res.status(400).send({ success: false, message: '验证码错误，请重新输入。' });
+  }
+});
+
 /*
 // 用户页面
 app.get('/user', (req, res) => {

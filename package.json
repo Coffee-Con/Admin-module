@@ -16,6 +16,7 @@
     "dotenv": "^8.6.0",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
+    "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
     "marked": "^13.0.2",
     "multer": "^1.4.5-lts.1",
@@ -23,7 +24,8 @@
     "mysql2": "^3.10.2",
     "nodemailer": "^6.9.14",
     "nodemon": "^2.0.4",
-    "ollama": "^0.5.6"
+    "ollama": "^0.5.6",
+    "svg-captcha": "^1.4.0"
   },
   "engines": {
     "node": "12.14.1"
