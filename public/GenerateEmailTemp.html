@@ -3,51 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="GenerateEmailTemp.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- 添加 Font Awesome -->
   <title>Generate Email Temp</title>
+  <style>
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 10px;
+      background-color: transparent;
+      color: black;
+      border: none !important;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+    .back-button i {
+      margin-right: 5px;
+      font-size: 1.2em;
+    }
+    /* 为标题和白框增加样式，使其贴近 */
+    .title-container {
+      text-align: center;
+      margin-bottom: 0; /* 减少标题与卡片之间的距离 */
+      padding-top: 20px; /* 增加顶部的间距 */
+    }
+    .card {
+      margin-top: -10px; /* 使白框贴近标题 */
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1 style="margin-top: 2em;">Generate Email Temp</h1>
-    <div class="form-group">
-      <input placeholder="Subject" id="userInput" name="userInput" type="text" class="form-control" required>
+  <button class="back-button" onclick="window.location.href='public/admin/index.html'">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back</span>
+  </button>
+
+  <!-- 将标题放在白框正上方 -->
+  <div class="container my-5">
+    <div class="title-container">
+      <h1>Generate Email Template</h1>
     </div>
-    <div class="form-group">
-      <textarea id="response" class="form-control" style="height: 325px;" required></textarea>
+
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="form-group">
+          <div class="input-group">
+            <input placeholder="Subject" id="userInput" name="userInput" type="text" class="form-control" required>
+            <div class="input-group-append">
+              <span class="input-group-text"><i class="bi bi-pencil"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <textarea id="response" class="form-control" rows="5" placeholder="Generated Email Content" required></textarea>
+        </div>
+        
+        <div class="button-container d-flex justify-content-between mt-3">
+          <button onclick="sendMessage()" class="btn btn-primary flex-fill mr-2">
+            <i class="bi bi-envelope"></i> Generate
+          </button>
+          <button onclick="confirmTemp()" class="btn btn-success flex-fill">
+            <i class="bi bi-check-circle"></i> Confirm Template
+          </button>
+        </div>
+      </div>
     </div>
-    <button onclick="sendMessage()" class="btn btn-primary">Generate</button>
-    <button onclick="confirmTemp()" class="btn btn-primary">Confirm Template</button>
+
+    <div id="statusMessage" class="alert alert-success d-none mt-4" role="alert">
+      Your template has been successfully generated!
+    </div>
   </div>
 
   <script>
     async function sendMessage() {
       const userInput = document.getElementById('userInput').value;
       const responseElement = document.getElementById('response');
-
-      // Clear the response element
-      responseElement.value = ''; // 使用 .value 清空内容
+      responseElement.value = '';
 
       const response = await fetch('/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userInput })
       });
-
+      
       const data = await response.json();
-      responseElement.value = data.message; // 使用 .value 设置内容
+      responseElement.value = data.message;
+
+      document.getElementById('statusMessage').classList.remove('d-none');
     }
 
     async function confirmTemp() {
       const Subject = document.getElementById('userInput').value;
-      const Content = document.getElementById("response").value; // 获取用户输入的内容
+      const Content = document.getElementById('response').value;
 
       const response = await fetch('/confirmTemp', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ Subject, Content })
       });
       const data = await response.json();
