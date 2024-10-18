@@ -1,0 +1,228 @@
+/* Center the heading */
+h1 {
+  text-align: center;
+  margin-top: 2em;
+  color: rgb(5, 143, 216);
+}
+body {
+  font-family: 'Arial', sans-serif;
+  background-image: url('image/login-background.jpg'); /* 背景图路径 */
+  background-size: cover; /* 让背景图覆盖整个页面 */
+  background-repeat: no-repeat; /* 防止背景图重复 */
+  background-position: center center; /* 将背景图置于页面中央 */
+  background-attachment: fixed; /* 背景图固定，不随页面滚动 */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  box-sizing: border-box;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+ 
+  max-width: 1200px;
+}
+.layout {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 2em auto;
+  max-width: 1200px;
+}
+
+/* Flexbox layout for the section */
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center horizontally if needed */
+}
+
+/* Styling for the image */
+
+/* Adjust the width of text inputs */
+.form-group input {
+  width: 300px; /* Adjust width as needed */
+  margin-top: 2em;
+  
+}
+
+/* Margin for form groups */
+.form-group1 {
+  margin-bottom: 1em;
+  margin-top: 1em;
+  display: flex;
+  align-items: flex-start; /* 垂直居中 */
+  flex-direction: column; 
+}
+
+.form-group2 {
+  margin-bottom: 1em;
+  margin-top: 3em;
+  display: flex;
+  align-items: flex-start; /* 垂直居中 */
+  flex-direction: column; 
+}
+
+.form-group1 label {
+  margin-right: 1em; /* 给标签和输入框之间添加一些间距 */
+  min-width: 130px; /* 为标签设置最小宽度，使其对齐 */
+}
+.form-group2 label {
+  margin-right: 1em;
+  min-width: 130px;
+}
+
+/* Margin for buttons */
+.btn {
+  margin-right: 5em;
+  margin-top: 5em; 
+}
+.background-area {
+  background-color: white; /* White background */
+  padding: 60px; /* Padding inside the area */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  max-width: 800px; /* 限制背景区域的宽度 */
+  position: fixed; /* 使背景区域固定 */
+  right: 10em; /* 固定在页面的右侧 */
+  top: 60%; /* 垂直居中 */
+  transform: translateY(-50%); /* 垂直居中修正 */
+  z-index: 1; /* 保持在文字渐变下方 */
+}
+.centered-image {
+  display: block;
+  margin: 0 auto; 
+}
+
+.btn-custom {
+  background-color: #6c757d; /* 设置按钮背景色为相同 */
+  color: white; /* 文字颜色 */
+  font-size: 16px; /* 字体大小 */
+  padding: 10px 20px; /* 按钮的内边距，控制大小 */
+  border: none; /* 去除边框 */
+  border-radius: 5px; /* 圆角效果 */
+  cursor: pointer; /* 鼠标悬停时变成手型 */
+}
+
+.btn-custom:hover {
+  background-color: #5a6268; /* 悬停时按钮颜色变化 */
+}
+
+.tooltip-button {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 160px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* 调整工具提示的位置 */
+  left: 50%;
+  margin-left: -80px; /* 居中工具提示 */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-button:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* 使导航栏中的按钮和第二个按钮的大小一致 */
+.navbar-brand {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+.text-container {
+  position: absolute;
+  left: 10%; /* 固定在页面的左边，控制区域 */
+  top: 30%; /* 距离顶部一定距离 */
+  width: 40%; /* 固定宽度 */
+  text-align: left;
+  font-size: 24px; /* 控制文字大小 */
+  line-height: 1.5em; /* 行间距 */
+}
+
+.text-line {
+  opacity: 0; /* 初始透明度 */
+  animation: fadeIn 1s ease forwards; /* 渐显效果 */
+}
+
+/* 为每一行设置不同的延迟时间 */
+.text-line-1 {
+  animation-delay: 0s;
+}
+.text-line-2 {
+  animation-delay: 1s;
+}
+.text-line-3 {
+  animation-delay: 2s;
+}
+.text-line-4 {
+  animation-delay: 3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0; /* 起始透明 */
+  }
+  to {
+    opacity: 1; /* 最终完全显示 */
+  }
+}
+
+/* 页面加载时，添加一个类，让文字逐渐显示 */
+body.loaded .text-container {
+  width: 40%; /* 最终宽度为100%，即显示全部文字 */
+}
+.text-line {
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  color: green; /* 将字体颜色设置为绿色 */
+  text-shadow: 
+    -1px -1px 0 #000, /* 左上角 */
+    1px -1px 0 #000,  /* 右上角 */
+    -1px 1px 0 #000,  /* 左下角 */
+    1px 1px 0 #000;   /* 右下角 */
+}
+
+/* 为每一行设置不同的延迟时间 */
+.text-line-1 {
+  animation-delay: 0s;
+}
+
+.text-line-2 {
+  animation-delay: 1s;
+}
+
+.text-line-3 {
+  animation-delay: 2s;
+}
+
+.text-line-4 {
+  animation-delay: 3s;
+}
+
+/* 渐显效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
