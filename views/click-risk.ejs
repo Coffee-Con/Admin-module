@@ -9,7 +9,7 @@
 <body>
   <h1>Click Events Risk Assessment</h1>
   <p>Clicks in the last month: <strong><%= clickCount %></strong></p>
-  <p class="risk <% if (riskLevel === '低风险') { %>low<% } else if (riskLevel === '中风险') { %>medium<% } else { %>high<% } %>">
+  <p class="risk <% if (riskLevel === 'Low risk') { %>low<% } else if (riskLevel === 'Medium risk') { %>medium<% } else { %>high<% } %>">
     Current risk level: <strong><%= riskLevel %></strong>
   </p>
 </body>
