@@ -95,9 +95,12 @@
             </select>
         </div>
 
-        <div class="form-group"> <!-- need to change to select user name --> <!-- need a funtion to display all the user expcet in the group -->
-            <label for="userId">User ID</label>
-            <input type="number" id="userId" placeholder="Enter user ID">
+        <div class="form-group">
+            <label for="availableUsers">Select User</label>
+            <select id="availableUsers">
+                <option value="">Select a user</option>
+                <!-- Options will be populated here -->
+            </select>
         </div>
 
         <button onclick="addGroupMember()">Add Member</button>
@@ -169,13 +172,43 @@
         // Call the function on page load to populate the group dropdown
         document.addEventListener('DOMContentLoaded', loadGroups);
 
-        // Function to add a member to a group
+        // Function to fetch available users not in the group
+        function fetchAvailableUsers(groupId) {
+            if (!groupId) {
+                alert('Please select a group');
+                return;
+            }
+
+            fetch(`/available-users/${groupId}`)
+                .then(response => response.json())
+                .then(users => {
+                    const userSelect = document.getElementById('availableUsers');
+                    userSelect.innerHTML = '<option value="">Select a user</option>'; // Reset options
+
+                    // Populate the dropdown with available users
+                    users.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.UserID;
+                        option.textContent = `${user.Name} (${user.Email})`; // Display Name and Email
+                        userSelect.appendChild(option);
+                    });
+                })
+                .catch(err => console.error('Error fetching available users:', err));
+        }
+
+        // Call this function when a group is selected
+        document.getElementById('groupSelect').addEventListener('change', function() {
+            const groupId = this.value;
+            fetchAvailableUsers(groupId); // Fetch users not in the group
+        });
+
+        // Update the addGroupMember function to use selected user
         function addGroupMember() {
             const groupId = document.getElementById('groupSelect').value;
-            const userId = document.getElementById('userId').value;
+            const userId = document.getElementById('availableUsers').value;
 
             if (!groupId || !userId) {
-                alert('Please select a group and enter a user ID');
+                alert('Please select a group and a user');
                 return;
             }
 
@@ -188,7 +221,8 @@
             .then(data => {
                 if (data.success) {
                     alert('Member added successfully');
-                    fetchGroupMembers(groupId); // Refresh member list
+                    fetchGroupMembers(groupId); // Refresh group member list
+                    fetchAvailableUsers(groupId); // Refresh available users
                 } else {
                     alert('Error adding member');
                 }

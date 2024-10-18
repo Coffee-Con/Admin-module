@@ -91,4 +91,25 @@ const getGroupMembers = (req, res) => {
   });
 };
 
-module.exports = { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers };
+// API to fetch available users not in the selected group
+const getAvailableUsers = (req, res) => {
+  const { groupId } = req.params;
+  const query = `
+      SELECT u.UserID, u.User, u.Email, u.Name 
+      FROM user u 
+      WHERE u.UserID NOT IN (
+          SELECT gu.UserID 
+          FROM group_user gu 
+          WHERE gu.GroupID = ?
+      );`;
+
+  connection.query(query, [groupId], (err, results) => {
+      if (err) {
+          console.error('Error fetching available users:', err);
+          return res.status(500).json({ error: 'Database error' });
+      }
+      res.json(results); // Return available users
+  });
+};
+
+module.exports = { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers , getAvailableUsers};

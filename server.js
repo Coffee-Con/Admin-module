@@ -20,6 +20,7 @@ app.use(express.static('public')); // 用于提供静态文件
 app.use(express.urlencoded({ extended: true }));
 
 // 连接到MySQL数据库
+console.log("Try to connect the databse");
 const connection = mysql.createConnection(dbConfig);
 
 connection.connect((err) => {
@@ -52,7 +53,7 @@ app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间
     }
 
     if (results.length === 0) {
-      res.status(401).send('Email error');
+      res.status(401).send('Email error'); // change to email and password error
       return;
     }
 
@@ -60,17 +61,17 @@ app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间
     const hashedPW = crypto.createHash('md5').update(password + user.Salt).digest('hex');
 
     if (hashedPW !== user.HashedPW) {
-      res.status(401).send('Password error');
+      res.status(401).send('Password error'); // change to email and password error
       return;
     }
 
     // 根据用户角色跳转到不同页面
     if (user.Role === 0) {
-      res.redirect('/user');
+      res.redirect('/user'); // 404 后续修改
     } else if (user.Role === 1) {
       res.redirect('/admin/index');
     } else {
-      res.status(401).send('Unknown role');
+      res.status(401).send('Unknown role'); // 如果出现需要修改
     }
   });
 });
@@ -96,6 +97,9 @@ app.post('/addUsers', upload.single('csvfile'), (req, res) => {
     res.send(result);
   });
 });
+
+// single register need UI
+// 待处理
 
 /*
 // 用户页面
@@ -226,7 +230,7 @@ The following are the titles you need to use to generate content: `;
 
   try {
     const response = await ollama.chat({
-      model: 'llama3.1:latest',
+      model: 'llama3.1:latest', // change to 0.5b? to get info faster
       messages: [{ role: 'user', content: predefinedText + userMessage }],
     });
     res.json({ message: response.message.content });
@@ -252,6 +256,7 @@ app.post('/confirmTemp', upload.none(), (req, res) => {
       console.error('Error inserting data:', error);
       return res.status(500).json({ error: 'Database error' });
     }
+    console.log('Results:', results);
     res.json({ success: true, id: results.insertId });
   });
 });
@@ -364,13 +369,14 @@ app.get('/click-risk', (req, res) => {
 });
 
 // Group
-const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers } = require('./functions/group'); // 导入Group模块
+const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers, getAvailableUsers } = require('./functions/group'); // 导入Group模块
 app.use('/groups', groups);
 app.use('/create-group', createGroup);
 app.use('/add-group-member', addGroupMember);
 app.use('/remove-group-member', removeGroupMember);
 // app.use('/group-members', getGroupMembers);
 app.get('/group-members/:groupId', getGroupMembers);
+app.get('/available-users/:groupId', getAvailableUsers);
 // Group end
 
 // Mobile API
