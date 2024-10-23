@@ -4,6 +4,11 @@ const marked = require('marked');
 const generateLink = require('./generateLink');
 require('dotenv').config();
 
+// 连接到MySQL数据库
+const mysql = require('mysql2');
+const dbConfig = require('./dbConfig'); // 导入数据库配置
+const connection = mysql.createConnection(dbConfig);
+
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
@@ -79,4 +84,125 @@ const sendMailHandler = async (req, res) => {
   }
 };
 
-module.exports = { sendMailHandler };
+// 生成随机 Token
+const crypto = require('crypto');
+function generateToken() {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+// 验证验证码并发送带 Token 的邮件
+const verifyCaptcha = async (req, res) => {
+  const { captchaInput, email } = req.body;
+
+  // 验证验证码是否正确（忽略大小写）
+  if (req.session.captcha && captchaInput.toLowerCase() === req.session.captcha.toLowerCase()) {
+    try {
+      // 检查邮箱是否在数据库中存在
+      const query = 'SELECT UserID FROM `user` WHERE email = ?';
+      connection.query(query, [email], (err, rows) => {
+        if (err) {
+          console.error('数据库查询错误:', err);
+          return res.status(500).json({ success: false, message: '数据库错误，请稍后重试。' });
+        }
+
+        if (rows.length === 0) {
+          return res.status(400).json({ success: false, message: '该邮箱未注册，请重试。' });
+        }
+
+        const userID = rows[0].UserID;
+
+        // 生成唯一的 token 并存储到数据库
+        const token = generateToken();
+        const expiryTime = new Date(Date.now() + 60 * 60 * 1000); // Token 有效期1小时
+
+        const insertQuery = 'INSERT INTO reset_tokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
+        connection.query(insertQuery, [userID, token, expiryTime], (err, results) => {
+          if (err) {
+            console.error('Token 数据库插入错误:', err);
+            return res.status(500).json({ success: false, message: '数据库错误，请稍后重试。' });
+          }
+
+          // 构建带 Token 的重置密码链接
+          const resetLink = `http://localhost:5003/resetPassword.html?changepasswordToken=${token}`;
+
+          // 发送邮件
+          const mailOptions = {
+            from: 'no-reply@staffcanvas.com',
+            to: email,
+            subject: '密码重置请求',
+            text: `请点击以下链接以重置密码：\n\n${resetLink}\n\n该链接将在1小时后失效。`
+          };
+
+          transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+              console.error('邮件发送错误:', err);
+              return res.status(500).json({ success: false, message: '邮件发送失败，请稍后重试。' });
+            }
+            return res.status(200).json({ success: true, message: '验证码正确！请到对应邮箱更新密码。' });
+          });
+        });
+      });
+    } catch (err) {
+      console.error('服务器错误:', err);
+      return res.status(500).json({ success: false, message: '内部服务器错误，请稍后重试。' });
+    }
+  } else {
+    return res.status(400).json({ success: false, message: '验证码错误，请重新输入。' });
+  }
+};
+
+
+// 验证 Token 并展示重置密码页面
+const resetPassword = (req, res) => {
+  console.log(req.body);
+  const { newPassword, changepasswordToken } = req.body;
+
+  if (!newPassword || !changepasswordToken) {
+      return res.status(400).json({ success: false, message: '新密码和 Token 是必需的。' });
+  }
+
+  // 查找与 token 关联的用户
+  const query = `
+    SELECT u.UserID, u.Salt 
+    FROM reset_tokens rt
+    JOIN user u ON rt.user_id = u.UserID
+    WHERE rt.token = ? AND rt.token_expiry > NOW()
+  `;
+  connection.query(query, [changepasswordToken], async (err, rows) => {
+      if (err) {
+          console.error('数据库查询错误:', err);
+          return res.status(500).json({ success: false, message: '内部服务器错误，请稍后重试。' });
+      }
+
+      if (rows.length === 0) {
+          return res.status(400).json({ success: false, message: 'Token 无效或已过期，请重新请求重置密码。' });
+      }
+
+      const userId = rows[0].user_id;
+      const salt = rows[0].Salt;
+
+      // 对新密码进行哈希处理
+      const hashedPW = crypto.createHash('md5').update(newPassword + salt).digest('hex');
+
+      // 更新用户的密码
+      const updateQuery = 'UPDATE user SET HashedPW = ? WHERE UserID = ?';
+      connection.query(updateQuery, [hashedPW, userId], (err, results) => {
+          if (err) {
+              console.error('更新密码错误:', err);
+              return res.status(500).json({ success: false, message: '内部服务器错误，请稍后重试。' });
+          }
+
+          // 可选：删除已使用的重置 token
+          const deleteQuery = 'DELETE FROM reset_tokens WHERE token = ?';
+          connection.query(deleteQuery, [changepasswordToken], (err) => {
+              if (err) {
+                  console.error('删除 Token 错误:', err);
+              }
+          });
+
+          return res.status(200).json({ success: true, message: '密码重置成功！' });
+      });
+  });
+};
+
+module.exports = { sendMailHandler, verifyCaptcha, resetPassword };

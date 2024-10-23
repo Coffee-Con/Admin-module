@@ -132,6 +132,7 @@ app.get('/captcha', (req, res) => {
     res.status(200).send(captcha.data);
 });
 
+/*
 // 验证验证码
 app.post('/verify-captcha', (req, res) => {
   const { captchaInput } = req.body;
@@ -143,6 +144,12 @@ app.post('/verify-captcha', (req, res) => {
       return res.status(400).send({ success: false, message: '验证码错误，请重新输入。' });
   }
 });
+*/
+//const mailer = require('./functions/mailer');
+app.post('/verify-captcha', mailer.verifyCaptcha);
+
+app.use(express.json());
+app.post('/reset-password', mailer.resetPassword);
 
 /*
 // 用户页面
