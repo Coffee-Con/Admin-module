@@ -6,6 +6,8 @@
 
 PORT= html port
 
+SMTP For testing: https://ethereal.email/
+
 SMTP_HOST = SMTP host
 
 SMTP_PORT = SMTP Port
