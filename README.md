@@ -16,7 +16,7 @@ ACCOUNT= e-mail address
 
 PASS= e-mail pass
 
-SENDER= send e-mail address
+~~SENDER= send e-mail address~~
 
 ### install mysql8.0
 
