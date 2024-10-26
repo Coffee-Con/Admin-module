@@ -430,7 +430,20 @@ app.get('/available-users/:groupId', getAvailableUsers);
 // Group end
 
 // Mobile API
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const { authenticateToken, login } = require('./functions/api/authFunctions');
+const { checkAdmin } = require('./functions/api/checkAdmin');
 
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// 登录路由
+app.post('/api/login', (req, res) => login(req, res));
+
+// 管理员判断路由
+app.get('/api/check-admin', authenticateToken, checkAdmin);
 // Mobile API end
 
 app.listen(port, () => {
