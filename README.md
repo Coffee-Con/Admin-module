@@ -26,6 +26,6 @@ run .sql file https://github.com/Coffee-Con/Database/blob/main/mysql.sql
 
 install node.js v22.9.0 https://nodejs.org/en/download/package-manager
 
-npm install cors dotenv express multiparty nodemailer nodemon
+npm install cors dotenv express multiparty nodemailer nodemon cookie-parser
 
 npm start

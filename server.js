@@ -36,14 +36,14 @@ connection.connect((err) => {
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/login.html');
 });
+const { requireAuth } = require('./functions/api/authFunctions');
 
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'your_secret_key';  // JWT 秘钥
 // 处理登录请求
 app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间件处理表单数据
   const email = req.body.email;
   const password = req.body.password;
-
-  // console.log('Email:', email);
-  // console.log('Password:', password);
 
   const query = 'SELECT * FROM user WHERE Email = ?';
   connection.query(query, [email], (err, results) => {
@@ -64,6 +64,9 @@ app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间
     if (hashedPW !== user.HashedPW) {
       res.status(401).send('Password error'); // change to email and password error
       return;
+    } else {
+      const token = jwt.sign({ id: user.UserID, email: user.Email, Role: user.Role }, SECRET_KEY, { expiresIn: '1h' });
+      res.cookie('token', token, { httpOnly: true });
     }
 
     // 根据用户角色跳转到不同页面
@@ -131,20 +134,6 @@ app.get('/captcha', (req, res) => {
     res.status(200).send(captcha.data);
 });
 
-/*
-// 验证验证码
-app.post('/verify-captcha', (req, res) => {
-  const { captchaInput } = req.body;
-
-  // 将用户输入和存储的验证码都转换为小写进行比较
-  if (req.session.captcha && captchaInput.toLowerCase() === req.session.captcha.toLowerCase()) {
-      return res.status(200).send({ success: true, message: '验证码正确！' });
-  } else {
-      return res.status(400).send({ success: false, message: '验证码错误，请重新输入。' });
-  }
-});
-*/
-//const mailer = require('./functions/mailer');
 app.post('/verify-captcha', mailer.verifyCaptcha);
 
 app.use(express.json());
@@ -163,21 +152,17 @@ app.get('/admin', (req, res) => {
 */
 // 处理发送邮件请求
 app.post('/send', mailer.sendMailHandler);
-/*
-// 首页
-app.get('/index', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
-});
-*/
+
 // 管理首页
-app.get('/admin/index', (req, res) => {
+const cookieParser = require('cookie-parser');
+app.use(cookieParser()); // cookie
+app.get('/admin/index', requireAuth, (req, res) => {
   res.sendFile(__dirname + '/public/admin/index.html');
 });
 
-
 // click
 app.use(express.json());
-// 生成钓鱼链接页面
+// 生成钓鱼链接的测试页面
 app.get('/generate-link', (req, res) => {
   res.sendFile(__dirname + '/public/generate-link.html');
 });
