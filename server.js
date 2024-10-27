@@ -418,6 +418,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { authenticateToken, login } = require('./functions/api/authFunctions');
 const { checkAdmin } = require('./functions/api/checkAdmin');
+const { getAllCourses, getUserCourses } = require('./functions/api/course');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -428,6 +429,9 @@ app.post('/api/login', (req, res) => login(req, res));
 
 // 管理员判断路由
 app.get('/api/check-admin', authenticateToken, checkAdmin);
+
+app.get('/api/getUserCourses', authenticateToken, getUserCourses);
+app.get('/api/getCourses', getAllCourses);
 // Mobile API end
 
 app.listen(port, () => {
