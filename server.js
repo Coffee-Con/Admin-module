@@ -10,7 +10,8 @@ const mailer = require('./functions/mailer'); // 导入邮件发送模块
 
 // const ollama = require('ollama'); // AI
 const { default: ollama } = require('ollama');
-const addUsers = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
+const { addUsers, addUser} = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
+
 // const upload = require('./functions/middlewares/upload'); // 导入上传文件中间件
 
 const app = express();
@@ -97,9 +98,7 @@ app.post('/addUsers', upload.single('csvfile'), (req, res) => {
     res.send(result);
   });
 });
-
-// single register need UI
-// 待处理
+app.post('/addUser', addUser);
 
 // captcha testing后续需修改位置 /* */
 const svgCaptcha = require('svg-captcha');

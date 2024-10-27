@@ -1,4 +1,7 @@
 const mysql = require('mysql2');
+const dbConfig = require('./dbConfig');
+const connection = mysql.createConnection(dbConfig);
+
 const fs = require('fs');
 const csv = require('csv-parser');
 const crypto = require('crypto');
@@ -106,6 +109,35 @@ const readCSVAndInsertUsers = (filePath, connection, callback) => {
     });
 };
 
+// 处理表单提交的注册请求
+const register = (req, res) => {
+  const { user, email, name, password, role } = req.body;
+  // 检查邮箱是否已经存在
+  checkEmailExists(email, connection, (err, exists) => {
+    if (err) {
+      console.error('Error during email existence check:', err);
+      return res.status(500).send('Server error');
+    }
+
+    if (exists) {
+      return res.status(400).send('Email already registered');
+    } else {
+      const salt = crypto.randomBytes(16).toString('hex');
+      const hashedPW = crypto.createHash('md5').update(password + salt).digest('hex');
+
+      const query = 'INSERT INTO user (User, Email, Name, Role, Salt, HashedPW) VALUES (?, ?, ?, ?, ?, ?)';
+      connection.query(query, [user, email, name, role, salt, hashedPW], (err) => {
+        if (err) {
+          console.error('Error inserting data:', err.stack);
+          return res.status(500).send('Error inserting data');
+        }
+        console.log('Inserted user:', email);
+        res.send('User registered successfully');
+      });
+    }
+  });
+};
+
 // 读取并插入用户
 // readCSVAndInsertUsers('user-import.csv');
-module.exports = { addUsers: readCSVAndInsertUsers };
+module.exports = { addUsers: readCSVAndInsertUsers, addUser: register };
