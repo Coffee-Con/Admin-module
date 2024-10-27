@@ -63,4 +63,23 @@ function login(req, res, bcrypt) {
     }
 )};
 
-module.exports = { authenticateToken, login };
+// 要求登录的中间件
+function requireAuth(req, res, next) {
+    const token = req.cookies.token; // 从 cookie 中获取 token
+  
+    if (!token) {
+      // 未登录时重定向到登录页面
+      return res.redirect('/login.html');
+    }
+  
+    try {
+      // 验证 JWT
+      const decoded = jwt.verify(token, SECRET_KEY);
+      req.user = decoded; // 将解码后的用户信息存入 req.user
+      next();
+    } catch (err) {
+      return res.redirect('/login.html'); // token 无效时重定向到登录页面
+    }
+  }
+
+module.exports = { authenticateToken, login, requireAuth };
