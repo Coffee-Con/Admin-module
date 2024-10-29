@@ -151,6 +151,63 @@ const verifyCaptcha = async (req, res) => {
   }
 };
 
+// for mobile app
+// 验证验证码并发送带 Token 的邮件
+const verifyCaptcha2 = async (req, res) => {
+  const { email } = req.body;
+
+  // 验证验证码是否正确（忽略大小写）
+  try {
+    // 检查邮箱是否在数据库中存在
+    const query = 'SELECT UserID FROM `user` WHERE email = ?';
+    connection.query(query, [email], (err, rows) => {
+      if (err) {
+        console.error('数据库查询错误:', err);
+        return res.status(500).json({ success: false, message: '数据库错误，请稍后重试。' });
+      }
+
+      if (rows.length === 0) {
+        return res.status(400).json({ success: false, message: '该邮箱未注册，请重试。' });
+      }
+
+      const userID = rows[0].UserID;
+
+      // 生成唯一的 token 并存储到数据库
+      const token = generateToken();
+      const expiryTime = new Date(Date.now() + 60 * 60 * 1000); // Token 有效期1小时
+
+      const insertQuery = 'INSERT INTO reset_tokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
+      connection.query(insertQuery, [userID, token, expiryTime], (err, results) => {
+        if (err) {
+          console.error('Token 数据库插入错误:', err);
+          return res.status(500).json({ success: false, message: '数据库错误，请稍后重试。' });
+        }
+
+        // 构建带 Token 的重置密码链接
+        const resetLink = `http://localhost:5003/resetPassword.html?changepasswordToken=${token}`;
+
+        // 发送邮件
+        const mailOptions = {
+          from: 'no-reply@staffcanvas.com',
+          to: email,
+          subject: '密码重置请求',
+          text: `请点击以下链接以重置密码：\n\n${resetLink}\n\n该链接将在1小时后失效。`
+        };
+
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            console.error('邮件发送错误:', err);
+            return res.status(500).json({ success: false, message: '邮件发送失败，请稍后重试。' });
+          }
+          return res.status(200).json({ success: true, message: '验证码正确！请到对应邮箱更新密码。' });
+        });
+      });
+    });
+  } catch (err) {
+    console.error('服务器错误:', err);
+    return res.status(500).json({ success: false, message: '内部服务器错误，请稍后重试。' });
+  }
+};
 
 // 验证 Token 并展示重置密码页面
 const resetPassword = (req, res) => {
@@ -205,4 +262,4 @@ const resetPassword = (req, res) => {
   });
 };
 
-module.exports = { sendMailHandler, verifyCaptcha, resetPassword };
+module.exports = { sendMailHandler, verifyCaptcha, verifyCaptcha2, resetPassword };
