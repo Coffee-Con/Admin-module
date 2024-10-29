@@ -340,6 +340,9 @@ app.get('/groups', (req, res) => {
   });
 });
 
+const { deleteTemplate } = require('./functions/api/template');
+app.delete('/delete-template/:id', deleteTemplate);
+
 // Route to get recipients for a specific group
 app.get('/fillRecipient/:groupId', (req, res) => {
   const groupId = req.params.groupId;
