@@ -144,6 +144,24 @@
       .catch(err => console.error('Error loading Templates:', err));
     }
 
+    // Function to delete a template
+    function deleteTemplate(id) {
+            fetch(`/delete-template/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Template deleted successfully');
+                    loadTemplates(); // Refresh the templates list
+                } else {
+                    alert(data.error || 'Error deleting template');
+                }
+            })
+            .catch(err => console.error('Error deleting template:', err));
+        }
+
     document.addEventListener('DOMContentLoaded', () => {
       loadTemplates();
     });

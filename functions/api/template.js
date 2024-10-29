@@ -4,7 +4,7 @@ const connection = mysql.createConnection(dbConfig);
 
 const deleteTemplate = (req, res) => {
     const templateId = req.params.id;
-    const query = 'DELETE FROM templates WHERE id = ?;';
+    const query = 'DELETE FROM email_template WHERE id = ?;';
     connection.query(query, [templateId], (err, results) => {
       if (err) {
         console.error('Error removing member:', err);
