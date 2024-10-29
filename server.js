@@ -136,6 +136,10 @@ app.get('/captcha', (req, res) => {
 
 app.post('/verify-captcha', mailer.verifyCaptcha);
 
+// 等mobile端完成后删除
+app.use(express.json());
+app.post('/api/verify-captcha', mailer.verifyCaptcha2);
+
 app.use(express.json());
 app.post('/reset-password', mailer.resetPassword);
 
@@ -418,7 +422,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { authenticateToken, login } = require('./functions/api/authFunctions');
 const { checkAdmin } = require('./functions/api/checkAdmin');
-const { getAllCourses, getUserCourses } = require('./functions/api/course');
+const { getUserInfo } = require('./functions/api/user');
+const { getAllCourses, getUserCourses, getCourse } = require('./functions/api/course');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -431,8 +436,18 @@ app.post('/api/login', (req, res) => login(req, res));
 app.get('/api/check-admin', authenticateToken, checkAdmin);
 
 app.get('/api/getUserCourses', authenticateToken, getUserCourses);
-app.get('/api/getCourses', getAllCourses);
+
+app.get('/api/getUserInfo', authenticateToken, getUserInfo);
 // Mobile API end
+
+// Course
+const { createCourse, deleteCourse, updateCourse } = require('./functions/api/course');
+app.use('/create-course', createCourse);
+app.delete('/delete-course/:CourseID', deleteCourse);
+app.put('/update-course/:CourseID', updateCourse);
+app.get('/getCourses', getAllCourses);
+app.get('/getCourse/:CourseID', getCourse);
+// Course end
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
