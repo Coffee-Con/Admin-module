@@ -150,6 +150,93 @@
     <div id="result-message" class="mt-3"></div> <!-- 反馈信息区 -->
     <script src="./index.js"></script>
     <script>
+      let isSidebarOpen = true;
+
+      function toggleSidebar() {
+        const sidebar = document.getElementById('left_section');
+        const menuIcon = document.getElementById('icon');
+        const rightContent = document.getElementById("right_section");
+
+        if (isSidebarOpen) {
+          
+          sidebar.style.transform = 'translateX(-100%)';
+          menuIcon.style.transform = 'translateX(350%)'; 
+          rightContent.style.transform = "translateX(-9%)";
+        } else {
+          
+          sidebar.style.transform = 'translateX(0)';
+          menuIcon.style.transform = 'translateX(0)'; 
+          rightContent.style.transform = "translateX(0%)";
+
+        }
+
+        isSidebarOpen = !isSidebarOpen; 
+      }
+
+      function searchFunction(){
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const historyItems = document.querySelectorAll("#historyList li");
+        historyItems.forEach(function(item){
+          const text = item.textContent.toLowerCase();
+          if(input == ''){
+            item.style.display = '';
+          }else if(text == input){
+            item.style.display = '';
+          }else{
+            item.style.display = "none";
+          }
+        });
+      }
+
+      let emailCount = 1;
+      let historyData = [];
+      function addToHistory(){
+        const inputName = document.getElementById('name').value.toLowerCase();
+        const inputEmail = document.getElementById('email').value.toLowerCase();
+        const inputSubject = document.getElementById('subject').value.toLowerCase();
+        const inputMessage = document.getElementById('message').value.toLowerCase();
+        const sendName = document.getElementById('sendername').value.toLowerCase();
+        const sendEmail = document.getElementById('senderemail').value.toLowerCase();
+        const emailGroups = document.getElementById('emailGroup').value.toLowerCase();
+
+        if (inputName.trim() == "") {
+          alert("Please enter your name");
+          return;
+        }
+
+        if (inputEmail.trim() == "") {
+          alert("Please enter your email");
+          return;
+        }
+
+        if (inputSubject.trim() == "") {
+          alert("Please enter the subject");
+          return;
+        }
+
+        if (inputMessage.trim() == "") {
+          alert("Please enter the message");
+          return;
+        }
+
+        historyData.push({sendername:sendName, senderemail:sendEmail, name:inputName, email:inputEmail, subject:inputSubject, message:inputMessage, emailGroup:emailGroups});
+        const historyItem = document.createElement("li");
+        historyItem.textContent = `Email ${emailCount}`;
+        let currentCount = emailCount;
+        document.getElementById("historyList").appendChild(historyItem);
+        historyItem.onclick = function(){
+          document.getElementById('sendername').value = historyData[currentCount - 1].sendername;
+          document.getElementById('senderemail').value = historyData[currentCount - 1].senderemail;
+          document.getElementById('name').value = historyData[currentCount - 1].name;
+          document.getElementById('email').value = historyData[currentCount - 1].email;
+          document.getElementById('subject').value = historyData[currentCount - 1].subject;
+          document.getElementById('message').value = historyData[currentCount - 1].message;
+          document.getElementById('emailGroup').value = historyData[currentCount - 1].emailGroup;
+        }
+        emailCount++;
+      }
+
+
       async function loadTemplates() {
         const response = await fetch('/templates');
         const templates = await response.json();
