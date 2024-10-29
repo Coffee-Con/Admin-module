@@ -70,10 +70,23 @@
           </button>
         </div>
       </div>
-    </div>
-
-    <div id="statusMessage" class="alert alert-success d-none mt-4" role="alert">
-      Your template has been successfully generated!
+      <div id="statusMessage" class="alert alert-success d-none mt-4" role="alert">
+        Your template has been successfully generated!
+      </div>
+      <!-- Template List Section -->
+      <h2 class="text-center my-4">Templates List</h2>
+      <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th>Template ID</th>
+                  <th>Title</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody id="templatesTableBody">
+              <!-- Template list will be populated here -->
+          </tbody>
+      </table>
     </div>
   </div>
 
@@ -107,6 +120,33 @@
       const data = await response.json();
       console.log(data);
     }
+
+    function loadTemplates() {
+      fetch('/templates')
+      .then(response => response.json())
+      .then(templates => {
+          const templatesTableBody = document.getElementById('templatesTableBody');
+          templatesTableBody.innerHTML = ''; // Clear the table
+
+          templates.forEach(template => {
+              // Access title and content directly from the object structure
+              const title = template.content.subject;
+
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                  <td>${template.id}</td>
+                  <td>${title}</td>
+                  <td><button onclick="deleteTemplate(${template.id})" class="btn btn-danger btn-sm">Delete</button></td>
+              `;
+              templatesTableBody.appendChild(row);
+          });
+      })
+      .catch(err => console.error('Error loading Templates:', err));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTemplates();
+    });
   </script>
 </body>
 </html>
