@@ -57,7 +57,7 @@ function login(req, res, bcrypt) {
             console.log("User from database:", user); // 打印从数据库中获取的用户信息
             console.log("Login successful for user:", email);
             // 确保生成的 JWT 包含 Role 属性
-            const token = jwt.sign({ id: user.UserID, email: user.Email, Role: user.Role }, SECRET_KEY, { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.UserID, email: user.Email, Role: user.Role }, SECRET_KEY, { expiresIn: '8h' });
             res.json({ token });
         }
     }
