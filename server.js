@@ -268,7 +268,7 @@ The following are the titles you need to use to generate content: `;
 
   try {
     const response = await ollama.chat({
-      model: 'llama3.1:latest', // change to 0.5b? to get info faster
+      model: 'qwen2.5:0.5b', // change to 0.5b? to get info faster
       messages: [{ role: 'user', content: predefinedText + userMessage }],
     });
     res.json({ message: response.message.content });
