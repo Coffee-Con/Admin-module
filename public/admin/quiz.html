@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Management</title>
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz Management</h1>
+
+        <!-- Create Quiz Section -->
+        <h2>Create Quiz</h2>
+        <div class="form-group">
+            <label for="quizName">Quiz Name</label>
+            <input type="text" id="quizName" placeholder="Enter quiz name">
+        </div>
+        <div class="form-group">
+            <label for="quizDescription">Quiz Description</label>
+            <input type="text" id="quizDescription" placeholder="Enter quiz description">
+        </div>
+        <button onclick="createQuiz()">Create Quiz</button>
+
+        <!-- Update Quiz Section -->
+        <h2>Update Quiz</h2>
+        <div class="form-group">
+            <label for="quizSelect">Select Quiz ID</label>
+            <select id="quizSelect" onchange="fetchQuizDetails(this.value)">
+                <option value="">Select a quiz</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="updateQuizName">Quiz Name</label>
+            <input type="text" id="updateQuizName" placeholder="Enter quiz name">
+        </div>
+        <div class="form-group">
+            <label for="updateQuizDescription">Quiz Description</label>
+            <input type="text" id="updateQuizDescription" placeholder="Enter quiz description">
+        </div>
+        <button onclick="updateQuiz()">Update Quiz</button>
+
+        <!-- Quiz List Section -->
+        <h2>Quizzes List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Quiz ID</th>
+                    <th>Quiz Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="quizsTableBody">
+                <!-- Quiz list will be populated here -->
+            </tbody>
+        </table>
+
+        <!-- Add Quiz to course -->
+        <h2>Add Quiz to course</h2>
+        <div class="form-group">
+            <label for="addCourseID">Select Course ID</label>
+            <select id="addCourseID" onchange="loadQuizzesNotInCourse(this.value)">
+                <option value="">Select a course</option>
+                <!-- Courses will be populated here -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="addQuizID">Select Quiz ID</label>
+            <select id="addQuizID">
+                <option value="">Select a quiz</option>
+                <!-- Quizzes will be populated here --> 
+            </select>
+        </div>
+        <div class="form-group">
+            <button onclick="addQuizToCourse()">Add Quiz to Course</button>
+        </div>
+
+        <!-- Display all quizzes of selected course -->
+        <h2>Quizzes of Course</h2>
+        <div class="form-group">
+            <label for="courseSelect">Select Course ID</label>
+            <select id="courseSelect" onchange="fetchQuizzesOfCourse(this.value)">
+                <option value="">Select a course</option>
+                <!-- Courses will be populated here -->
+            </select>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Quiz ID</th>
+                    <th>Quiz Name</th>
+                    <th>Description</th>
+                    <th>Action</th><!-- Delete button -->
+                </tr>
+            </thead>
+            <tbody id="quizzesOfCourseTableBody">
+                <!-- Quizzes of course will be populated here -->
+            </tbody>
+    </div>
+
+    <script>
+        // Function to create a new quiz
+        function createQuiz() {
+            const quizName = document.getElementById('quizName').value;
+            const quizDescription = document.getElementById('quizDescription').value;
+
+            if (!quizName) {
+                alert('Quiz Name is required');
+                return;
+            }
+
+            fetch('/create-quiz', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ QuizName: quizName, QuizDescription: quizDescription })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Quiz created successfully with ID: ' + data.id);
+                    loadQuizs(); // Refresh the quiz list
+                } else {
+                    alert('Error creating quiz');
+                }
+            })
+            .catch(err => console.error('Error creating quiz:', err));
+        }
+
+        // Function to update an existing quiz
+        function updateQuiz() {
+            const quizID = document.getElementById('quizSelect').value;
+            const quizName = document.getElementById('updateQuizName').value;
+            const quizDescription = document.getElementById('updateQuizDescription').value;
+            if (!quizID || !quizName) {
+                alert('Quiz ID and Name are required');
+                return;
+            }
+
+            fetch(`/update-quiz/${quizID}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ QuizName: quizName, QuizDescription: quizDescription })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Quiz updated successfully');
+                    loadQuizs(); // Refresh the quiz list
+                } else {
+                    alert(data.error || 'Error updating quiz');
+                }
+            })
+            .catch(err => console.error('Error updating quiz:', err));
+        }
+
+        // Function to delete a quiz
+        function deleteQuiz(quizID) {
+            fetch(`/delete-quiz/${quizID}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Quiz deleted successfully');
+                    loadQuizs(); // Refresh the quiz list
+                } else {
+                    alert(data.error || 'Error deleting quiz');
+                }
+            })
+            .catch(err => console.error('Error deleting quiz:', err));
+        }
+
+        // Function to load quizs into the table
+        function loadQuizs() {
+            fetch('/getQuizzes')
+            .then(response => response.json())
+            .then(quizs => {
+                const quizsTableBody = document.getElementById('quizsTableBody');
+                quizsTableBody.innerHTML = ''; // Clear the table
+
+                quizs.forEach(quiz => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${quiz.QuizID}</td>
+                        <td>${quiz.QuizName}</td>
+                        <td>${quiz.QuizDescription}</td>
+                        <td><button onclick="deleteQuiz(${quiz.QuizID})">Delete</button></td>
+                    `;
+                    quizsTableBody.appendChild(row);
+                });
+
+                const quizSelect = document.getElementById('quizSelect');
+                quizs.forEach(quiz => {
+                    const option = document.createElement('option');
+                    option.value = quiz.QuizID;
+                    option.textContent = quiz.QuizName;
+                    quizSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error('Error loading quizs:', err));
+        }
+
+        // Fetch quiz details when a quiz is selected
+        async function fetchQuizDetails(quizID) {
+            if (!quizID) {
+                document.getElementById('updateQuizName').value = '';
+                document.getElementById('updateQuizDescription').value = '';
+                return;
+            }
+            const response = await fetch(`/getQuiz/${quizID}`);
+            const quiz = await response.json();
+            document.getElementById('updateQuizName').value = quiz.QuizName;
+            document.getElementById('updateQuizDescription').value = quiz.QuizDescription;
+        }
+
+        // Add quiz to course
+        async function addQuizToCourse() {
+            const courseID = document.getElementById('addCourseID').value;
+            const quizID = document.getElementById('addQuizID').value;
+            if (!courseID || !quizID) {
+                alert('Course ID and Quiz ID are required');
+                return;
+            }
+            const response = await fetch('/addQuizToCourse', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ CourseID: courseID, QuizID: quizID })
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert('Quiz added to course successfully');
+            } else {
+                alert(data.error || 'Error adding quiz to course');
+            }
+
+            // refresh the quizzes of course list
+            loadQuizzesNotInCourse(courseID);
+        }
+
+        // Delete quiz when a quiz is selected
+        async function removeQuizFromCourse(courseID, quizID) {
+            if (!courseID || !quizID) {
+                alert('Course ID and Quiz ID are required');
+                return;
+            }
+            const response = await fetch('/removeQuizFromCourse', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ CourseID: courseID, QuizID: quizID })
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert('Quiz removed from course successfully');
+            } else {
+                alert(data.error || 'Error removing quiz from course');
+            }
+
+            // Refresh the quizzes of course list
+            fetchQuizzesOfCourse(courseID);
+        }
+
+        // Fetch quizzes of a course
+        async function fetchQuizzesOfCourse(courseID) {
+            const response = await fetch(`/getCourseQuizzes/${courseID}`);
+            const quizzes = await response.json();
+            const quizzesOfCourseTableBody = document.getElementById('quizzesOfCourseTableBody');
+            quizzesOfCourseTableBody.innerHTML = ''; // Clear the table
+
+            quizzes.forEach(quiz => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${quiz.QuizID}</td>
+                    <td>${quiz.QuizName}</td>
+                    <td>${quiz.QuizDescription}</td>
+                    <td><button onclick="removeQuizFromCourse(${courseID},${quiz.QuizID})">Delete</button></td>
+                `;
+                quizzesOfCourseTableBody.appendChild(row);
+            });
+        }
+
+        async function loadQuizzesNotInCourse(CourseID) {
+            const response = await fetch(`/getQuizzesNotInCourse/${CourseID}`);
+            const quizzes = await response.json();
+            const addQuizSelect = document.getElementById('addQuizID');
+            addQuizSelect.innerHTML = '<option value="">Select a quiz</option>';
+            quizzes.forEach(quiz => {
+                const option = document.createElement('option');
+                option.value = quiz.QuizID;
+                option.textContent = quiz.QuizName;
+                addQuizSelect.appendChild(option);
+            });
+        }
+
+        // Function to load courses into the table
+        function loadCourses() {
+            fetch('/getCourses')
+            .then(response => response.json())
+            .then(courses => {
+                const courseSelect = document.getElementById('courseSelect');
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.CourseID;
+                    option.textContent = course.CourseName;
+                    courseSelect.appendChild(option);
+                });
+
+                const courseSelect2 = document.getElementById('addCourseID');
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.CourseID;
+                    option.textContent = course.CourseName;
+                    courseSelect2.appendChild(option);
+                });
+            })
+            .catch(err => console.error('Error loading courses:', err));
+        }
+
+        // Call loadQuizs on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadQuizs();
+            loadCourses();
+        });
+    </script>
+</body>
+</html>

@@ -452,6 +452,19 @@ app.get('/getCourses', getAllCourses);
 app.get('/getCourse/:CourseID', getCourse);
 // Course end
 
+// Quiz
+const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse } = require('./functions/api/quiz');
+app.use('/create-quiz', createQuiz);
+app.delete('/delete-quiz/:QuizID', deleteQuiz);
+app.put('/update-quiz/:QuizID', updateQuiz);
+app.get('/getQuizzes', getAllQuizzes);
+app.get('/getQuiz/:QuizID', getQuiz);
+app.get('/getCourseQuizzes/:CourseID', getCourseQuizzes);
+app.get('/getQuizzesNotInCourse/:CourseID', getQuizzesNotInCourse);
+app.post('/addQuizToCourse', addQuizToCourse);
+app.delete('/removeQuizFromCourse', removeQuizFromCourse);
+// Quiz end
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
