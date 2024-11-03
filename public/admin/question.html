@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Management</title>
+    <link rel="stylesheet" href="form.css">
+    <style>
+        .answer-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .answer-input input {
+            width: auto !important;
+        }
+
+        .answer {
+            flex: 1;
+            margin-right: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        .delete-button {
+            margin-right: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .correct-answer {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Question Management</h1>
+
+        <!-- Create Question Section -->
+        <h2>Create Question</h2>
+        <div class="form-group">
+            <label for="questionType">Question Type</label>
+            <select id="questionType" required>
+                <option value="" selected>Select a question type</option>
+                <option value="1">MCQ</option>
+                <option value="2">Fill in the Blank</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="questionTopic">Question Topic</label>
+            <input type="text" id="questionTopic" placeholder="Enter question topic" required>
+        </div>
+        <div id="answersContainer" class="form-group">
+            <label for="questionAnswer">Question Answers</label>
+            <div class="answer-input">
+                <input type="text" class="answer" placeholder="Enter question answer" required>
+                <input type="checkbox" class="correct-answer" checked> Correct
+            </div>
+            <button type="button" onclick="addAnswer()">Add Answer</button>
+        </div>
+        <button onclick="createQuestion()">Create Question</button>
+    </div>
+
+    <script>
+        function addAnswer() {
+            const container = document.getElementById("answersContainer");
+            const newAnswerDiv = document.createElement("div");
+            newAnswerDiv.classList.add("answer-input");
+
+            newAnswerDiv.innerHTML = `
+                <button type="button" class="delete-button" onclick="deleteAnswer(this)">Delete</button>
+                <input type="text" class="answer" placeholder="Enter question answer">
+                <input type="checkbox" class="correct-answer"> Correct
+            `;
+            container.insertBefore(newAnswerDiv, container.lastElementChild);
+        }
+
+        function createQuestion() {
+            const questionType = document.getElementById("questionType").value;
+            const questionTopic = document.getElementById("questionTopic").value;
+            const answers = Array.from(document.querySelectorAll(".answer")).map(input => input.value);
+            const correctAnswers = Array.from(document.querySelectorAll(".answer")).filter((input, index) => {
+                const checkbox = input.parentElement.querySelector(".correct-answer");
+                return checkbox.checked;
+            }).map(input => input.value);
+            
+            // Validation: Check if at least one correct answer is selected
+            if (correctAnswers.length === 0) {
+                alert("Please select at least one correct answer.");
+                return; // Stop execution if no correct answers are selected
+            }
+
+            const questionData = {
+                type: questionType,
+                topic: questionTopic,
+                answers: answers,
+                correctAnswers: correctAnswers
+            };
+
+            // Store questionData in JSON format (e.g., save to a server or log for testing)
+            console.log(JSON.stringify(questionData));
+
+            // Send questionData to the server
+            fetch('/create-question', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(questionData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Question created with ID: ${data.id}`);
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function deleteAnswer(button) {
+            const answerDiv = button.parentElement;
+            answerDiv.remove();
+        }
+    </script>
+</body>
+</html>

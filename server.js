@@ -465,6 +465,11 @@ app.post('/addQuizToCourse', addQuizToCourse);
 app.delete('/removeQuizFromCourse', removeQuizFromCourse);
 // Quiz end
 
+// Question
+const { createQuestion } = require('./functions/api/question');
+app.use('/create-question', createQuestion);
+// Question end
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
