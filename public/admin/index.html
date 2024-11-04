@@ -1,400 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
+ <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <title>Admin module - Send Email</title>
+    <title>Home Page</title>
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
         body {
-          margin: 0;
-          padding: 0;
-          height: 100vh;
-          display: flex; 
-      }
-      
-      .left_section{
-          width:250px;
-          background-color: rgba(240, 240, 240, 0.8);
-          padding:20px;
-          transition: transform 0.3s ease; 
-          transform: translateX(0); 
-      }
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
 
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('../image/Wallpaper.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.7; 
+            z-index: -1; 
+        }
 
-      .right_section{
-          flex-grow: 1;
-          background-color: white;
-          margin:20px;
-          transition: transform 0.3s ease; 
-          transform: translateX(0); 
-      }
+        .centered-container{
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            gap: 4rem;
+            padding: 20px;
+            border: 2px solid #ccc;
+            width:500px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8); 
+        }
 
-      .search-container{
-          padding-top: 20px;
-          display: flex;
-      }
+        .link-box a {
+            padding: 10px 20px;
+            border: 2px solid #333; 
+            border-radius: 5px; 
+            text-decoration: none;
+            color: #333;
+        }
 
-      #historyList li {
-        padding: 10px;
-        cursor: pointer; 
-        transition: background-color 0.3s ease, transform 0.3s ease; 
-      }
+        .button-Animation {
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease; 
+         }
 
-      #historyList li:hover {
-        background-color: #f0f0f0; 
-        transform: scale(1.05); 
-      }
+        .button-Animation:hover {
+            transform: scale(1.1);
+        }
 
-      .button-Animation {
-        border: none;
-        cursor: pointer;
-        transition: transform 0.3s ease; 
-      }
+        .content{
+            flex-direction: column;
+            align-items: center;
+            display: flex;
+        }
 
-      .button-Animation:hover {
-        transform: scale(1.1);
-      }
+        .title{
+            color: #fff; 
+            text-transform: uppercase; 
+            margin-bottom: 1em;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8); 
+            font-family: Arial, sans-serif; 
+        }
     </style>
-  </head>
+ </head>
 
-  <body>
-    <div class="left_section" id="left_section">
-      <div style="display: flex;">
-        <a class="fas fa-envelope button-Animation" style="color: black; font-weight: 400;"href="index.html">New Email</a>
-        <div id="icon" style="margin-left: 90px; transition: transform 0.3s ease;" onclick="toggleSidebar()">
-          <i class="fas fa-bars button-Animation"></i>
+ <body>
+    <div class="content">
+        <h1 class="title" style="font-size: 4em; font-weight: bold; margin-bottom: 1em;">PHISHING HOME PAGE</h1>
+        <div class="centered-container">
+            <div class="link-box button-Animation">
+                <a href="send.html" style="font-weight: bold;">
+                    <i class="fas fa-envelope" style="padding-right: 5px;"></i>Send Email
+                </a>
+            </div>
+            <div class="link-box button-Animation">
+                <a href="../GenerateEmailTemp.html" style="font-weight: bold;">
+                    <i class="fas fa-file-alt" style="padding-right: 5px;"></i>Generate Email Template
+                </a>
+            </div>
+            <div class="link-box button-Animation" style="font-weight: bold;">
+                <a href="../QuestionBank.html">
+                    <i class="fas fa-question-circle" style="padding-right: 5px;"></i>Question Bank
+                </a>
+            </div>
+            <div class="link-box button-Animation" style="font-weight: bold;">
+                <a href="../admin/group.html">
+                    <i class="fas fa-user" style="padding-right: 5px;"></i>Group Management
+                </a>
+            </div>
+            <div class="link-box button-Animation" style="font-weight: bold;">
+                <a href="../click-events-history">
+                    <i class="fas fa-history" style="padding-right: 5px;"></i>Event History
+                </a>
+            </div>
+            <div class="link-box button-Animation" style="font-weight: bold;">
+                <a href="../click-risk">
+                    <i class="fas fa-exclamation-triangle" style="padding-right: 5px;"></i>Analytic Report
+                </a>
+            </div>
         </div>
-      </div>
-      <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search..." class="form-control" />
-        <button class="fas fa-search button-Animation" style="border: none;" onclick="searchFunction()"></button>
-      </div>
-      <div id="searchHistory" style="margin-top: 20px;">
-        <p>History:</p>
-        <ul id="historyList" style="list-style-type: none; padding: 0;">
-        </ul>
-      </div>
-      <div style="position: fixed; bottom: 10px;">
-        <button class="button-Animation fas fa-history" style="border: none; outline: none;" title="Click History" onclick="window.location.href='/click-events-history'"></button>
-        <button class="button-Animation fas fa-book" style="border: none; outline: none; margin-left: 145px;" title="Risk Report" onclick="window.location.href='/click-risk'"></button>
-      </div>
     </div>
-    <div class="right_section" id="right_section">
-      <div class="form-group" style="display: flex;">
-        <select style="border: none; outline: none; font-weight: bolder;" id="subjectTemp" name="subjectTemp"  onchange="fillTemplate()">
-          <option value="">Select Template</option>
-        </select>
-        <a href="../GenerateEmailTemp.html" style="left: 55px;">
-          <i  style="color: black; font-size:10px;" class="fas fa-plus button-Animation" title="Add Template"></i>
-        </a>
-        <a href="../QuestionBank.html" style="position: absolute; margin-left: 88rem;">
-          <i style="color: black; font-size: 10px;" class="fas fa-question button-Animation" title="Question Bank"></i>
-        </a>
-      </div>
-      <h1 style="margin-top: 50px;">Admin module - Send Email</h1>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="section-title">
-            <hr>
-            <form id="contact-form" method="POST" action="send" enctype="multipart/form-data">
-              <div class="form-group">
-                <div class="row">
-                  <div class="col-md-6">
-                    <input placeholder="SenderName" id="sendername" name="sendername" type="text" class="form-control"/>
-                  </div>
-                  <div class="col-md-6">
-                    <input placeholder="SenderEmail" id="senderemail" type="email" name="senderemail" class="form-control"
-                      aria-describedby="emailHelp"/>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <select id="emailGroup" name="emailGroup" class="form-control" onchange="fillRecipient(this.value)">
-                  <option value="">Select Email Group</option>
-                </select>
-              </div>
-              <div id="recipient-fields">
-                <div class="form-group recipient">
-                  <div class="row">
-                    <div class="col-md-5">
-                      <input placeholder="Name" name="name[]" type="text" class="form-control" required />
-                    </div>
-                    <div class="col-md-5">
-                      <input placeholder="Email" type="email" name="email[]" class="form-control" aria-describedby="emailHelp" required />
-                    </div>
-                    <div class="col-md-2">
-                      <button type="button" class="btn btn-danger" onclick="removeRecipient(this)">Delete</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <button type="button" class="btn btn-secondary" onclick="addRecipient()">Add Recipient</button>
-              </div>
-              <div class="form-group">
-                <input placeholder="Subject" id="subject" name="subject" type="text" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <textarea placeholder="Message" id="message" name="message" class="form-control" rows="3" style="height: 325px;" required></textarea>
-              </div>
-              <button type="submit" value="submit" class="btn btn-primary">Submit</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="result-message" class="mt-3"></div> <!-- 反馈信息区 -->
-    <script src="./index.js"></script>
-    <script>
-      let isSidebarOpen = true;
-
-      function toggleSidebar() {
-        const sidebar = document.getElementById('left_section');
-        const menuIcon = document.getElementById('icon');
-        const rightContent = document.getElementById("right_section");
-
-        if (isSidebarOpen) {
-          
-          sidebar.style.transform = 'translateX(-100%)';
-          menuIcon.style.transform = 'translateX(350%)'; 
-          rightContent.style.transform = "translateX(-9%)";
-        } else {
-          
-          sidebar.style.transform = 'translateX(0)';
-          menuIcon.style.transform = 'translateX(0)'; 
-          rightContent.style.transform = "translateX(0%)";
-
-        }
-
-        isSidebarOpen = !isSidebarOpen; 
-      }
-
-      function searchFunction(){
-        const input = document.getElementById('searchInput').value.toLowerCase();
-        const historyItems = document.querySelectorAll("#historyList li");
-        historyItems.forEach(function(item){
-          const text = item.textContent.toLowerCase();
-          if(input == ''){
-            item.style.display = '';
-          }else if(text == input){
-            item.style.display = '';
-          }else{
-            item.style.display = "none";
-          }
-        });
-      }
-
-      let emailCount = 1;
-      let historyData = [];
-      function addToHistory(){
-        const inputName = document.getElementById('name').value.toLowerCase();
-        const inputEmail = document.getElementById('email').value.toLowerCase();
-        const inputSubject = document.getElementById('subject').value.toLowerCase();
-        const inputMessage = document.getElementById('message').value.toLowerCase();
-        const sendName = document.getElementById('sendername').value.toLowerCase();
-        const sendEmail = document.getElementById('senderemail').value.toLowerCase();
-        const emailGroups = document.getElementById('emailGroup').value.toLowerCase();
-
-        if (inputName.trim() == "") {
-          alert("Please enter your name");
-          return;
-        }
-
-        if (inputEmail.trim() == "") {
-          alert("Please enter your email");
-          return;
-        }
-
-        if (inputSubject.trim() == "") {
-          alert("Please enter the subject");
-          return;
-        }
-
-        if (inputMessage.trim() == "") {
-          alert("Please enter the message");
-          return;
-        }
-
-        historyData.push({sendername:sendName, senderemail:sendEmail, name:inputName, email:inputEmail, subject:inputSubject, message:inputMessage, emailGroup:emailGroups});
-        const historyItem = document.createElement("li");
-        historyItem.textContent = `Email ${emailCount}`;
-        let currentCount = emailCount;
-        document.getElementById("historyList").appendChild(historyItem);
-        historyItem.onclick = function(){
-          document.getElementById('sendername').value = historyData[currentCount - 1].sendername;
-          document.getElementById('senderemail').value = historyData[currentCount - 1].senderemail;
-          document.getElementById('name').value = historyData[currentCount - 1].name;
-          document.getElementById('email').value = historyData[currentCount - 1].email;
-          document.getElementById('subject').value = historyData[currentCount - 1].subject;
-          document.getElementById('message').value = historyData[currentCount - 1].message;
-          document.getElementById('emailGroup').value = historyData[currentCount - 1].emailGroup;
-        }
-        emailCount++;
-      }
-
-
-      async function loadTemplates() {
-        const response = await fetch('/templates');
-        const templates = await response.json();
-        const selectElement = document.getElementById('subjectTemp');
-        selectElement.innerHTML = '<option value="">Select Template</option>'; // Reset options
-        templates.forEach(template => {
-          const option = document.createElement('option');
-          option.value = template.id;
-          option.textContent = `Template ${template.id} - ${template.content.subject}`; // Customize text as needed
-          selectElement.appendChild(option);
-        });
-      }
-      
-      async function fillTemplate() {
-        const templateId = document.getElementById('subjectTemp').value;
-        const subjectInput = document.getElementById('subject');
-        const messageInput = document.getElementById('message');
-        if (templateId) {
-          const response = await fetch(`/template/${templateId}`);
-          const template = await response.json();
-          // console.log("template:", template);
-          
-          subjectInput.value = template.content.subject;
-          // console.log("subject:", template.content.subject);
-          messageInput.value = template.content.content ;
-          // console.log("content;", template.content.content);
-        } else {
-          subjectInput.value = '';
-          messageInput.value = '';
-        }
-      }
-
-      function addRecipient() {
-        const recipientFields = document.getElementById('recipient-fields');
-        const newRecipient = document.createElement('div');
-        newRecipient.className = 'form-group recipient';
-        newRecipient.innerHTML = `
-          <div class="row">
-            <div class="col-md-5">
-              <input placeholder="Name" name="name[]" type="text" class="form-control" required />
-            </div>
-            <div class="col-md-5">
-              <input placeholder="Email" type="email" name="email[]" class="form-control" aria-describedby="emailHelp" required />
-            </div>
-            <div class="col-md-2">
-              <button type="button" class="btn btn-danger" onclick="removeRecipient(this)">Delete</button>
-            </div>
-          </div>
-        `;
-        recipientFields.appendChild(newRecipient);
-      }
-
-      function removeRecipient(button) {
-        button.closest('.recipient').remove();
-      }
-
-      async function loadGroups() {
-        try {
-          const response = await fetch('/groups');
-          const groups = await response.json();
-          const groupSelect = document.getElementById('emailGroup');
-          groupSelect.innerHTML = '<option value="">Select Email Group</option>'; // Reset options
-          groups.forEach(group => {
-            const option = document.createElement('option');
-            option.value = group.GroupID;
-            option.textContent = group.GroupName;
-            groupSelect.appendChild(option);
-          });
-        } catch (error) {
-          console.error('Error fetching groups:', error);
-          document.getElementById("result-message").innerHTML = "An error occurred while loading groups: " + error;
-        }
-      }
-      /*
-      async function fillRecipient(groupId) {
-        try {
-          const response = await fetch(`/fillRecipient/${groupId}`);
-          const recipients = await response.json();
-          // 清空当前的收件人字段
-          const recipientFields = document.getElementById('recipient-fields');
-          recipientFields.innerHTML = '';
-          // 循环遍历返回的收件人列表并创建新的收件人字段
-          recipients.forEach((recipient) => {
-            const newRecipient = document.createElement('div');
-            newRecipient.className = 'form-group recipient';
-            newRecipient.innerHTML = `
-              <div class="row">
-                <div class="col-md-6">
-                  <input placeholder="Name" name="name[]" type="text" class="form-control" value="${recipient.Name}" required />
-                </div>
-                <div class="col-md-6">
-                  <input placeholder="Email" type="email" name="email[]" class="form-control" value="${recipient.Email}" required />
-                </div>
-              </div>
-            `;
-            recipientFields.appendChild(newRecipient);
-          });
-        } catch (error) {
-          console.error('Error fetching recipients:', error);
-          document.getElementById("result-message").innerHTML = "An error occurred while loading recipients: " + error;
-        }
-      }
-      */
-      async function fillRecipient(groupId) {
-        try {
-          const response = await fetch(`/fillRecipient/${groupId}`);
-          const recipients = await response.json();
-          // 清空当前的收件人字段
-          const recipientFields = document.getElementById('recipient-fields');
-          recipientFields.innerHTML = '';
-          if (recipients.length === 0) {
-            // 如果组内没有成员，保留一行空的输入字段
-            const emptyRecipient = document.createElement('div');
-            emptyRecipient.className = 'form-group recipient';
-            emptyRecipient.innerHTML = `
-              <div class="row">
-                <div class="col-md-5">
-                  <input placeholder="Name" name="name[]" type="text" class="form-control" required />
-                </div>
-                <div class="col-md-5">
-                  <input placeholder="Email" type="email" name="email[]" class="form-control" aria-describedby="emailHelp" required />
-                </div>
-                <div class="col-md-2">
-                  <button type="button" class="btn btn-danger" onclick="removeRecipient(this)">Delete</button>
-                </div>
-              </div>
-            `;
-            recipientFields.appendChild(emptyRecipient);
-          } else {
-            // 循环遍历返回的收件人列表并创建新的收件人字段
-            recipients.forEach((recipient) => {
-              const newRecipient = document.createElement('div');
-              newRecipient.className = 'form-group recipient';
-              newRecipient.innerHTML = `
-                <div class="row">
-                  <div class="col-md-5">
-                    <input placeholder="Name" name="name[]" type="text" class="form-control" value="${recipient.Name}" required />
-                  </div>
-                  <div class="col-md-5">
-                    <input placeholder="Email" type="email" name="email[]" class="form-control" value="${recipient.Email}" required />
-                  </div>
-                  <div class="col-md-2">
-                    <button type="button" class="btn btn-danger" onclick="removeRecipient(this)">Delete</button>
-                  </div>
-                </div>
-              `;
-              recipientFields.appendChild(newRecipient);
-            });
-          }
-        } catch (error) {
-          console.error('Error fetching recipients:', error);
-          document.getElementById("result-message").innerHTML = "An error occurred while loading recipients: " + error;
-        }
-      }
-      document.addEventListener('DOMContentLoaded', () => {
-        loadTemplates();
-        loadGroups();
-      });
-    </script>
-  </body>
+ </body>
 </html>
