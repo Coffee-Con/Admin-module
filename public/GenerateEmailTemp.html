@@ -27,7 +27,7 @@
     /* 为标题和白框增加样式，使其贴近 */
     .title-container {
       text-align: center;
-      margin-bottom: 0; /* 减少标题与卡片之间的距离 */
+      margin-bottom: 25px; /* 减少标题与卡片之间的距离 */
       padding-top: 20px; /* 增加顶部的间距 */
     }
     .card {
@@ -36,7 +36,7 @@
   </style>
 </head>
 <body>
-  <button class="back-button" onclick="window.location.href='/admin/index.html'">
+  <button class="back-button" onclick="window.location.href='admin/index.html'">
     <i class="fa-solid fa-arrow-left"></i>
     <span>Back</span>
   </button>
@@ -70,24 +70,43 @@
           </button>
         </div>
       </div>
-      <div id="statusMessage" class="alert alert-success d-none mt-4" role="alert">
-        Your template has been successfully generated!
-      </div>
-      <!-- Template List Section -->
-      <h2 class="text-center my-4">Templates List</h2>
-      <table class="table table-striped">
-          <thead>
-              <tr>
-                  <th>Template ID</th>
-                  <th>Title</th>
-                  <th>Action</th>
-              </tr>
-          </thead>
-          <tbody id="templatesTableBody">
-              <!-- Template list will be populated here -->
-          </tbody>
-      </table>
     </div>
+
+    <div id="statusMessage" class="alert alert-success d-none mt-4" role="alert">
+      Your template has been successfully generated!
+    </div>
+    <div id="confirmMessage" class="alert alert-success d-none mt-4" role="alert">
+      Your template has been successfully saved!
+    </div>
+    <div id="errorMessage0" class="alert alert-danger d-none mt-4" role="alert">
+      Subject can not be blank!
+    </div>
+    <div id="errorMessage" class="alert alert-danger d-none mt-4" role="alert">
+      Your template has been unsuccessfully generated!
+    </div>
+    <div id="errorMessage2" class="alert alert-danger d-none mt-4" role="alert">
+      Your template has been unsuccessfully saved!
+    </div>
+    <div id="errorMessage3" class="alert alert-danger d-none mt-4" role="alert">
+      Subject or Content  can not be blank!
+    </div>
+
+          <!-- Template List Section -->
+          <h2 class="text-center my-4">Templates List</h2>
+          <table class="table table-striped">
+              <thead>
+                  <tr>
+                      <th>Template ID</th>
+                      <th>Title</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
+              <tbody id="templatesTableBody">
+                  <!-- Template list will be populated here -->
+              </tbody>
+          </table>
+        </div>
+      </div>
   </div>
 
   <script>
@@ -96,29 +115,63 @@
       const responseElement = document.getElementById('response');
       responseElement.value = '';
 
-      const response = await fetch('/chat', {
+      if(!userInput){
+        document.getElementById("errorMessage0").classList.remove("d-none");
+        return;
+      }
+
+      fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userInput })
-      });
-      
-      const data = await response.json();
-      responseElement.value = data.message;
+      })
+        .then(response =>{
+            if(!response.ok){
+              throw new Error("Request Fail");
+            }
+            return response.json();
+          })
+        .then(data =>{
+          console.log(data);
+          document.getElementById('statusMessage').classList.remove('d-none');
+          responseElement.value = data.message;
+        })
+        .catch(error =>{
+          console.error("Error happened:", error);
+          document.getElementById('errorMessage').classList.remove('d-none');
+        })
 
-      document.getElementById('statusMessage').classList.remove('d-none');
     }
 
-    async function confirmTemp() {
+      async function confirmTemp() {
       const Subject = document.getElementById('userInput').value;
       const Content = document.getElementById('response').value;
 
-      const response = await fetch('/confirmTemp', {
+      if (!Subject || !Content) {
+        console.log("Subject or Content can not be blank");
+        document.getElementById('errorMessage3').classList.remove('d-none');
+        return;
+      }
+
+      fetch('/confirmTemp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ Subject, Content })
-      });
-      const data = await response.json();
-      console.log(data);
+      })
+        .then(response =>{
+          if(!response.ok){
+            throw new Error("Request Fail");
+          }
+          return response.json();
+        })
+        .then(data =>{
+          console.log(data);
+          document.getElementById('confirmMessage').classList.remove('d-none');
+        })
+        .catch(error =>{
+          console.error("Error happened:", error);
+          document.getElementById('errorMessage2').classList.remove('d-none');
+        })
     }
 
     function loadTemplates() {
