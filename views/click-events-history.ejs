@@ -35,6 +35,29 @@
     .back-button:active {
       transform: scale(0.95); 
     }
+    
+    table {
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color:lightgray;
+      color: black;
+      
+    }
+
+    th,
+    td {
+      width: 150px;
+      text-align: center;
+      border: 1px solid black;
+      padding: 5px;
+    }
+
+    tbody {
+      border-spacing: 15px;
+    } 
+    
   </style>
 </head>
 <body>
@@ -56,7 +79,7 @@
       <tbody>
         <% events.forEach(event => { %>
           <tr>
-            <td><%= event.time %></td>
+            <td style="width: 400px;"><%= event.time %></td>
             <td><%= event.Name %></td>
             <td><%= event.Email %></td>
           </tr>
