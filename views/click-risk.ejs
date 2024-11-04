@@ -4,13 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <title>Report</title>
+  <style>
+    .back-button {
+      position: relative;
+      top: 20px;
+      right: -10px;
+      background-color: transparent; /* Button background color */
+      color: black; /* Button text color */
+      border: none !important;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+    .back-button i {
+      margin-right: 5px;
+    }
+    
+    .back-button {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      z-index: 1000;
+    }
+
+    .back-button:hover {
+      background-color: lightgray; 
+      transform: translateY(-2px); 
+    }
+
+    .back-button:active {
+      transform: scale(0.95); 
+    }
+  </style>
 </head>
 <body>
-  <h1>Click Events Risk Assessment</h1>
-  <p>Clicks in the last month: <strong><%= clickCount %></strong></p>
-  <p class="risk <% if (riskLevel === 'Low risk') { %>low<% } else if (riskLevel === 'Medium risk') { %>medium<% } else { %>high<% } %>">
-    Current risk level: <strong><%= riskLevel %></strong>
-  </p>
+  <button class="back-button" onclick="window.location.href='admin/index.html'">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back</span>
+  </button>
+  <div class="container">
+    <h1 style="margin-top: 1em;">Analytic Report</h1>
+    <hr>
+    <p>Clicks in the last month: <strong><%= clickCount %></strong></p>
+    <p class="risk <% if (riskLevel === 'Low risk') { %>low<% } else if (riskLevel === 'Medium risk') { %>medium<% } else { %>high<% } %>">
+      Current risk level: <strong><%= riskLevel %></strong>
+    </p>
+  </div>
 </body>
 </html>
