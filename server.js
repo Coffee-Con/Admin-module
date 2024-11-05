@@ -453,7 +453,7 @@ app.get('/getCourse/:CourseID', getCourse);
 // Course end
 
 // Quiz
-const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse } = require('./functions/api/quiz');
+const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes } = require('./functions/api/quiz');
 app.use('/create-quiz', createQuiz);
 app.delete('/delete-quiz/:QuizID', deleteQuiz);
 app.put('/update-quiz/:QuizID', updateQuiz);
@@ -463,11 +463,15 @@ app.get('/getCourseQuizzes/:CourseID', getCourseQuizzes);
 app.get('/getQuizzesNotInCourse/:CourseID', getQuizzesNotInCourse);
 app.post('/addQuizToCourse', addQuizToCourse);
 app.delete('/removeQuizFromCourse', removeQuizFromCourse);
+app.get('/api/getUserCourseQuizzes/:CourseID',authenticateToken, getUserCourseQuizzes);
 // Quiz end
 
 // Question
-const { createQuestion } = require('./functions/api/question');
+const { createQuestion, getQuizQuestions, getQuestion, getQuestions } = require('./functions/api/question');
 app.use('/create-question', createQuestion);
+app.get('/api/getQuizQuestions/:QuizID',authenticateToken, getQuizQuestions);
+app.get('/api/getQuestion/:QuestionID', getQuestion);
+app.get('/api/getQuestions/:QuizID', getQuestions);
 // Question end
 
 app.listen(port, () => {

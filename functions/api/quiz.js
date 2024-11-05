@@ -191,4 +191,27 @@ const removeQuizFromCourse = (req, res) => {
     });
 };
 
-module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse };
+// 获取用户未完成的所有quiz（对应课程）
+function getUserCourseQuizzes(req, res) {
+    console.log('Getting user course quizzes');
+    const userID = req.user.id;
+    const { CourseID } = req.params;
+    console.log('CourseID:', CourseID);
+    const query = `
+        SELECT DISTINCT * 
+        FROM QuizCourse 
+        JOIN Quiz 
+        ON QuizCourse.QuizID = Quiz.QuizID
+        WHERE CourseID = ?;
+    `;
+    connection.query(query, [userID, CourseID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.json(results);
+    });
+}
+
+module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes };
