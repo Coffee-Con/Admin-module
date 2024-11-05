@@ -25,7 +25,7 @@
     "mysql2": "^3.10.2",
     "nodemailer": "^6.9.14",
     "nodemon": "^2.0.4",
-    "ollama": "^0.5.6",
+    "ollama": "^0.5.9",
     "svg-captcha": "^1.4.0"
   },
   "engines": {
