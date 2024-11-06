@@ -40,6 +40,10 @@
     .card {
       margin-top: -10px; /* 使白框贴近标题 */
     }
+
+    .d-none{
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -124,6 +128,9 @@
 
       if(!userInput){
         document.getElementById("errorMessage0").classList.remove("d-none");
+        setTimeout(() => {
+            document.getElementById("errorMessage0").classList.add("d-none");
+          }, 5000);
         return;
       }
 
@@ -142,10 +149,16 @@
           console.log(data);
           document.getElementById('statusMessage').classList.remove('d-none');
           responseElement.value = data.message;
+          setTimeout(() => {
+            document.getElementById("statusMessage").classList.add("d-none");
+          }, 5000);
         })
         .catch(error =>{
           console.error("Error happened:", error);
           document.getElementById('errorMessage').classList.remove('d-none');
+          setTimeout(() => {
+            document.getElementById("errorMessage").classList.add("d-none");
+          }, 5000);
         })
 
     }
@@ -157,6 +170,9 @@
       if (!Subject || !Content) {
         console.log("Subject or Content can not be blank");
         document.getElementById('errorMessage3').classList.remove('d-none');
+        setTimeout(() => {
+            document.getElementById("errorMessage3").classList.add("d-none");
+          }, 5000);
         return;
       }
 
@@ -174,10 +190,16 @@
         .then(data =>{
           console.log(data);
           document.getElementById('confirmMessage').classList.remove('d-none');
+          setTimeout(() => {
+            document.getElementById("confirmMessage").classList.add("d-none");
+          }, 5000);
         })
         .catch(error =>{
           console.error("Error happened:", error);
           document.getElementById('errorMessage2').classList.remove('d-none');
+          setTimeout(() => {
+            document.getElementById("errorMessage2").classList.add("d-none");
+          }, 5000);
         })
         loadTemplates();
     }
