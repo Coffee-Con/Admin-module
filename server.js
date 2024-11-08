@@ -358,6 +358,7 @@ app.get('/fillRecipient/:groupId', (req, res) => {
 });
 
 // History
+/*
 // 设置 EJS 作为视图引擎
 app.set('view engine', 'ejs');
 
@@ -408,6 +409,11 @@ app.get('/click-risk', (req, res) => {
     res.render('click-risk', { clickCount, riskLevel });
   });
 });
+*/
+const { getClicks, getClicksRisk } = require('./functions/api/click');
+app.get('/click-events-history', getClicks);
+app.get('/click-risk', getClicksRisk);
+// History end
 
 // Group
 const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers, getAvailableUsers } = require('./functions/group'); // 导入Group模块
@@ -468,6 +474,7 @@ app.get('/api/getUserCourseQuizzes/:CourseID',authenticateToken, getUserCourseQu
 
 // Question
 const { createQuestion, getQuizQuestions, getQuestion, getQuestions } = require('./functions/api/question');
+const { get } = require('http');
 app.use('/create-question', createQuestion);
 app.get('/api/getQuizQuestions/:QuizID',authenticateToken, getQuizQuestions);
 app.get('/api/getQuestion/:QuestionID', getQuestion);

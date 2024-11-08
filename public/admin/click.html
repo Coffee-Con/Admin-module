@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <title>Click</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    
+    .back-button {
+      position: relative;
+      top: 20px;
+      right: -10px;
+      background-color: transparent; /* Button background color */
+      color: black; /* Button text color */
+      border: none !important;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+    .back-button i {
+      margin-right: 5px;
+    }
+    
+    .back-button {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      z-index: 1000;
+    }
+
+    .back-button:hover {
+      background-color: lightgray; 
+      transform: translateY(-2px); 
+    }
+
+    .back-button:active {
+      transform: scale(0.95); 
+    }
+  </style>
+</head>
+<body>
+  <button class="back-button" onclick="window.location.href='admin/index.html'">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back</span>
+  </button>
+   <div class="container">
+    <h1 style="margin-top: 1em;">Analytic Report</h1>
+    <hr>
+    <p>Clicks in the last month: <strong id="click-count">Loading...</strong></p>
+    <p id="risk-level" class="risk">Current risk level: <strong>Loading...</strong></p>
+  </div>
+
+  <h1 style="margin-top: 1em;">Event History</h1>
+  <hr>
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody id="event-history">
+      <tr>
+        <td colspan="3">Loading...</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    // 获取点击数据和风险等级
+    async function fetchClickData() {
+      try {
+        // 获取点击历史数据
+        const eventsResponse = await fetch('/click-events-history');
+        const events = await eventsResponse.json();
+
+        // 获取风险等级数据
+        const riskResponse = await fetch('/click-risk');
+        const riskData = await riskResponse.json();
+
+        // 渲染点击次数
+        document.getElementById('click-count').textContent = riskData[0]?.click_count_last_month || 0;
+
+        // 判断风险等级并渲染
+        const clickCount = riskData[0]?.click_count_last_month || 0;
+        let riskLevel = '';
+        let riskClass = '';
+
+        if (clickCount < 50) {
+          riskLevel = 'Low risk';
+          riskClass = 'low';
+        } else if (clickCount < 200) {
+          riskLevel = 'Medium risk';
+          riskClass = 'medium';
+        } else {
+          riskLevel = 'High risk';
+          riskClass = 'high';
+        }
+
+        const riskElement = document.getElementById('risk-level');
+        riskElement.innerHTML = `Current risk level: <strong>${riskLevel}</strong>`;
+        riskElement.classList.add(riskClass);
+
+        // 渲染事件历史记录
+        const eventHistoryElement = document.getElementById('event-history');
+        eventHistoryElement.innerHTML = ''; // 清空加载提示
+
+        if (events.length > 0) {
+          events.forEach((event) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td style="width: 400px;">${new Date(event.time).toLocaleString()}</td>
+              <td>${event.Name}</td>
+              <td>${event.Email}</td>
+            `;
+            eventHistoryElement.appendChild(row);
+          });
+        } else {
+          eventHistoryElement.innerHTML = '<tr><td colspan="3">No events found.</td></tr>';
+        }
+      } catch (error) {
+        console.error('Error fetching click data:', error);
+        document.getElementById('click-count').textContent = 'Error';
+        document.getElementById('risk-level').textContent = 'Error';
+        document.getElementById('event-history').innerHTML = '<tr><td colspan="3">Error loading events.</td></tr>';
+      }
+    }
+
+    // 页面加载时调用 fetchClickData
+    document.addEventListener('DOMContentLoaded', fetchClickData);
+  </script>
+</body>
+</html>
