@@ -358,58 +358,6 @@ app.get('/fillRecipient/:groupId', (req, res) => {
 });
 
 // History
-/*
-// 设置 EJS 作为视图引擎
-app.set('view engine', 'ejs');
-
-app.get('/click-events-history', (req, res) => {
-  const query = `
-    SELECT ce.time, u.Name, u.Email
-    FROM click_event ce
-    JOIN click_key ck ON ce.key = ck.key
-    JOIN user u ON ck.userid = u.UserID
-    ORDER BY ce.time DESC;
-  `;
-
-  connection.query(query, (error, results) => {
-    if (error) {
-      return res.status(500).send('Database query error');
-    }
-
-    // 渲染到 EJS 模板
-    res.render('click-events-history', { events: results });
-  });
-});
-
-app.get('/click-risk', (req, res) => {
-  const query = `
-    SELECT COUNT(*) AS click_count_last_month
-    FROM click_event
-    WHERE time >= NOW() - INTERVAL 1 MONTH;
-  `;
-
-  connection.query(query, (error, results) => {
-    if (error) {
-      return res.status(500).send('Database query error');
-    }
-
-    const clickCount = results[0].click_count_last_month;
-    let riskLevel;
-
-    // 设置风险等级
-    if (clickCount === 0) {
-      riskLevel = 'Low risk';
-    } else if (clickCount === 1) {
-      riskLevel = 'Medium risk';
-    } else if (clickCount > 2) {
-      riskLevel = 'High risk';
-    }
-
-    // 渲染页面
-    res.render('click-risk', { clickCount, riskLevel });
-  });
-});
-*/
 const { getClicks, getClicksRisk } = require('./functions/api/click');
 app.get('/click-events-history', getClicks);
 app.get('/click-risk', getClicksRisk);
