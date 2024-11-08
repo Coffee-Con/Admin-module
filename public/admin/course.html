@@ -4,11 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="form.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #333333;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .subHeader{
+            font-size: 24px;
+            color: #333333;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .back-button {
+          position: absolute; /* Change to absolute positioning */
+          top: 12px; /* Maintain distance from the top */
+          left: 10px; /* Align to the left */
+          background-color: transparent; /* Button background color */
+          color: black; /* Button text color */
+          border: none !important;
+          border-radius: 5px;
+          padding: 10px 15px;
+          cursor: pointer;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+            font-size: 1.2em; /* Adjust icon size for consistency */
+        }
+
+        .back-button {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: lightgray; 
+            transform: translateY(-2px); 
+        }
+
+        .back-button:active {
+            transform: scale(0.95); 
+        }
+
+        .button-Animation {
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease; 
+        }
+
+        .button-Animation:hover {
+            transform: scale(1.1);
+        }
+    </style>
 </head>
 <body>
+    <button class="back-button" onclick="window.location.href='quiz.html'">
+        <i class="fa-solid fa-arrow-left"></i> 
+        <span>Back</span>
+    </button>
+    <header class="header">
+        <h1>Course Management
+            <i class="fas fa-book" style="color: #007bff;"></i>
+        </h1>
+    </header>
     <div class="container">
-        <h1>Course Management</h1>
 
         <!-- Create Course Section -->
         <h2>Create Course</h2>
@@ -20,10 +103,10 @@
             <label for="courseDescription">Course Description</label>
             <input type="text" id="courseDescription" placeholder="Enter course description">
         </div>
-        <button onclick="createCourse()">Create Course</button>
+        <button class="btn btn-primary button-Animation" onclick="createCourse()">Create Course</button>
 
         <!-- Update Course Section -->
-        <h2>Update Course</h2>
+        <h2 style="margin-top: 10px;">Update Course</h2>
         <div class="form-group">
             <label for="courseSelect">Select Course ID</label>
             <select id="courseSelect" onchange="fetchCourseDetails(this.value)">
@@ -38,10 +121,10 @@
             <label for="updateCourseDescription">Course Description</label>
             <input type="text" id="updateCourseDescription" placeholder="Enter course description">
         </div>
-        <button onclick="updateCourse()">Update Course</button>
+        <button class="btn btn-primary button-Animation" onclick="updateCourse()">Update Course</button>
 
         <!-- Course List Section -->
-        <h2>Courses List</h2>
+        <h2 style="margin-top: 10px;">Courses List</h2>
         <table>
             <thead>
                 <tr>
@@ -144,7 +227,7 @@
                         <td>${course.CourseID}</td>
                         <td>${course.CourseName}</td>
                         <td>${course.CourseDescription}</td>
-                        <td><button onclick="deleteCourse(${course.CourseID})">Delete</button></td>
+                        <td><button class="btn btn-danger button-Animation" onclick="deleteCourse(${course.CourseID})">Delete</button></td>
                     `;
                     coursesTableBody.appendChild(row);
                 });
