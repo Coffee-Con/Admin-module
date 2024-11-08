@@ -109,12 +109,33 @@
         .button-Animation:hover {
             transform: scale(1.1);
         }
+
+        .button-Animation2 {
+            border: none;
+            cursor: pointer;
+            outline: none;
+            position: absolute; 
+            top: 12px; 
+            right:20px; 
+            background-color: transparent; 
+            color: black;
+            transition: background-color 0.3s ease, transform 0.3s ease; 
+        }
+
+        .button-Animation2:hover {
+            background-color: lightgray;
+            transform: translateY(-2px); 
+        }
     </style>
 </head>
 <body>
     <button class="back-button" onclick="window.location.href='index.html'">
         <i class="fa-solid fa-arrow-left"></i> 
         <span>Back</span>
+    </button>
+    <button class="button-Animation2" onclick="window.location.href='quiz.html'">
+        <i class="fa-solid fa-arrow-right"></i>
+        <span>Quiz Page</span>
     </button>
     <header class="header">
         <h1>Question Management
@@ -144,7 +165,7 @@
             </div>
             <button class="btn btn-primary button-Animation" type="button" onclick="addAnswer()">Add Answer</button>
         </div>
-        <button class="btn btn-primary button-Animation" onclick="createQuestion()">Create Question</button>
+            <button class="btn btn-primary button-Animation" onclick="createQuestion()">Create Question</button>
     </div>
 
     <script>

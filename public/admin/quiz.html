@@ -4,11 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="form.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #333333;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .subHeader{
+            font-size: 24px;
+            color: #333333;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .back-button {
+          position: absolute; /* Change to absolute positioning */
+          top: 12px; /* Maintain distance from the top */
+          left: 10px; /* Align to the left */
+          background-color: transparent; /* Button background color */
+          color: black; /* Button text color */
+          border: none !important;
+          border-radius: 5px;
+          padding: 10px 15px;
+          cursor: pointer;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+            font-size: 1.2em; /* Adjust icon size for consistency */
+        }
+
+        .back-button {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: lightgray; 
+            transform: translateY(-2px); 
+        }
+
+        .back-button:active {
+            transform: scale(0.95); 
+        }
+
+        .button-Animation {
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease; 
+        }
+
+        .button-Animation:hover {
+            transform: scale(1.1);
+        }
+
+        .button-Animation2 {
+            border: none;
+            cursor: pointer;
+            outline: none;
+            position: absolute; 
+            top: 12px; 
+            right:20px; 
+            background-color: transparent; 
+            color: black;
+            transition: background-color 0.3s ease, transform 0.3s ease; 
+        }
+
+        .button-Animation2:hover {
+            background-color: lightgray;
+            transform: translateY(-2px); 
+        }
+    </style>
 </head>
 <body>
+    <button class="back-button" onclick="window.location.href='question.html'">
+        <i class="fa-solid fa-arrow-left"></i> 
+        <span>Back</span>
+    </button>
+    <button class="button-Animation2" onclick="window.location.href='course.html'">
+        <i class="fa-solid fa-arrow-right"></i>
+        <span>Course Page</span>
+    </button>
+    <header class="header">
+        <h1>Quize Management
+            <i class="fas fa-pencil-alt" style="color: #007bff;"></i>
+        </h1>
+    </header>
     <div class="container">
-        <h1>Quiz Management</h1>
 
         <!-- Create Quiz Section -->
         <h2>Create Quiz</h2>
@@ -20,10 +124,10 @@
             <label for="quizDescription">Quiz Description</label>
             <input type="text" id="quizDescription" placeholder="Enter quiz description">
         </div>
-        <button onclick="createQuiz()">Create Quiz</button>
+        <button class="btn btn-primary button-Animation" onclick="createQuiz()">Create Quiz</button>
 
         <!-- Update Quiz Section -->
-        <h2>Update Quiz</h2>
+        <h2 style="margin-top: 10px;">Update Quiz</h2>
         <div class="form-group">
             <label for="quizSelect">Select Quiz ID</label>
             <select id="quizSelect" onchange="fetchQuizDetails(this.value)">
@@ -38,10 +142,10 @@
             <label for="updateQuizDescription">Quiz Description</label>
             <input type="text" id="updateQuizDescription" placeholder="Enter quiz description">
         </div>
-        <button onclick="updateQuiz()">Update Quiz</button>
+        <button class="btn btn-primary button-Animation" onclick="updateQuiz()">Update Quiz</button>
 
         <!-- Quiz List Section -->
-        <h2>Quizzes List</h2>
+        <h2 style="margin-top: 10px;">Quizzes List</h2>
         <table>
             <thead>
                 <tr>
@@ -57,7 +161,7 @@
         </table>
 
         <!-- Add Quiz to course -->
-        <h2>Add Quiz to course</h2>
+        <h2 style="margin-top: 10px;">Add Quiz to course</h2>
         <div class="form-group">
             <label for="addCourseID">Select Course ID</label>
             <select id="addCourseID" onchange="loadQuizzesNotInCourse(this.value)">
@@ -73,7 +177,7 @@
             </select>
         </div>
         <div class="form-group">
-            <button onclick="addQuizToCourse()">Add Quiz to Course</button>
+            <button class="btn btn-primary button-Animation" onclick="addQuizToCourse()">Add Quiz to Course</button>
         </div>
 
         <!-- Display all quizzes of selected course -->
@@ -97,6 +201,7 @@
             <tbody id="quizzesOfCourseTableBody">
                 <!-- Quizzes of course will be populated here -->
             </tbody>
+        </table>
     </div>
 
     <script>
