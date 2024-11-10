@@ -164,13 +164,6 @@ app.get('/admin/index', requireAuth, (req, res) => {
   res.sendFile(__dirname + '/public/admin/index.html');
 });
 
-// click
-app.use(express.json());
-// 生成钓鱼链接的测试页面
-app.get('/generate-link', (req, res) => {
-  res.sendFile(__dirname + '/public/generate-link.html');
-});
-
 // 处理生成链接的请求
 app.post('/generate-link', upload.none(), (req, res) => {
   const email = req.body.email;
