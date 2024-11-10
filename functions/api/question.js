@@ -61,6 +61,7 @@ const getQuestions = (req, res) => {
 
     const query = `
         SELECT DISTINCT 
+            Question.QuestionID AS QuestionID,
             Question.Question AS Question,
             Question.QuestionType AS QuestionType,
             Question.Answer AS Answer
