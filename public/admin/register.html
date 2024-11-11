@@ -72,7 +72,7 @@
                     <h5 class="card-title mb-0">User Registration</h5>
                 </div>
                 <div class="card-body">
-                    <form action="/addUser" method="post">
+                    <form id="registerForm" method="post">
                         <div class="mb-3">
                             <label for="user" class="form-label">Username:</label>
                             <input type="text" class="form-control" id="user" name="user" required>
@@ -97,7 +97,7 @@
                             </select>
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary button-Animation">Register</button>
+                            <button type="button" onclick="register()" class="btn btn-primary button-Animation">Register</button>
                         </div>
                     </form>
                 </div>
@@ -122,5 +122,41 @@
     </div>    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        async function register() {
+            const formData = {
+                user: document.getElementById('user').value,
+                email: document.getElementById('email').value,
+                name: document.getElementById('name').value,
+                password: document.getElementById('password').value,
+                role: document.getElementById('role').value,
+            };
+    
+            try {
+                const response = await fetch('/addUser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+    
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Registration successful!');
+                    } else {
+                        alert('Registration failed: ' + result.message);
+                    }
+                } else {
+                    const errorText = await response.text();
+                    alert('Registration error: ' + errorText);
+                }
+            } catch (error) {
+                alert('Network error: ' + error.message);
+            }
+        }
+    </script>
 </body>
 </html>

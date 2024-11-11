@@ -132,7 +132,7 @@ const register = (req, res) => {
           return res.status(500).send('Error inserting data');
         }
         console.log('Inserted user:', email);
-        res.send('User registered successfully');
+        res.json({ success: true });
       });
     }
   });

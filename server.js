@@ -10,7 +10,7 @@ const mailer = require('./functions/mailer'); // 导入邮件发送模块
 
 // const ollama = require('ollama'); // AI
 const { default: ollama } = require('ollama');
-const { addUsers, addUser} = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
+const { addUsers } = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
 
 // const upload = require('./functions/middlewares/upload'); // 导入上传文件中间件
 
@@ -101,7 +101,6 @@ app.post('/addUsers', upload.single('csvfile'), (req, res) => {
     res.send(result);
   });
 });
-app.post('/addUser', addUser);
 
 // captcha testing后续需修改位置 /* */
 const svgCaptcha = require('svg-captcha');
@@ -422,6 +421,11 @@ app.get('/api/getQuestions/:QuizID', getQuestions);
 app.delete('/api/delete-question/:QuestionID', deleteQuestion);
 app.get('/api/getAllQuestions', getAllQuestions);
 // Question end
+
+// User
+const { addUser } = require('./functions/readCSVAndInsertUsers');
+app.post('/addUser', addUser);
+// User end
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
