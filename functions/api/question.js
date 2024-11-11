@@ -5,16 +5,16 @@ const connection = mysql.createConnection(dbConfig);
 
 // API to create a new question
 const createQuestion = (req, res) => {
-    const { type, topic, answers, correctAnswers } = req.body;
+    const { type, topic, answers } = req.body;
 
     // Validate required fields
-    if (!type || !topic || !Array.isArray(answers) || !Array.isArray(correctAnswers)) {
+    if (!type || !topic || !Array.isArray(answers)) {
         console.log('Error: Invalid input data.');
         return res.status(400).json({ error: 'Invalid input data.' });
     }
 
-    const query = 'INSERT INTO `Question` (Question, QuestionType, Answer, CorrectAnswer) VALUES (?, ?, ?, ?);';
-    connection.query(query, [topic, type, JSON.stringify(answers), JSON.stringify(correctAnswers)], (err, results) => {
+    const query = 'INSERT INTO `Question` (Question, QuestionType, Answer) VALUES (?, ?, ?);';
+    connection.query(query, [topic, type, JSON.stringify(answers)], (err, results) => {
         console.log('Query:', query);
         if (err) {
             console.error('Error inserting data:', err);
