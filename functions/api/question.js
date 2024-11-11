@@ -84,10 +84,7 @@ const getQuestions = (req, res) => {
 const deleteQuestion = (req, res) => {
     const { QuestionID } = req.params;
 
-    const query = `
-    DELETE FROM QuizQuestion WHERE QuestionID = ?;
-    DELETE FROM Question WHERE QuestionID = ?;
-    `;
+    const query = 'DELETE FROM Question WHERE QuestionID = ?;'
     connection.query(query, [QuestionID], (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
