@@ -414,12 +414,13 @@ app.get('/api/getUserCourseQuizzes/:CourseID',authenticateToken, getUserCourseQu
 // Quiz end
 
 // Question
-const { createQuestion, getQuizQuestions, getQuestion, getQuestions } = require('./functions/api/question');
-const { get } = require('http');
+const { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions } = require('./functions/api/question');
 app.use('/create-question', createQuestion);
 app.get('/api/getQuizQuestions/:QuizID',authenticateToken, getQuizQuestions);
 app.get('/api/getQuestion/:QuestionID', getQuestion);
 app.get('/api/getQuestions/:QuizID', getQuestions);
+app.delete('/api/delete-question/:QuestionID', deleteQuestion);
+app.get('/api/getAllQuestions', getAllQuestions);
 // Question end
 
 app.listen(port, () => {

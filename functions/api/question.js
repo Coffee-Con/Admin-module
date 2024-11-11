@@ -80,5 +80,36 @@ const getQuestions = (req, res) => {
     });
 };
 
+// Delete a question
+const deleteQuestion = (req, res) => {
+    const { QuestionID } = req.params;
+
+    const query = `
+    DELETE FROM QuizQuestion WHERE QuestionID = ?;
+    DELETE FROM Question WHERE QuestionID = ?;
+    `;
+    connection.query(query, [QuestionID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.json({ success: true });
+    });
+}
+
+// Get all questions
+const getAllQuestions = (req, res) => {
+    const query = 'SELECT * FROM COMP.Question;';
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.json(results);
+    });
+}
+
 // 导出API
-module.exports = { createQuestion, getQuizQuestions, getQuestion, getQuestions };
+module.exports = { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions };
