@@ -194,8 +194,6 @@ function saveQuestion(questionID) {
         answers: answers
     };
 
-    console.log(questionData);
-
     fetch(`/api/updateQuestion/${questionID}`, {
         method: 'PUT',
         headers: {
