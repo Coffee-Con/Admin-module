@@ -146,6 +146,23 @@ function deleteQuestion(questionID) {
       .catch(error => console.error('Error deleting question:', error));
 }
 
+// Add new answer input field for editing
+function addEditAnswer(questionID) {
+    const container = document.getElementById(`editAnswersContainer-${questionID}`);
+    const newAnswerDiv = document.createElement('div');
+    newAnswerDiv.classList.add('answer-input');
+    
+    newAnswerDiv.innerHTML = `
+        <input type="text" placeholder="Enter question answer">
+        <label>
+            <input style="margin-left:10px;" type="checkbox">
+            Correct
+        </label>
+        <button class="btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${questionID}, ${container.children.length})">Delete</button>
+    `;
+    container.appendChild(newAnswerDiv);
+}
+
 // Save question changes
 function saveQuestion(questionID) {
   // You can add additional functionality to allow editing answers here
