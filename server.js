@@ -336,7 +336,7 @@ app.get('/api/getUserCourseQuizzes/:CourseID',authenticateToken, getUserCourseQu
 
 // Question
 const { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions, updateQuestion } = require('./functions/api/question');
-app.use('/create-question', createQuestion);
+app.use('/api/createQuestion', createQuestion);
 app.get('/api/getQuizQuestions/:QuizID',authenticateToken, getQuizQuestions);
 app.get('/api/getQuestion/:QuestionID', getQuestion);
 app.get('/api/getQuestions/:QuizID', getQuestions);

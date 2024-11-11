@@ -42,7 +42,7 @@ function createQuestion() {
 
 
     // Send questionData to the server
-    fetch('/create-question', {
+    fetch('/api/createQuestion', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
