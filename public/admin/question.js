@@ -4,7 +4,7 @@ function addAnswer() {
   newAnswerDiv.classList.add("answer-input");
 
   newAnswerDiv.innerHTML = `
-      <button type="button" class="delete-button" onclick="deleteAnswer(this)">Delete</button>
+      <button class="btn btn-danger button-Animation" style="margin-right:10px; "type="button" class="delete-button" onclick="deleteAnswer(this)">Delete</button>
       <input type="text" class="answer" placeholder="Enter question answer">
       <input type="checkbox" class="correct-answer"> Correct
   `;
@@ -80,53 +80,42 @@ function fetchQuestions() {
               questionDiv.innerHTML = `
               <div class="question-header">
                   <span>${question.Question}</span>
-                  <button onclick="deleteQuestion(${question.QuestionID})">Delete</button>
-                  <button onclick="toggleDetails(this)">Edit</button>
+                  <button class="btn btn-danger button-Animation" style="margin-left:5px;" onclick="deleteQuestion(${question.QuestionID})">Delete</button>
+                  <button class="btn btn-primary button-Animation" style="margin-left:5px;" onclick="toggleDetails(this)">Edit</button>
               </div>
               <div class="question-details" style="display: none;">
-                  <div>
+                  <div class="form-group">
                       <label>Type:</label>
                       <select id="editType-${question.QuestionID}">
-                          <option value="1" ${question.QuestionType === '1' ? 'selected' : ''}>MCQ</option>
-                          <option value="2" ${question.QuestionType === '2' ? 'selected' : ''}>Fill in the Blank</option>
+                          <option value="1" ${question.QuestionType === 1 ? 'selected' : ''}>MCQ</option>
+                          <option value="2" ${question.QuestionType === 2 ? 'selected' : ''}>Fill in the Blank</option>
                       </select>
                   </div>
-                  <div>
+                  <div class="form-group">
                       <label>Question Text:</label>
                       <input type="text" id="editQuestion-${question.QuestionID}" value="${question.Question}">
                   </div>
-                  <div>
+                  <div class="form-group">
                   <label>Answers:</label>
                   <div id="editAnswersContainer-${question.QuestionID}">
                       ${Array.isArray(question.Answer) ? 
                           question.Answer.map((answer, index) => `
                               <div class="answer-input">
                                   <input type="text" id="editAnswer-${question.QuestionID}-${index}" value="${answer}" placeholder="Edit answer ${index + 1}">
-                                  <button type="button" onclick="deleteEditAnswer(${question.QuestionID}, ${index})">Delete</button>
+                                    <label>
+                                        <input style="margin-left:10px;" type="checkbox" id="isCorrect-${question.QuestionID}-${index}" ${question.CorrectAnswer.includes(answer) ? 'checked' : ''}>
+                                        Correct
+                                    </label>
+                                  <button class="btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${question.QuestionID}, ${index})">Delete</button>
                               </div>
                           `).join('') 
                           : ''
                       }
                   </div>
-                  <button type="button" onclick="addEditAnswer(${question.QuestionID})">Add New Answer</button>
+                  <button class="btn btn-primary button-Animation" type="button" onclick="addEditAnswer(${question.QuestionID})">Add New Answer</button>
               </div>
-              <div>
-                  <label>Correct Answers:</label>
-                  <div id="editCorrectAnswersContainer-${question.QuestionID}">
-                      ${Array.isArray(question.CorrectAnswer) ? 
-                          question.CorrectAnswer.map((correctAnswer, index) => `
-                              <div class="correct-answer-input">
-                                  <input type="text" id="editCorrectAnswer-${question.QuestionID}-${index}" value="${correctAnswer}" placeholder="Edit correct answer ${index + 1}">
-                                  <button type="button" onclick="deleteEditCorrectAnswer(${question.QuestionID}, ${index})">Delete</button>
-                              </div>
-                          `).join('') 
-                          : ''
-                      }
-                  </div>
-                  <button type="button" onclick="addEditCorrectAnswer(${question.QuestionID})">Add New Correct Answer</button>
-              </div>
-                  <button onclick="saveQuestion(${question.QuestionID})">Save Changes</button>
-              </div>
+                  <button class="btn btn-primary button-Animation" onclick="saveQuestion(${question.QuestionID})">Save Changes</button>
+            </div>
           `;
           questionList.appendChild(questionDiv);
           });
