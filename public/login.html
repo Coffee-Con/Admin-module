@@ -79,8 +79,6 @@
           </div>
         </form>
       </div>
-    <!-- 用于显示信息 -->
-    <div id="message"></div>
   </div>
 
 
@@ -111,7 +109,7 @@
         window.location.href = response.url; // 手动处理重定向
       } else {
         const result = await response.text();
-        document.getElementById('message').innerText = result;
+        alert(result); // 使用浏览器内置的 alert 显示消息
       }
     });
   </script>
