@@ -108,5 +108,26 @@ const getAllQuestions = (req, res) => {
     });
 }
 
+const updateQuestion = (req, res) => {
+    const { QuestionID, type, topic, answers } = req.body;
+
+    // Validate required fields
+    if (!QuestionID || !type || !topic || !Array.isArray(answers)) {
+        console.log('Error: Invalid input data.');
+        return res.status(400).json({ error: 'Invalid input data.' });
+    }
+
+    const query = 'UPDATE `Question` SET Question = ?, QuestionType = ?, Answer = ? WHERE QuestionID = ?;';
+    connection.query(query, [topic, type, JSON.stringify(answers), QuestionID], (err, results) => {
+        console.log('Query:', query);
+        if (err) {
+            console.error('Error updating data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        console.log('Question updated with ID:', QuestionID);
+        res.json({ success: true, id: QuestionID });
+    });
+}
+
 // 导出API
-module.exports = { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions };
+module.exports = { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions, updateQuestion };

@@ -28,9 +28,6 @@ function createQuestion() {
         answers: answers,
     };
 
-    // Store questionData in JSON format (e.g., save to a server or log for testing)
-    console.log(JSON.stringify(questionData));
-
     // Validation: Check if at least one correct answer is selected
     if (answers.length === 0) {
         alert("Please enter at least one answer.");
@@ -80,7 +77,6 @@ function fetchQuestions() {
                 const questionDiv = document.createElement('div');
                 questionDiv.classList.add('question-item');
 
-                console.log(question);
                 // 新的 answers 解析，包含 text 和 correct
                 const answers = Array.isArray(question.Answer) ?
                     question.Answer.map(answer => `${answer.text} (${answer.correct ? 'Correct' : 'Incorrect'})`).join(', ') :
@@ -186,20 +182,21 @@ function saveQuestion(questionID) {
         const answerInput = answerDiv.querySelector('input[type="text"]');
         const correctCheckbox = answerDiv.querySelector('input[type="checkbox"]');
         return {
-            answer: answerInput.value,
+            text: answerInput.value,
             correct: correctCheckbox.checked
         };
     });
 
     const questionData = {
+        QuestionID: questionID,
         type: questionType,
-        question: questionText,
+        topic: questionText,
         answers: answers
     };
 
     console.log(questionData);
 
-    fetch(`/api/update-question/${questionID}`, {
+    fetch(`/api/updateQuestion/${questionID}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
