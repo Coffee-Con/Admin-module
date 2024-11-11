@@ -51,7 +51,39 @@ const getQuestion = (req, res) => {
             res.status(500).send('Internal server error');
             return;
         }
-        res.json(results);
+
+        if (results.length > 0) {
+            const question = results[0];
+            
+            // 初始化空数组用于存放答案文本
+            let answersList = [];
+    
+            try {
+                // 检查 Answer 是否为字符串类型，否则转换为 JSON 字符串
+                let answerData = question.Answer;
+                if (typeof answerData !== 'string') {
+                    answerData = JSON.stringify(answerData); // 将对象转换为 JSON 字符串
+                }
+    
+                // 解析 Answer 字段
+                const answers = JSON.parse(answerData);
+    
+                // 提取 text 字段生成 list<string>
+                if (Array.isArray(answers)) {
+                    answersList = answers.map(answer => answer.text);
+                }
+            } catch (parseError) {
+                console.error('Error parsing Answer JSON:', parseError);
+            }    
+    
+            // 返回问题和答案列表，不包含正确性信息
+            res.json({
+                QuestionID: question.QuestionID,
+                QuestionType: question.QuestionType,
+                Question: question.Question,
+                Answer: answersList, // 如果为空，返回 []
+            });
+        }
     });
 };
 
@@ -76,7 +108,41 @@ const getQuestions = (req, res) => {
             res.status(500).send('Internal server error');
             return;
         }
-        res.json(results);
+        
+        // Initialize an array to store formatted questions
+        const formattedQuestions = results.map((question) => {
+            // Initialize an empty array to store answer texts
+            let answersList = [];
+
+            try {
+                // Check if Answer is a string; if not, convert it to a JSON string
+                let answerData = question.Answer;
+                if (typeof answerData !== 'string') {
+                    answerData = JSON.stringify(answerData); // Convert object to JSON string
+                }
+
+                // Parse the Answer field
+                const answers = JSON.parse(answerData);
+
+                // Extract the text field to generate a list of strings
+                if (Array.isArray(answers)) {
+                    answersList = answers.map(answer => answer.text);
+                }
+            } catch (parseError) {
+                console.error('Error parsing Answer JSON:', parseError);
+            }
+
+            // Return the formatted question object
+            return {
+                QuestionID: question.QuestionID,
+                QuestionType: question.QuestionType,
+                Question: question.Question,
+                Answer: answersList, // Return [] if parsing fails or no answers found
+            };
+        });
+
+        // Send the formatted questions as a response
+        res.json(formattedQuestions);
     });
 };
 
