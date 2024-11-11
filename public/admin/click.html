@@ -25,6 +25,7 @@
       padding: 10px 15px;
       cursor: pointer;
     }
+    
     .back-button i {
       margin-right: 5px;
     }
@@ -42,6 +43,27 @@
     .back-button:active {
       transform: scale(0.95); 
     }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    th{
+      background-color: lightgray;
+      color: black; 
+    }
+
+    th,td {
+      width: 150px;
+      text-align:center;
+      border: 1px solid black;
+      padding: 5px;
+    }
+
+    tr {
+      border-collapse: separate;
+      border-spacing: 0 15px;
+    }
   </style>
 </head>
 <body>
@@ -50,7 +72,7 @@
     <span>Back</span>
   </button>
    <div class="container">
-    <h1 style="margin-top: 1em;">Analytic Report</h1>
+    <h1 style="margin-top: 1em;">Risk Analysis</h1>
     <hr>
     <p>Clicks in the last month: <strong id="click-count">Loading...</strong></p>
     <p id="risk-level" class="risk">Current risk level: <strong>Loading...</strong></p>
