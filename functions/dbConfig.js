@@ -1,9 +1,11 @@
+require('dotenv').config();
+
 const dbConfig = {
-    host: '127.0.0.1',
-    port: 3306,
-    user: 'root',
-    password: 'yourpassword',
-    database: 'COMP'
+    host: process.env.DBHost || 'localhost',
+    port: process.env.DBPort || 3306,
+    user: process.env.DBUser || 'root',
+    password: process.env.DBPassword || 'Yourpassword',
+    database: process.env.DBName || 'COMP'
   };
   
 module.exports = dbConfig;
