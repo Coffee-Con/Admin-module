@@ -321,7 +321,7 @@ app.get('/getCourse/:CourseID', getCourse);
 // Course end
 
 // Quiz
-const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addQuizAnswer } = require('./functions/api/quiz');
+const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore } = require('./functions/api/quiz');
 app.use('/create-quiz', createQuiz);
 app.delete('/delete-quiz/:QuizID', deleteQuiz);
 app.put('/update-quiz/:QuizID', updateQuiz);
@@ -332,7 +332,8 @@ app.get('/getQuizzesNotInCourse/:CourseID', getQuizzesNotInCourse);
 app.post('/addQuizToCourse', addQuizToCourse);
 app.delete('/removeQuizFromCourse', removeQuizFromCourse);
 app.get('/api/getUserCourseQuizzes/:CourseID',authenticateToken, getUserCourseQuizzes);
-app.post('/api/submitQuiz', addQuizAnswer);
+app.post('/api/submitQuiz', addUserQuizAnswer);
+app.post('/api/addUserQuizScore', addUserQuizScore);
 // Quiz end
 
 // Question

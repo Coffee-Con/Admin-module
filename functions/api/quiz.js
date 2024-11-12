@@ -215,20 +215,20 @@ function getUserCourseQuizzes(req, res) {
 }
 
 // For user submit quiz 
-const addQuizAnswer = (req, res) => {
-    const { userid, quizid, answer } = req.body;
+const addUserQuizAnswer = (req, res) => {
+    const { UserID, QuizID, Answer } = req.body;
 
-    if (!userid || !quizid || !answer) {
+    if (!UserID || !QuizID || !Answer) {
         console.log('Error: User ID, Quiz ID, and Answer are required.');
         return res.status(400).json({ error: 'User ID, Quiz ID, and Answer are required.' });
     }
 
-    const query = 'INSERT INTO `userquizanswer` (UserID, QuizID, Answer) VALUES (?, ?, ?);';
+    const query = 'INSERT INTO `UserQuizAnswer` (UserID, QuizID, Answer) VALUES (?, ?, ?);';
 
     // Convert answer object to JSON string format
-    const answerJson = JSON.stringify(answer);
+    const AnswerJson = JSON.stringify(Answer);
 
-    connection.query(query, [userid, quizid, answerJson], (err, results) => {
+    connection.query(query, [UserID, QuizID, AnswerJson], (err, results) => {
         if (err) {
             console.error('Error inserting data:', err);
             return res.status(500).json({ error: 'Database error' });
@@ -237,6 +237,133 @@ const addQuizAnswer = (req, res) => {
         console.log('Quiz answer inserted successfully.');
         res.json({ success: true });
     });
+
+    // Use function addUserQuizScore to insert the score to the database
+    addUserQuizScore(req, res);
 };
 
-module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addQuizAnswer };
+// For after user submit quiz, add the score to the database
+const addUserQuizScore = (req, res) => {
+    const { UserID, QuizID, Answer } = req.body;
+  
+    if (!UserID || !QuizID || !Answer || !Array.isArray(Answer)) {
+        console.log('Error: User ID, Quiz ID, and Answer array are required.');
+        return res.status(400).json({ error: 'User ID, Quiz ID, and Answer array are required.' });
+    }
+
+    // 查询数据库中是否已经存在该用户对该 Quiz 的答题记录，如果存在则不再重复计算分数，直接返回错误
+    const query = 'SELECT * FROM `UserQuizScore` WHERE UserID = ? AND QuizID = ?;';
+    connection.query(query, [UserID, QuizID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            return res.status(500).send('Internal server error');
+        }
+
+        if (results.length > 0) {
+            console.log('User already has a score for this quiz.');
+            return res.status(400).json({ error: 'User already has a score for this quiz.' });
+        } else {
+            // 初始化总分和正确答题计数
+            let totalScore = 0;
+            let correctAnswersCount = 0;
+
+            // 遍历用户提交的答案数组，逐题查询数据库以获取正确答案
+            const checkAnswerPromises = Answer.map(({ QuestionID, Answer: userAnswer }) => {
+                return new Promise((resolve, reject) => {
+                    // 查询数据库，获取指定 questionid 的正确答案
+                    const query = 'SELECT Answer, QuestionType FROM `Question` WHERE QuestionID = ?;';
+                    connection.query(query, [QuestionID], (err, results) => {
+                        if (err) {
+                            console.error('Error querying the database:', err.stack);
+                            return reject('Internal server error');
+                        }
+
+                        if (results.length === 0) {
+                            console.log(`No question found for QuestionID: ${QuestionID}`);
+                            return resolve(false);
+                        }
+
+                        // 解析数据库中的正确答案
+                        const answerData = results[0].Answer;
+                        const questionType = results[0].QuestionType;
+
+                        // 提取正确答案列表
+                        const correctAnswers = answerData
+                            .filter((option) => option.correct)
+                            .map((option) => option.text);
+
+                        // 判断用户答案是否正确
+                        let isCorrect = false;
+                        if (questionType === 2) { // 填空题
+                            // 填空题：用户答案匹配任意一个正确答案
+                            isCorrect = correctAnswers.includes(userAnswer);
+                        } else if (questionType === 1) { // 选择题
+                            // 选择题：用户答案与正确答案匹配
+                            isCorrect = correctAnswers.includes(userAnswer);
+                        }
+
+                        // 统计正确答案的数量
+                        if (isCorrect) {
+                            correctAnswersCount += 1;
+                        }
+
+                        resolve(true);
+                    });
+                });
+            });
+
+            // 使用 Promise.all 处理所有答题结果
+            Promise.all(checkAnswerPromises)
+                .then(() => {
+                    // 计算总分
+                    totalScore = Math.round((correctAnswersCount / Answer.length) * 100);
+
+                    // 插入用户分数到 UserQuizScore 表
+                    const insertQuery = 'INSERT INTO `UserQuizScore` (UserID, QuizID, Score) VALUES (?, ?, ?);';
+                    connection.query(insertQuery, [UserID, QuizID, totalScore], (err) => {
+                        if (err) {
+                            console.error('Error inserting score into the database:', err.stack);
+                            return res.status(500).send('Internal server error');
+                        }
+
+                        console.log(`UserID: ${UserID}, QuizID: ${QuizID}, Score: ${totalScore}`);
+                        res.json({ UserID, QuizID, score: totalScore });
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error processing answers:', error);
+                    res.status(500).send('Error processing answers');
+                });
+        }
+    });
+};
+
+
+// Get user quiz socre
+const getUserQuizScore = (req, res) => {
+    const { UserID, QuizID } = req.params;
+
+    if (!UserID || !QuizID) {
+        console.log('Error: User ID and Quiz ID are required.');
+        return res.status(400).json({ error: 'User ID and Quiz ID are required.' });
+    }
+
+    const query = 'SELECT Answer FROM `UserQuizAnswer` WHERE UserID = ? AND QuizID = ?;';
+    connection.query(query, [UserID, QuizID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+
+        if (results.length === 0) {
+            console.log('No quiz found with that ID.');
+            return res.status(404).json({ error: 'Quiz not found' });
+        }
+
+        const answer = JSON.parse(results[0].Answer);
+        res.json(answer);
+    });
+}
+
+module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScore };
