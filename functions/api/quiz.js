@@ -342,7 +342,7 @@ const addUserQuizScore = (req, res) => {
 
 
 // Get user quiz socre
-const getUserQuizScore = (req, res) => {
+const getUserQuizScores = (req, res) => {
     const { UserID, QuizID } = req.params;
 
     if (!UserID || !QuizID) {
@@ -350,7 +350,7 @@ const getUserQuizScore = (req, res) => {
         return res.status(400).json({ error: 'User ID and Quiz ID are required.' });
     }
 
-    const query = 'SELECT Score FROM `UserQuizScore` WHERE UserID = ? AND QuizID = ?;';
+    const query = 'SELECT ID, Score, SubmitTime FROM `UserQuizScore` WHERE UserID = ? AND QuizID = ?;';
     connection.query(query, [UserID, QuizID], (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
@@ -363,8 +363,33 @@ const getUserQuizScore = (req, res) => {
             return res.status(404).json({ error: 'Quiz not found' });
         }
 
-        res.json(results[0]);
+        res.json(results);
     });
 }
 
-module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScore };
+const getUserQuizScore = (req, res) => {
+    const { UserID, QuizID, ID } = req.params;
+
+    if (!UserID || !QuizID || !ID) {
+        console.log('Error: User ID, Quiz ID, and ID are required.');
+        return res.status(400).json({ error: 'User ID, Quiz ID, and SubmitID are required.' });
+    }
+
+    const query = 'SELECT ID, Score, SubmitTime FROM `UserQuizScore` WHERE UserID = ? AND QuizID = ? AND ID = ?;';
+    connection.query(query, [UserID, QuizID, ID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+
+        if (results.length === 0) {
+            console.log('No quiz found with that ID.');
+            return res.status(404).json({ error: 'Quiz not found' });
+        }
+
+        res.json(results);
+    });
+}
+
+module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore };
