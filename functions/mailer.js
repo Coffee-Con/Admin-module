@@ -275,7 +275,6 @@ const generateLink = async (email) => {
       }
 
       const userId = results.length > 0 ? results[0].UserID : 0;
-      console.log('User ID:', userId);
 
       connection.query('INSERT INTO click_key (`key`, `userid`) VALUES (?, ?)', [key, userId], (err) => {
         if (err) {
