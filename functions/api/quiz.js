@@ -324,14 +324,14 @@ const addUserQuizScore = (req, res) => {
 
             // 插入用户分数到 UserQuizScore 表
             const insertQuery = 'INSERT INTO `UserQuizScore` (UserID, QuizID, Score) VALUES (?, ?, ?);';
-            connection.query(insertQuery, [UserID, QuizID, totalScore], (err) => {
+            connection.query(insertQuery, [UserID, QuizID, totalScore], (err, results) => {
                 if (err) {
                     console.error('Error inserting score into the database:', err.stack);
                     return res.status(500).send('Internal server error');
                 }
 
-                console.log(`UserID: ${UserID}, QuizID: ${QuizID}, Score: ${totalScore}`);
-                res.json({ UserID, QuizID, Score: totalScore });
+                const insertedId = results.insertId;
+                res.json({ ID: insertedId, UserID, QuizID, Score: totalScore });
             });
         })
         .catch((error) => {
