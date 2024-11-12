@@ -4,7 +4,6 @@ const nodemailer = require('nodemailer');
 const multiparty = require('multiparty');
 const marked = require('marked');
 const crypto = require('crypto');
-const port = process.env.PORT || 5001;
 
 // 连接到MySQL数据库
 const mysql = require('mysql2');
@@ -185,7 +184,7 @@ const verifyCaptcha2 = async (req, res) => {
         }
 
         // 构建带 Token 的重置密码链接
-        const resetLink = `http://localhost:5003/resetPassword.html?changepasswordToken=${token}`;
+        const resetLink = `${process.env.BASE_URL}:${process.env.PORT}/resetPassword.html?changepasswordToken=${token}`;
 
         // 发送邮件
         const mailOptions = {
@@ -283,7 +282,7 @@ const generateLink = async (email) => {
           return;
         }
 
-        const link = `http://localhost:${port}/click/${key}`;
+        const link = `${process.env.BASE_URL}:${process.env.PORT}/click/${key}`;
         resolve(link);
       });
     });
