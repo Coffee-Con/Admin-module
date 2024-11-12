@@ -56,7 +56,7 @@ Dear [name],
 
 To enhance the security of our system, we are updating all employees' account information. Please click the following link and follow the instructions to complete the update:
 
-[link]
+[click]([link])
 
 Please ensure this is done within 24 hours, or your account will be temporarily disabled.
 
