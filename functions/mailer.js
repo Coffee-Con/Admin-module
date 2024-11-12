@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const multiparty = require('multiparty');
 const marked = require('marked');
 const crypto = require('crypto');
+const port = process.env.PORT || 5001;
 
 // 连接到MySQL数据库
 const mysql = require('mysql2');
@@ -262,37 +263,30 @@ const resetPassword = (req, res) => {
   });
 };
 
-const generateLink = async (req, res) => {
-  const email = req.body.email;
-  console.log('Email:', email);
-  // 为每个用户生成唯一的 key
-  const key = crypto.randomBytes(16).toString('hex');
-  console.log('Key:', key);
+const generateLink = async (email) => {
+  return new Promise((resolve, reject) => {
+    const key = crypto.randomBytes(16).toString('hex');
 
-  // 从数据库中获取用户 ID
-  connection.query('SELECT UserID FROM user WHERE (`Email`) = (?)', [email], (err, results) => {
-    if (err) {
-      console.error('Error querying the database:', err.stack);
-      res.status(500).send('Internal server error');
-      return;
-    }
-
-    // 如果没有找到用户，则设置 UserID 为 0
-    const userId = results.length > 0 ? results[0].UserID : 0;
-    // const userId = 1; // For testing purposes
-    console.log('User ID:', userId);
-
-    // 将生成的 key 存储到数据库
-    connection.query('INSERT INTO click_key (`key`, `userid`) VALUES (?, ?)', [key, userId], (err) => {
+    connection.query('SELECT UserID FROM user WHERE (`Email`) = (?)', [email], (err, results) => {
       if (err) {
-        console.error('Error inserting key into the database:', err.stack);
-        res.status(500).send('Internal server error');
+        console.error('Error querying the database:', err.stack);
+        reject('Internal server error');
         return;
       }
 
-      // 返回生成的链接
-      const link = `http://localhost:${port}/click/${key}`;
-      res.send(`Click link generated: <a href="${link}" target="_blank">Click</a>`);
+      const userId = results.length > 0 ? results[0].UserID : 0;
+      console.log('User ID:', userId);
+
+      connection.query('INSERT INTO click_key (`key`, `userid`) VALUES (?, ?)', [key, userId], (err) => {
+        if (err) {
+          console.error('Error inserting key into the database:', err.stack);
+          reject('Internal server error');
+          return;
+        }
+
+        const link = `http://localhost:${port}/click/${key}`;
+        resolve(link);
+      });
     });
   });
 };
