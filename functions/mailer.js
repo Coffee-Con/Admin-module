@@ -1,8 +1,9 @@
+require('dotenv').config();
+
 const nodemailer = require('nodemailer');
 const multiparty = require('multiparty');
 const marked = require('marked');
-const generateLink = require('./generateLink');
-require('dotenv').config();
+const crypto = require('crypto');
 
 // 连接到MySQL数据库
 const mysql = require('mysql2');
@@ -56,7 +57,7 @@ const sendMailHandler = async (req, res) => {
     // 依次遍历每个收件人并发送邮件
     for (let i = 0; i < nameArray.length; i++) {
       const namePlaceholder = nameArray[i];
-      const linkPlaceholder = await generateLink.generateLink(emailArray[i]);
+      const linkPlaceholder = await generateLink(emailArray[i]);
 
       // 用模板内容替换占位符
       const content = message
@@ -85,7 +86,6 @@ const sendMailHandler = async (req, res) => {
 };
 
 // 生成随机 Token
-const crypto = require('crypto');
 function generateToken() {
   return crypto.randomBytes(32).toString('hex');
 }

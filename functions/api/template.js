@@ -3,7 +3,6 @@ const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
 
 const { default: ollama } = require('ollama');
-const { get } = require('ollama/src/utils.js');
 
 const addTemplate = (req, res) => {
   const { Subject, Content } = req.body;
