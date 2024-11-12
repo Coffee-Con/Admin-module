@@ -29,7 +29,7 @@ function authenticateToken(req, res, next) {
 }
 
 // 登录并生成 JWT Token
-function login(req, res, bcrypt) {
+function login(req, res) {
     const email = req.body.email;
     const password = req.body.password;
 

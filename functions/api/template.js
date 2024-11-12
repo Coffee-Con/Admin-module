@@ -3,6 +3,7 @@ const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
 
 const { default: ollama } = require('ollama');
+const { get } = require('ollama/src/utils.js');
 
 const addTemplate = (req, res) => {
   const { Subject, Content } = req.body;
@@ -80,4 +81,31 @@ The following are the titles you need to use to generate content: `;
   }
 };
 
-module.exports = { deleteTemplate, addTemplate, generateTemplate };
+const getTemplates = (req, res) => {
+  const query = 'SELECT id, content FROM email_template';
+
+  connection.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+    // console.log('Templates:', results);
+    res.json(results);
+  });
+};
+
+const getTemplate = (req, res) => {
+  const templateId = req.params.id;
+  const query = 'SELECT content FROM email_template WHERE id = ?';
+
+  connection.query(query, templateId, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Template not found' });
+    }
+    res.json(results[0]);
+  });
+}
+
+module.exports = { deleteTemplate, addTemplate, generateTemplate, getTemplates, getTemplate };

@@ -262,4 +262,55 @@ const resetPassword = (req, res) => {
   });
 };
 
-module.exports = { sendMailHandler, verifyCaptcha, verifyCaptcha2, resetPassword };
+const generateLink = async (req, res) => {
+  const email = req.body.email;
+  console.log('Email:', email);
+  // 为每个用户生成唯一的 key
+  const key = crypto.randomBytes(16).toString('hex');
+  console.log('Key:', key);
+
+  // 从数据库中获取用户 ID
+  connection.query('SELECT UserID FROM user WHERE (`Email`) = (?)', [email], (err, results) => {
+    if (err) {
+      console.error('Error querying the database:', err.stack);
+      res.status(500).send('Internal server error');
+      return;
+    }
+
+    // 如果没有找到用户，则设置 UserID 为 0
+    const userId = results.length > 0 ? results[0].UserID : 0;
+    // const userId = 1; // For testing purposes
+    console.log('User ID:', userId);
+
+    // 将生成的 key 存储到数据库
+    connection.query('INSERT INTO click_key (`key`, `userid`) VALUES (?, ?)', [key, userId], (err) => {
+      if (err) {
+        console.error('Error inserting key into the database:', err.stack);
+        res.status(500).send('Internal server error');
+        return;
+      }
+
+      // 返回生成的链接
+      const link = `http://localhost:${port}/click/${key}`;
+      res.send(`Click link generated: <a href="${link}" target="_blank">Click</a>`);
+    });
+  });
+};
+
+const clickLinkHandler = (req, res) => {
+  const key = req.params.key;
+
+  // 记录点击事件
+  connection.query('INSERT INTO click_event (`key`) VALUES (?)', [key], (err) => {
+    if (err) {
+      console.error('Error inserting click event into the database:', err.stack);
+    }
+
+    // 显示一个确认页面
+    res.send(
+      '<h1>Your click has been recorded.</h1>'
+    );
+  });
+};
+
+module.exports = { sendMailHandler, verifyCaptcha, verifyCaptcha2, resetPassword, generateLink, clickLinkHandler };

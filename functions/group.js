@@ -112,4 +112,17 @@ const getAvailableUsers = (req, res) => {
   });
 };
 
-module.exports = { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers , getAvailableUsers};
+const fillRecipient = (req, res) => {
+  const groupId = req.params.groupId;
+  const query = 'SELECT u.Name, u.Email FROM `user` u JOIN `group_user` gu ON u.UserID = gu.UserID WHERE gu.GroupID = ?';
+  connection.query(query, [groupId], (err, results) => {
+    if (err) {
+      console.error('Error fetching recipients:', err);
+      return res.status(500).json({ error: 'Failed to load recipients', details: err });
+    }
+    console.log('Recipients:', results);
+    res.json(results);
+  });
+};
+
+module.exports = { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers , getAvailableUsers, fillRecipient };

@@ -140,17 +140,6 @@ app.post('/api/verify-captcha', mailer.verifyCaptcha2);
 app.use(express.json());
 app.post('/reset-password', mailer.resetPassword);
 
-/*
-// 用户页面
-app.get('/user', (req, res) => {
-  res.sendFile(__dirname + '/public/user.html');
-});
-
-// 管理员页面
-app.get('/admin', (req, res) => {
-  res.sendFile(__dirname + '/public/admin.html');
-});
-*/
 // 处理发送邮件请求
 app.post('/send', mailer.sendMailHandler);
 
@@ -162,114 +151,9 @@ app.get('/admin/index', requireAuth, (req, res) => {
 });
 
 // 处理生成链接的请求
-app.post('/generate-link', upload.none(), (req, res) => {
-  const email = req.body.email;
-  console.log('Email:', email);
-  // 为每个用户生成唯一的 key
-  const key = crypto.randomBytes(16).toString('hex');
-  console.log('Key:', key);
-
-  // 从数据库中获取用户 ID
-  connection.query('SELECT UserID FROM user WHERE (`Email`) = (?)', [email], (err, results) => {
-    if (err) {
-      console.error('Error querying the database:', err.stack);
-      res.status(500).send('Internal server error');
-      return;
-    }
-
-    // 如果没有找到用户，则设置 UserID 为 0
-    const userId = results.length > 0 ? results[0].UserID : 0;
-    // const userId = 1; // For testing purposes
-    console.log('User ID:', userId);
-
-    // 将生成的 key 存储到数据库
-    connection.query('INSERT INTO click_key (`key`, `userid`) VALUES (?, ?)', [key, userId], (err) => {
-      if (err) {
-        console.error('Error inserting key into the database:', err.stack);
-        res.status(500).send('Internal server error');
-        return;
-      }
-
-      // 返回生成的链接
-      const link = `http://localhost:${port}/click/${key}`;
-      res.send(`Click link generated: <a href="${link}" target="_blank">${link}</a>`);
-    });
-  });
-});
-
-// 记录点击事件
-app.get('/click/:key', (req, res) => {
-  const key = req.params.key;
-  console.log('Key:', key);
-
-  // 记录点击事件
-  connection.query('INSERT INTO click_event (`key`) VALUES (?)', [key], (err) => {
-    if (err) {
-      console.error('Error inserting click event into the database:', err.stack);
-    }
-
-    // 可选: 显示一个确认页面
-    res.send('Click recorded.');
-  });
-});
-
-// Route to get templates
-app.get('/templates', (req, res) => {
-  const query = 'SELECT id, content FROM email_template';
-
-  connection.query(query, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: 'Database error', details: err });
-    }
-    // console.log('Templates:', results);
-    res.json(results);
-  });
-});
-
-// Route to get a single template by ID
-app.get('/template/:id', (req, res) => {
-  const templateId = req.params.id;
-  const query = 'SELECT content FROM email_template WHERE id = ?';
-
-  connection.query(query, templateId, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: 'Database error', details: err });
-    }
-    if (results.length === 0) {
-      return res.status(404).json({ error: 'Template not found' });
-    }
-    res.json(results[0]);
-  });
-});
-
-// Route to get all groups
-app.get('/groups', (req, res) => {
-  const query = 'SELECT GroupID, GroupName FROM `group`';
-  connection.query(query, (err, results) => {
-    if (err) {
-      console.error('Error fetching groups:', err);
-      return res.status(500).json({ error: 'Failed to load groups', details: err });
-    }
-    res.json(results);
-  });
-});
-
-const { deleteTemplate } = require('./functions/api/template');
-app.delete('/delete-template/:id', deleteTemplate);
-
-// Route to get recipients for a specific group
-app.get('/fillRecipient/:groupId', (req, res) => {
-  const groupId = req.params.groupId;
-  const query = 'SELECT u.Name, u.Email FROM `user` u JOIN `group_user` gu ON u.UserID = gu.UserID WHERE gu.GroupID = ?';
-  connection.query(query, [groupId], (err, results) => {
-    if (err) {
-      console.error('Error fetching recipients:', err);
-      return res.status(500).json({ error: 'Failed to load recipients', details: err });
-    }
-    console.log('Recipients:', results);
-    res.json(results);
-  });
-});
+const { generateLink, clickLinkHandler } = require('./functions/mailer');
+app.post('/generate-link', generateLink);
+app.get("/click/:key", clickLinkHandler); // 记录点击事件
 
 // History
 const { getClicks, getClicksRisk } = require('./functions/api/click');
@@ -278,7 +162,7 @@ app.get('/click-risk', getClicksRisk);
 // History end
 
 // Group
-const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers, getAvailableUsers } = require('./functions/group'); // 导入Group模块
+const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers, getAvailableUsers, fillRecipient } = require('./functions/group'); // 导入Group模块
 app.use('/groups', groups);
 app.use('/create-group', createGroup);
 app.use('/add-group-member', addGroupMember);
@@ -286,6 +170,7 @@ app.use('/remove-group-member', removeGroupMember);
 // app.use('/group-members', getGroupMembers);
 app.get('/group-members/:groupId', getGroupMembers);
 app.get('/available-users/:groupId', getAvailableUsers);
+app.get('/fillRecipient/:groupId', fillRecipient);
 // Group end
 
 // Mobile API
@@ -355,9 +240,12 @@ app.post('/addUser', addUser);
 // User end
 
 // Template
-const { generateTemplate, addTemplate } = require('./functions/api/template');
+const { generateTemplate, addTemplate, getTemplates, deleteTemplate, getTemplate } = require('./functions/api/template');
 app.post('/chat', generateTemplate);
 app.post('/confirmTemp', addTemplate);
+app.get('/templates', getTemplates);
+app.delete('/delete-template/:id', deleteTemplate);
+app.get('/template/:id', getTemplate);
 // Template end
 
 app.listen(port, () => {
