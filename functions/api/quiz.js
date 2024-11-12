@@ -270,7 +270,7 @@ const addUserQuizScore = (req, res) => {
             // 遍历用户提交的答案数组，逐题查询数据库以获取正确答案
             const checkAnswerPromises = Answer.map(({ QuestionID, Answer: userAnswer }) => {
                 return new Promise((resolve, reject) => {
-                    // 查询数据库，获取指定 questionid 的正确答案
+                    // 查询数据库，获取指定 QuestionID 的正确答案
                     const query = 'SELECT Answer, QuestionType FROM `Question` WHERE QuestionID = ?;';
                     connection.query(query, [QuestionID], (err, results) => {
                         if (err) {
