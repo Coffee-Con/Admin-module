@@ -331,7 +331,7 @@ const addUserQuizScore = (req, res) => {
                 }
 
                 console.log(`UserID: ${UserID}, QuizID: ${QuizID}, Score: ${totalScore}`);
-                res.json({ UserID, QuizID, score: totalScore });
+                res.json({ UserID, QuizID, Score: totalScore });
             });
         })
         .catch((error) => {
