@@ -239,4 +239,77 @@ const addQuizAnswer = (req, res) => {
     });
 };
 
-module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addQuizAnswer };
+// calculate User Score
+const calculateUserScore = (req, res) => {
+    const { UserID, QuizID } = req.params;
+
+    // 查询用户的答案
+    const userAnswerQuery = 'SELECT Answer FROM userquizanswer WHERE UserID = ? AND QuizID = ?';
+    // 查询正确答案
+    const correctAnswerQuery = 'SELECT CorrectAnswer FROM correctanswers WHERE QuizID = ?';
+
+    connection.query(userAnswerQuery, [UserID, QuizID], (userErr, userResults) => {
+        if (userErr) {
+            console.error('Error querying user answers:', userErr.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+
+        if (userResults.length === 0) {
+            res.status(404).json({ error: 'User answers not found' });
+            return;
+        }
+
+        // 解析用户的答案
+        let userAnswersList;
+        try {
+            userAnswersList = JSON.parse(userResults[0].Answer);
+        } catch (parseError) {
+            console.error('Error parsing user Answer JSON:', parseError);
+            res.status(500).send('Error parsing user answers');
+            return;
+        }
+
+        connection.query(correctAnswerQuery, [QuizID], (correctErr, correctResults) => {
+            if (correctErr) {
+                console.error('Error querying correct answers:', correctErr.stack);
+                res.status(500).send('Internal server error');
+                return;
+            }
+
+            if (correctResults.length === 0) {
+                res.status(404).json({ error: 'Correct answers not found' });
+                return;
+            }
+
+            // 解析正确答案
+            let correctAnswersList;
+            try {
+                correctAnswersList = JSON.parse(correctResults[0].CorrectAnswer);
+            } catch (parseError) {
+                console.error('Error parsing correct Answer JSON:', parseError);
+                res.status(500).send('Error parsing correct answers');
+                return;
+            }
+
+            // 计算分数
+            let score = 0;
+            userAnswersList.forEach((userAnswer) => {
+                const correctAnswer = correctAnswersList.find(ca => ca.questionid === userAnswer.questionid);
+                if (correctAnswer && correctAnswer.answer === userAnswer.answer) {
+                    score += 1;
+                }
+            });
+
+            // 返回用户的总得分
+            res.json({
+                UserID,
+                QuizID,
+                Score: score
+            });
+        });
+    });
+};
+
+
+module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addQuizAnswer, calculateUserScore };
