@@ -31,8 +31,8 @@ const createQuiz = (req, res) => {
             console.error('Error inserting data:', err); // Log the error
             return res.status(500).json({ error: 'Database error' });
         }
-        console.log('Quiz created with ID:', results.insertId); // Debugging line
-        res.json({ success: true, id: results.insertId });
+        // console.log('Quiz created with ID:', results.insertId); // Debugging line
+        res.status(200).json({ success: true, id: results.insertId });
     });
 };
 
@@ -51,10 +51,10 @@ const deleteQuiz = (req, res) => {
             return res.status(500).json({ error: 'Database error' });
         }
         if (results.affectedRows === 0) {
-            console.log('No quiz found with that ID.'); // Debugging line
+            // console.log('No quiz found with that ID.'); // Debugging line
             return res.status(404).json({ error: 'Quiz not found' });
         }
-        console.log('Quiz deleted with ID:', QuizID); // Debugging line
+        // console.log('Quiz deleted with ID:', QuizID); // Debugging line
         res.json({ success: true, message: 'Quiz deleted successfully' });
     });
 };
@@ -234,12 +234,13 @@ const addUserQuizAnswer = (req, res) => {
             return res.status(500).json({ error: 'Database error' });
         }
 
-        console.log('Quiz answer inserted successfully.');
+        // console.log('Quiz answer inserted successfully.');
         res.json({ success: true });
     });
 
     // Use function addUserQuizScore to insert the score to the database
-    addUserQuizScore(req, res);
+    // addUserQuizScore(req);
+    // 需要在这里调用 addUserQuizScore 函数，将用户的答题结果计算分数并插入数据库，然后返回结果
 };
 
 // For after user submit quiz, add the score to the database
