@@ -214,4 +214,29 @@ function getUserCourseQuizzes(req, res) {
     });
 }
 
-module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes };
+// For user submit quiz 
+const addQuizAnswer = (req, res) => {
+    const { userid, quizid, answer } = req.body;
+
+    if (!userid || !quizid || !answer) {
+        console.log('Error: User ID, Quiz ID, and Answer are required.');
+        return res.status(400).json({ error: 'User ID, Quiz ID, and Answer are required.' });
+    }
+
+    const query = 'INSERT INTO `userquizanswer` (UserID, QuizID, Answer) VALUES (?, ?, ?);';
+
+    // Convert answer object to JSON string format
+    const answerJson = JSON.stringify(answer);
+
+    connection.query(query, [userid, quizid, answerJson], (err, results) => {
+        if (err) {
+            console.error('Error inserting data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        console.log('Quiz answer inserted successfully.');
+        res.json({ success: true });
+    });
+};
+
+module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addQuizAnswer };
