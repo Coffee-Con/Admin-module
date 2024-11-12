@@ -30,7 +30,6 @@ const createGroup = (req, res) => {
 const groups = (req, res) => {
   const query = 'SELECT GroupID, GroupName FROM `group`;';
   connection.query(query, (err, results) => {
-    console.log('Groups:', results); // Debugging line
     if (err) {
       return res.status(500).json({ error: 'Database error', details: err });
     }
