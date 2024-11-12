@@ -350,7 +350,7 @@ const getUserQuizScore = (req, res) => {
         return res.status(400).json({ error: 'User ID and Quiz ID are required.' });
     }
 
-    const query = 'SELECT Answer FROM `UserQuizAnswer` WHERE UserID = ? AND QuizID = ?;';
+    const query = 'SELECT Score FROM `UserQuizScore` WHERE UserID = ? AND QuizID = ?;';
     connection.query(query, [UserID, QuizID], (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
@@ -363,8 +363,7 @@ const getUserQuizScore = (req, res) => {
             return res.status(404).json({ error: 'Quiz not found' });
         }
 
-        const answer = JSON.parse(results[0].Answer);
-        res.json(answer);
+        res.json(results[0]);
     });
 }
 
