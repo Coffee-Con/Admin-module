@@ -256,6 +256,21 @@ function saveQuestion(questionID) {
         .catch(error => console.error('Error updating question:', error));
 }
 
+// 通过修改class="correct-answer"的css，实现根据选择的问题类型隐藏/显示<input type="checkbox" class="correct-answer">
+function questionTypecss() {
+    var questionType = document.getElementById("questionType").value;
+    var correctAnswer = document.getElementsByClassName("correct-answer");
+    if (questionType == 2) {
+        for (var i = 0; i < correctAnswer.length; i++) {
+            correctAnswer[i].style.display = "none";
+        }
+    } else {
+        for (var i = 0; i < correctAnswer.length; i++) {
+            correctAnswer[i].style.display = "block";
+        }
+    }
+}
+
 // Initialize question list on page load
 window.onload = fetchQuestions;
 
