@@ -9,6 +9,20 @@ function addAnswer() {
       <input type="checkbox" class="correct-answer"> Correct
   `;
     container.insertBefore(newAnswerDiv, container.lastElementChild);
+        const questionTypeSelect = document.getElementById('questionType');
+        const correctCheckboxes = document.querySelectorAll('.correct-answer');
+    
+            if (questionTypeSelect.value === '2') { // Fill in the Blank
+                correctCheckboxes.forEach(checkbox => {
+                    checkbox.style.display = 'none';
+                });
+            } else {
+                correctCheckboxes.forEach(checkbox => {
+                    checkbox.style.display = 'inline-block';
+                });
+            }
+
+    
 }
 
 function createQuestion() {
@@ -97,12 +111,16 @@ function fetchQuestions() {
                         <hr>
                     </div>
                     <div class="question-details" style="display: none;">
-                        <div class="form-group">
+                        <div class="form-group" style="display:none;">
                             <label>Type:</label>
                             <select id="editType-${question.QuestionID}">
                                 <option value="1" ${question.QuestionType === 1 ? 'selected' : ''}>MCQ</option>
                                 <option value="2" ${question.QuestionType === 2 ? 'selected' : ''}>Fill in the Blank</option>
                             </select>
+                        </div>
+                        <div class="form-group" style="display:flex;">
+                            <label>Type:</label>
+                            <p style="margin-left:5px;">${question.QuestionType === 1 ? 'MCQ' : (question.QuestionType === 2 ? 'Fill in the Blank' : 'Other Type')}</p>
                         </div>
                         <div class="form-group">
                             <label>Question Text:</label>
@@ -142,12 +160,10 @@ function fetchQuestions() {
                 const correctCheckboxes2 = questionDiv.querySelectorAll(`#editAnswersContainer-${question.QuestionID} input[type="checkbox`);
 
                 if(questionTypeSelect3 ==='Fill in the Blank'){
-                    addAnswerButton2.style.display = 'none';
                     correctCheckboxes2.forEach(checkbox => {
                         checkbox.style.display = 'none';
                     }); 
                 }else{
-                    addAnswerButton2.style.display = 'inline-block';
                     correctCheckboxes2.forEach(checkbox => {
                         checkbox.style.display = 'inline-block';
                     });
@@ -155,12 +171,10 @@ function fetchQuestions() {
 
                 questionTypeSelect2.addEventListener('change', function() {
                     if (questionTypeSelect2.value === '2') {
-                        addAnswerButton2.style.display = 'none';
                         correctCheckboxes2.forEach(checkbox => {
                             checkbox.style.display = 'none';
                         });
                     } else {
-                        addAnswerButton2.style.display = 'inline-block';
                         correctCheckboxes2.forEach(checkbox => {
                             checkbox.style.display = 'inline-block';
                         });
@@ -202,13 +216,27 @@ function addEditAnswer(questionID) {
 
     newAnswerDiv.innerHTML = `
         <input type="text" placeholder="Enter question answer">
-        <label>
-            <input style="margin-left:10px;" type="checkbox">
+        <label style="margin-left:10px;">
+            <input class="checkBox" style="margin-left:10px;" type="checkbox">
             Correct
         </label>
         <button class="btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${questionID}, ${container.children.length})">Delete</button>
     `;
     container.appendChild(newAnswerDiv);
+    // 检查问题类型并隐藏/显示“Correct”复选框
+    const questionTypeSelect = document.getElementById(`editType-${questionID}`);
+    const correctCheckboxes = container.querySelectorAll('.checkBox');
+
+    if (questionTypeSelect.value === '2') { // Fill in the Blank
+        correctCheckboxes.forEach(checkbox => {
+            checkbox.style.display = 'none';
+        });
+    } else {
+        correctCheckboxes.forEach(checkbox => {
+            checkbox.style.display = 'inline-block';
+        });
+    }
+
 }
 
 // Delete answer input field for editing
@@ -226,7 +254,7 @@ function saveQuestion(questionID) {
         const correctCheckbox = answerDiv.querySelector('input[type="checkbox"]');
         return {
             text: answerInput.value,
-            correct: correctCheckbox.checked
+            correct: questionType === "2" ? true : correctCheckbox.checked
         };
     });
 
@@ -274,28 +302,8 @@ function questionTypecss() {
 // Initialize question list on page load
 window.onload = fetchQuestions;
 
-document.addEventListener('DOMContentLoaded', function() {
-    const questionTypeSelect = document.getElementById('questionType');
-    const answersContainer = document.getElementById('answersContainer');
-    const addAnswerButton = document.querySelector('.btn.btn-primary.button-Animation');
-    const correctCheckboxes = document.querySelectorAll('.correct-answer');
 
-    questionTypeSelect.addEventListener('change', function() {
-        if (questionTypeSelect.value === '2') { // Fill in the Blank
-            // 隐藏添加答案按钮和所有复选框
-            addAnswerButton.style.display = 'none';
-            correctCheckboxes.forEach(checkbox => {
-                checkbox.style.display = 'none';
-            });
-        } else {
-            // 显示添加答案按钮和所有复选框
-            addAnswerButton.style.display = 'inline-block';
-            correctCheckboxes.forEach(checkbox => {
-                checkbox.style.display = 'inline-block';
-            });
-        }
-    });
-});
+
 
 
 
