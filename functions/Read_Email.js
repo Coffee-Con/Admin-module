@@ -11,7 +11,7 @@ connection.connect((err) => {
   console.log('Connected to the database.');
 });
 
-const query = 'SELECT Email FROM user';
+const query = 'SELECT Email FROM User';
 
 connection.query(query, (error, results, fields) => {
   if (error) {

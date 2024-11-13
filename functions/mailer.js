@@ -98,7 +98,7 @@ const verifyCaptcha = async (req, res) => {
   if (req.session.captcha && captchaInput.toLowerCase() === req.session.captcha.toLowerCase()) {
     try {
       // 检查邮箱是否在数据库中存在
-      const query = 'SELECT UserID FROM `user` WHERE email = ?';
+      const query = 'SELECT UserID FROM `User` WHERE email = ?';
       connection.query(query, [email], (err, rows) => {
         if (err) {
           console.error('数据库查询错误:', err);
@@ -159,7 +159,7 @@ const verifyCaptcha2 = async (req, res) => {
   // 验证验证码是否正确（忽略大小写）
   try {
     // 检查邮箱是否在数据库中存在
-    const query = 'SELECT UserID FROM `user` WHERE email = ?';
+    const query = 'SELECT UserID FROM `User` WHERE email = ?';
     connection.query(query, [email], (err, rows) => {
       if (err) {
         console.error('数据库查询错误:', err);
@@ -222,7 +222,7 @@ const resetPassword = (req, res) => {
   const query = `
     SELECT u.UserID, u.Salt 
     FROM reset_tokens rt
-    JOIN user u ON rt.user_id = u.UserID
+    JOIN User u ON rt.user_id = u.UserID
     WHERE rt.token = ? AND rt.token_expiry > NOW()
   `;
   connection.query(query, [changepasswordToken], async (err, rows) => {
@@ -242,7 +242,7 @@ const resetPassword = (req, res) => {
       const hashedPW = crypto.createHash('md5').update(newPassword + salt).digest('hex');
 
       // 更新用户的密码
-      const updateQuery = 'UPDATE user SET HashedPW = ? WHERE UserID = ?';
+      const updateQuery = 'UPDATE User SET HashedPW = ? WHERE UserID = ?';
       connection.query(updateQuery, [hashedPW, userId], (err, results) => {
           if (err) {
               console.error('更新密码错误:', err);
@@ -266,7 +266,7 @@ const generateLink = async (email) => {
   return new Promise((resolve, reject) => {
     const key = crypto.randomBytes(16).toString('hex');
 
-    connection.query('SELECT UserID FROM user WHERE (`Email`) = (?)', [email], (err, results) => {
+    connection.query('SELECT UserID FROM User WHERE (`Email`) = (?)', [email], (err, results) => {
       if (err) {
         console.error('Error querying the database:', err.stack);
         reject('Internal server error');
@@ -275,7 +275,7 @@ const generateLink = async (email) => {
 
       const userId = results.length > 0 ? results[0].UserID : 0;
 
-      connection.query('INSERT INTO click_key (`key`, `userid`) VALUES (?, ?)', [key, userId], (err) => {
+      connection.query('INSERT INTO ClickKey (`key`, `userid`) VALUES (?, ?)', [key, userId], (err) => {
         if (err) {
           console.error('Error inserting key into the database:', err.stack);
           reject('Internal server error');

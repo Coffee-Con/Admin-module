@@ -5,7 +5,7 @@ const connection = mysql.createConnection(dbConfig);
 
 function getUserInfo(req, res) {
     if (req.user.id != null) {
-        const query = 'SELECT * FROM user WHERE UserID = ?';
+        const query = 'SELECT * FROM User WHERE UserID = ?';
         connection.query(query, [req.user.id], (err, results) => {
             if (err) {
                 console.error('Error querying the database:', err.stack);

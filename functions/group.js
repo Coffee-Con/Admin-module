@@ -15,7 +15,7 @@ const createGroup = (req, res) => {
       return res.status(400).json({ error: 'Group Name is required.' });
   }
 
-  const query = 'INSERT INTO `group` (GroupName) VALUES (?);';
+  const query = 'INSERT INTO `Group` (GroupName) VALUES (?);';
   connection.query(query, [groupName], (err, results) => {
       if (err) {
           console.error('Error inserting data:', err); // Log the error
@@ -28,7 +28,7 @@ const createGroup = (req, res) => {
 
 // API to fetch all groups
 const groups = (req, res) => {
-  const query = 'SELECT GroupID, GroupName FROM `group`;';
+  const query = 'SELECT GroupID, GroupName FROM `Group`;';
   connection.query(query, (err, results) => {
     if (err) {
       return res.status(500).json({ error: 'Database error', details: err });
@@ -45,7 +45,7 @@ const addGroupMember = (req, res) => {
       return res.status(400).json({ error: 'Group ID and User ID are required.' });
   }
 
-  const query = 'INSERT INTO `group_user` (GroupID, UserID) VALUES (?, ?);';
+  const query = 'INSERT INTO `GroupUser` (GroupID, UserID) VALUES (?, ?);';
   connection.query(query, [groupId, userId], (err, results) => {
       if (err) {
           console.error('Error adding member:', err);
@@ -63,7 +63,7 @@ const removeGroupMember = (req, res) => {
       return res.status(400).json({ error: 'Group ID and User ID are required.' });
   }
 
-  const query = 'DELETE FROM `group_user` WHERE GroupID = ? AND UserID = ?;';
+  const query = 'DELETE FROM `GroupUser` WHERE GroupID = ? AND UserID = ?;';
   connection.query(query, [groupId, userId], (err, results) => {
       if (err) {
           console.error('Error removing member:', err);
@@ -78,8 +78,8 @@ const getGroupMembers = (req, res) => {
   const { groupId } = req.params;
   const query = `
       SELECT u.UserID, u.User, u.Email, u.Name 
-      FROM user u 
-      JOIN group_user gu ON u.UserID = gu.UserID 
+      FROM User u 
+      JOIN GroupUser gu ON u.UserID = gu.UserID 
       WHERE gu.GroupID = ?;`;
   connection.query(query, [groupId], (err, results) => {
       if (err) {
@@ -95,10 +95,10 @@ const getAvailableUsers = (req, res) => {
   const { groupId } = req.params;
   const query = `
       SELECT u.UserID, u.User, u.Email, u.Name 
-      FROM user u 
+      FROM User u 
       WHERE u.UserID NOT IN (
           SELECT gu.UserID 
-          FROM group_user gu 
+          FROM GroupUser gu 
           WHERE gu.GroupID = ?
       );`;
 
@@ -113,7 +113,7 @@ const getAvailableUsers = (req, res) => {
 
 const fillRecipient = (req, res) => {
   const groupId = req.params.groupId;
-  const query = 'SELECT u.Name, u.Email FROM `user` u JOIN `group_user` gu ON u.UserID = gu.UserID WHERE gu.GroupID = ?';
+  const query = 'SELECT u.Name, u.Email FROM `User` u JOIN `GroupUser` gu ON u.UserID = gu.UserID WHERE gu.GroupID = ?';
   connection.query(query, [groupId], (err, results) => {
     if (err) {
       console.error('Error fetching recipients:', err);

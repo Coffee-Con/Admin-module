@@ -5,9 +5,9 @@ const connection = mysql.createConnection(dbConfig);
 const getClicks = (req, res) => {
   const query = `
     SELECT ce.time, u.Name, u.Email
-    FROM click_event ce
-    JOIN click_key ck ON ce.key = ck.key
-    JOIN user u ON ck.userid = u.UserID
+    FROM ClickEvent ce
+    JOIN ClickKey ck ON ce.key = ck.key
+    JOIN User u ON ck.userid = u.UserID
     ORDER BY ce.time DESC;
   `;
 
@@ -21,7 +21,7 @@ const getClicks = (req, res) => {
 const getClicksRisk = (req, res) => {
   const query = `
     SELECT COUNT(*) AS click_count_last_month
-    FROM click_event
+    FROM ClickEvent
     WHERE time >= NOW() - INTERVAL 1 MONTH;
   `;
 

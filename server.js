@@ -41,7 +41,7 @@ app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间
   const email = req.body.email;
   const password = req.body.password;
 
-  const query = 'SELECT * FROM user WHERE Email = ?';
+  const query = 'SELECT * FROM User WHERE Email = ?';
   connection.query(query, [email], (err, results) => {
     if (err) {
       console.error('Error querying the database:', err.stack);

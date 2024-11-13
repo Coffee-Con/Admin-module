@@ -5,9 +5,9 @@ const crypto = require('crypto');
 app.get('/click-events-history', (req, res) => {
   const query = `
     SELECT ce.time, u.Name, u.Email
-    FROM click_event ce
-    JOIN click_key ck ON ce.key = ck.key
-    JOIN user u ON ck.userid = u.UserID
+    FROM ClickEvent ce
+    JOIN ClickKey ck ON ce.key = ck.key
+    JOIN User u ON ck.userid = u.UserID
     ORDER BY ce.time DESC;
   `;
 

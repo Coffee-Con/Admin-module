@@ -8,7 +8,7 @@ const crypto = require('crypto');
 
 // 检查Email是否存在的函数
 const checkEmailExists = (email, connection, callback) => {
-  const query = 'SELECT COUNT(*) AS count FROM user WHERE Email = ?';
+  const query = 'SELECT COUNT(*) AS count FROM User WHERE Email = ?';
   connection.query(query, [email], (err, results) => {
     if (err) {
       console.error('Error checking email:', err.stack);
@@ -73,7 +73,7 @@ const readCSVAndInsertUsers = (filePath, connection, callback) => {
             const salt = crypto.randomBytes(16).toString('hex');
             const hashedPW = crypto.createHash('md5').update(user.password + salt).digest('hex');
 
-            const query = 'INSERT INTO user (User, Email, Name, Role, Salt, HashedPW) VALUES (?, ?, ?, ?, ?, ?)';
+            const query = 'INSERT INTO User (User, Email, Name, Role, Salt, HashedPW) VALUES (?, ?, ?, ?, ?, ?)';
             connection.query(query, [user.user, user.email, user.name, user.role, salt, hashedPW], (err) => {
               if (err) {
                 console.error('Error inserting data:', err.stack);
@@ -125,7 +125,7 @@ const register = (req, res) => {
       const salt = crypto.randomBytes(16).toString('hex');
       const hashedPW = crypto.createHash('md5').update(password + salt).digest('hex');
 
-      const query = 'INSERT INTO user (User, Email, Name, Role, Salt, HashedPW) VALUES (?, ?, ?, ?, ?, ?)';
+      const query = 'INSERT INTO User (User, Email, Name, Role, Salt, HashedPW) VALUES (?, ?, ?, ?, ?, ?)';
       connection.query(query, [user, email, name, role, salt, hashedPW], (err) => {
         if (err) {
           console.error('Error inserting data:', err.stack);

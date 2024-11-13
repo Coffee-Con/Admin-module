@@ -22,7 +22,7 @@ function getUserCourses(req, res) {
     const query = `
         SELECT c.*
         FROM Course c
-        JOIN Course_User cu ON c.CourseID = cu.CourseID
+        JOIN CourseUser cu ON c.CourseID = cu.CourseID
         WHERE cu.UserID = ?;
     `;
     connection.query(query, [userID], (err, results) => {

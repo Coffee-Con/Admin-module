@@ -33,7 +33,7 @@ function login(req, res) {
     const email = req.body.email;
     const password = req.body.password;
 
-    const query = 'SELECT * FROM user WHERE Email = ?';
+    const query = 'SELECT * FROM User WHERE Email = ?';
     connection.query(query, [email], (err, results) => {
         if (err) {
         console.error('Error querying the database:', err.stack);

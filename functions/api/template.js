@@ -11,8 +11,8 @@ const addTemplate = (req, res) => {
   if (!Subject || !Content) {
     return res.status(400).json({ error: 'Subject and content are required.' });
   }
-  // Insert data into the email_template table
-  const query = 'INSERT INTO email_template (content) VALUES (?)';
+  // Insert data into the EmailTemplate table
+  const query = 'INSERT INTO EmailTemplate (content) VALUES (?)';
   const contentJson = JSON.stringify({ subject: Subject, content: Content });
 
   connection.query(query, contentJson, (error, results) => {
@@ -27,7 +27,7 @@ const addTemplate = (req, res) => {
 
 const deleteTemplate = (req, res) => {
     const templateId = req.params.id;
-    const query = 'DELETE FROM email_template WHERE id = ?;';
+    const query = 'DELETE FROM EmailTemplate WHERE id = ?;';
     connection.query(query, [templateId], (err, results) => {
       if (err) {
         console.error('Error removing member:', err);
@@ -81,7 +81,7 @@ The following are the titles you need to use to generate content: `;
 };
 
 const getTemplates = (req, res) => {
-  const query = 'SELECT id, content FROM email_template';
+  const query = 'SELECT id, content FROM EmailTemplate';
 
   connection.query(query, (err, results) => {
     if (err) {
@@ -94,7 +94,7 @@ const getTemplates = (req, res) => {
 
 const getTemplate = (req, res) => {
   const templateId = req.params.id;
-  const query = 'SELECT content FROM email_template WHERE id = ?';
+  const query = 'SELECT content FROM EmailTemplate WHERE id = ?';
 
   connection.query(query, templateId, (err, results) => {
     if (err) {
