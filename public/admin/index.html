@@ -6,6 +6,15 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        function logout(){
+            fetch('/logout', { method: 'POST' })
+            .then(res => {
+                window.location.href = '/login.html';
+            })
+            .catch(err => console.error('Logout failed', err));
+        }
+    </script>
     <title>Home Page</title>
     <style>
         html, body {
@@ -112,6 +121,11 @@
             <div class="link-box button-Animation" style="font-weight: bold;">
                 <a href="./click.html">
                     <i class="fas fa-history" style="padding-right: 5px;"></i>Analytic Report
+                </a>
+            </div>
+            <div class="link-box button-Animation" style="font-weight: bold;">
+                <a onclick="logout()">
+                    <i class="fas fa-history" style="padding-right: 5px;"></i>logout
                 </a>
             </div>
         </div>

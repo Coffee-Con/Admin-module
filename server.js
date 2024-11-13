@@ -75,6 +75,11 @@ app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间
     }
   });
 });
+// logout
+app.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/');
+});
 
 // Register
 // Handle file upload
