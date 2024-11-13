@@ -90,9 +90,10 @@ function fetchQuestions() {
 
                 questionDiv.innerHTML = `
                     <div class="question-header">
-                        <span>${question.Question}</span>
+                        <span style="font-weight:bold;">Q: ${question.Question}</span>
                         <button class="btn btn-danger button-Animation" style="margin-left:5px;" onclick="deleteQuestion(${question.QuestionID})">Delete</button>
-                        <button class="btn btn-primary button-Animation" style="margin-left:5px;" onclick="toggleDetails(this)">Edit</button>
+                        <button class="btn btn-success button-Animation" style="margin-left:5px;" onclick="toggleDetails(this)">Edit</button>
+                        <hr>
                     </div>
                     <div class="question-details" style="display: none;">
                         <div class="form-group">
@@ -113,22 +114,57 @@ function fetchQuestions() {
                                 question.Answer.map((answer, index) => `
                                     <div class="answer-input">
                                         <input type="text" id="editAnswerText-${question.QuestionID}-${index}" value="${answer.text}" placeholder="Edit answer ${index + 1}">
-                                        <label>
-                                            <input style="margin-left:10px;" type="checkbox" id="correct-${question.QuestionID}-${index}" ${answer.correct ? 'checked' : ''}>
+                                        <label style="margin-left:10px;" >
+                                            <input type="checkbox" id="correct-${question.QuestionID}-${index}" ${answer.correct ? 'checked' : ''}>
                                             Correct
                                         </label>
-                                        <button class="btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${question.QuestionID}, ${index})">Delete</button>
+                                        <button class="deleteButton btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${question.QuestionID}, ${index})">Delete</button>
                                     </div>
                                 `).join('')
                                 : ''
                                 }
                             </div>
-                            <button class="btn btn-primary button-Animation" type="button" onclick="addEditAnswer(${question.QuestionID})">Add New Answer</button>
+                            <div style="display:flex; margin-top:15px;">
+                                <button class="btn btn-primary button-Animation" type="button" onclick="addEditAnswer(${question.QuestionID})">Add New Answer</button>
+                                <button style="margin-left:630px; position:absolute"  class="btn btn-primary button-Animation" onclick="saveQuestion(${question.QuestionID})">Save Changes</button>
+                                <hr>
+                            </div>
+                            <hr>
                         </div>
-                        <button class="btn btn-primary button-Animation" onclick="saveQuestion(${question.QuestionID})">Save Changes</button>
                     </div>
                 `;
                 questionList.appendChild(questionDiv);
+                // 在这里添加事件监听器
+                const questionTypeSelect2 = document.getElementById(`editType-${question.QuestionID}`);
+                const questionTypeSelect3 = questionTypeSelect2.options[questionTypeSelect2.selectedIndex].text;
+                const addAnswerButton2 = questionDiv.querySelector('.btn.btn-primary.button-Animation');
+                const correctCheckboxes2 = questionDiv.querySelectorAll(`#editAnswersContainer-${question.QuestionID} input[type="checkbox`);
+
+                if(questionTypeSelect3 ==='Fill in the Blank'){
+                    addAnswerButton2.style.display = 'none';
+                    correctCheckboxes2.forEach(checkbox => {
+                        checkbox.style.display = 'none';
+                    }); 
+                }else{
+                    addAnswerButton2.style.display = 'inline-block';
+                    correctCheckboxes2.forEach(checkbox => {
+                        checkbox.style.display = 'inline-block';
+                    });
+                }
+
+                questionTypeSelect2.addEventListener('change', function() {
+                    if (questionTypeSelect2.value === '2') {
+                        addAnswerButton2.style.display = 'none';
+                        correctCheckboxes2.forEach(checkbox => {
+                            checkbox.style.display = 'none';
+                        });
+                    } else {
+                        addAnswerButton2.style.display = 'inline-block';
+                        correctCheckboxes2.forEach(checkbox => {
+                            checkbox.style.display = 'inline-block';
+                        });
+                    }
+                });
             });
         })
         .catch(error => console.error('Error fetching questions:', error));
@@ -221,3 +257,29 @@ function saveQuestion(questionID) {
 
 // Initialize question list on page load
 window.onload = fetchQuestions;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const questionTypeSelect = document.getElementById('questionType');
+    const answersContainer = document.getElementById('answersContainer');
+    const addAnswerButton = document.querySelector('.btn.btn-primary.button-Animation');
+    const correctCheckboxes = document.querySelectorAll('.correct-answer');
+
+    questionTypeSelect.addEventListener('change', function() {
+        if (questionTypeSelect.value === '2') { // Fill in the Blank
+            // 隐藏添加答案按钮和所有复选框
+            addAnswerButton.style.display = 'none';
+            correctCheckboxes.forEach(checkbox => {
+                checkbox.style.display = 'none';
+            });
+        } else {
+            // 显示添加答案按钮和所有复选框
+            addAnswerButton.style.display = 'inline-block';
+            correctCheckboxes.forEach(checkbox => {
+                checkbox.style.display = 'inline-block';
+            });
+        }
+    });
+});
+
+
+

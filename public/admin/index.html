@@ -27,7 +27,6 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            overflow: hidden;
         }
 
         body::before {
@@ -49,7 +48,7 @@
             display: flex;
             flex-direction: column; 
             align-items: center;
-            gap: 4rem;
+            gap: 3em;
             padding: 20px;
             border: 2px solid #ccc;
             width:500px;
@@ -96,8 +95,8 @@
 
  <body>
     <div class="content">
-        <h1 class="title" style="font-size: 4em; font-weight: bold; margin-bottom: 1em;">PHISHING HOME PAGE</h1>
-        <div class="centered-container">
+        <h1 class="title" style="font-size: 4em; font-weight: bold; margin-bottom: 1em; margin-top: 1em;">PHISHING HOME PAGE</h1>
+        <div class="centered-container" style="margin-bottom: 1em;">
             <div class="link-box button-Animation">
                 <a href="send.html" style="font-weight: bold;">
                     <i class="fas fa-envelope" style="padding-right: 5px;"></i>Send Email
@@ -125,7 +124,7 @@
             </div>
             <div class="link-box button-Animation" style="font-weight: bold;">
                 <a onclick="logout()">
-                    <i class="fas fa-history" style="padding-right: 5px;"></i>logout
+                    <i class="fas fa-sign-out-alt" style="padding-right: 5px;"></i>logout
                 </a>
             </div>
         </div>
