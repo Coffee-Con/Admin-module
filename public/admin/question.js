@@ -18,7 +18,7 @@ function createQuestion() {
         const isCorrect = input.parentElement.querySelector(".correct-answer").checked;
         return {
             text: input.value,
-            correct: isCorrect
+            correct: questionType === 2 ? true : isCorrect
         };
     });
 
