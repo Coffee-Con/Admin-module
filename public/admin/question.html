@@ -167,10 +167,12 @@
                 <input type="text" class="answer" placeholder="Enter question answer" required>
                 <input type="checkbox" class="correct-answer" checked> Correct
             </div>
-            <button class="btn btn-primary button-Animation" type="button" onclick="addAnswer()">Add Answer</button>
+            <div style="display: flex; margin-top: 15px;">
+                <button class="btn btn-primary button-Animation" type="button" onclick="addAnswer()">Add Answer</button>
+                <button style="margin-left: 620px; position: absolute;" class="btn btn-primary button-Animation" onclick="createQuestion()">Create Question</button>
+            </div>
         </div>
-        <button class="btn btn-primary button-Animation" onclick="createQuestion()">Create Question</button>
-        <h2 style="margin-top: 15px; margin-bottom: 15px;" class="subHeader">Question List</h2>
+        <h2 style="margin-top: 20px; margin-bottom: 20px;" class="subHeader">Question List</h2>
         <div id="questionList"></div>
     </div>
 
