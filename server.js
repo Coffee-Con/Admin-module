@@ -221,7 +221,7 @@ app.post('/addQuizToCourse', addQuizToCourse);
 app.delete('/removeQuizFromCourse', removeQuizFromCourse);
 app.get('/api/getUserCourseQuizzes/:CourseID',authenticateToken, getUserCourseQuizzes);
 app.post('/api/submitQuiz', addUserQuizAnswer);
-app.post('/api/addUserQuizScore', addUserQuizScore);
+// app.post('/api/addUserQuizScore', addUserQuizScore); use submitQuiz instead
 app.get('/api/getUserQuizScores', getUserQuizScores);
 app.get('/api/getUserQuizScore', getUserQuizScore);
 // Quiz end
