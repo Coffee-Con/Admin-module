@@ -37,6 +37,12 @@ function createQuestion() {
     const hasCorrectAnswer = answers.some(answer => answer.correct);
     if (!hasCorrectAnswer) {
         alert("Please select at least one correct answer.");
+        return; 
+    }
+
+
+    if(!questionType) {
+        alert('Please Seletect A Question Type');
         return;
     }
 
