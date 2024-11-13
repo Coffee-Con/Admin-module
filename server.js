@@ -10,8 +10,6 @@ const mailer = require('./functions/mailer'); // 导入邮件发送模块
 
 const { addUsers } = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
 
-// const upload = require('./functions/middlewares/upload'); // 导入上传文件中间件
-
 const app = express();
 const port = process.env.PORT || 5001;
 
@@ -90,7 +88,7 @@ app.post('/addUsers', upload.single('csvfile'), (req, res) => {
 
   console.log('File uploaded:', filePath);
   // Use the Add_User_by_csv.js script
-  addUsers.addUsers(filePath, connection, (err, result) => {
+  addUsers(filePath, connection, (err, result) => {
     if (err) {
       console.error('Error adding users:', err);
       return res.status(500).send('Error adding users.');
