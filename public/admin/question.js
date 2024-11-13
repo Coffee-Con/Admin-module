@@ -18,7 +18,7 @@ function createQuestion() {
         const isCorrect = input.parentElement.querySelector(".correct-answer").checked;
         return {
             text: input.value,
-            correct: questionType === 2 ? true : isCorrect
+            correct: questionType === "2" ? true : isCorrect
         };
     });
 
@@ -28,6 +28,7 @@ function createQuestion() {
         answers: answers,
     };
 
+    console.log(questionData);
     // Validation: Check if at least one correct answer is selected
     if (answers.length === 0) {
         alert("Please enter at least one answer.");
