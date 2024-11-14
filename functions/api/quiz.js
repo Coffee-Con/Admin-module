@@ -392,4 +392,72 @@ const getUserQuizScore = (req, res) => {
     });
 }
 
-module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore };
+// save user quiz answer to database (every question)
+const saveUserQuizQuestionAnswer = (req, res) => {
+    const { UserID, QuizID, QuestionID, Answer } = req.body;
+
+    if (!UserID || !QuizID || !QuestionID || !Answer) {
+        console.log('Error: User ID, Quiz ID, Question ID, and Answer are required.');
+        return res.status(400).json({ error: 'User ID, Quiz ID, Question ID, and Answer are required.' });
+    }
+
+    // 查询数据库中是否已经存在该用户对该 Question 的答题记录，如果有则更新，否则插入
+    const query = 'SELECT * FROM `UserQuizQuestionAnswer` WHERE UserID = ? AND QuizID = ? AND QuestionID = ?;';
+
+    connection.query(query, [UserID, QuizID, QuestionID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            return res.status(500).send('Internal server error');
+        }
+
+        if (results.length > 0) {
+            // 更新用户答题记录
+            const updateQuery = 'UPDATE `UserQuizQuestionAnswer` SET Answer = ? WHERE UserID = ? AND QuizID = ? AND QuestionID = ?;';
+            connection.query(updateQuery, [Answer, UserID, QuizID, QuestionID], (err, results) => {
+                if (err) {
+                    console.error('Error updating user quiz answer:', err.stack);
+                    return res.status(500).send('Internal server error');
+                }
+                res.json({ success: true, message: 'User quiz answer updated successfully' });
+            });
+        } else {
+            // 插入用户答题记录
+            const insertQuery = 'INSERT INTO `UserQuizQuestionAnswer` (UserID, QuizID, QuestionID, Answer) VALUES (?, ?, ?, ?);';
+            connection.query(insertQuery, [UserID, QuizID, QuestionID, Answer], (err, results) => {
+                if (err) {
+                    console.error('Error inserting user quiz answer:', err.stack);
+                    return res.status(500).send('Internal server error');
+                }
+                res.json({ success: true, message: 'User quiz answer saved successfully' });
+            });
+        }
+    });
+};
+
+// get user quiz answer from database (every question verion)
+const getUserQuizAnswers = (req, res) => {
+    const { UserID, QuizID } = req.params;
+
+    if (!UserID || !QuizID) {
+        console.log('Error: User ID and Quiz ID are required.');
+        return res.status(400).json({ error: 'User ID and Quiz ID are required.' });
+    }
+
+    const query = 'SELECT QuestionID, Answer FROM `UserQuizQuestionAnswer` WHERE UserID = ? AND QuizID = ?;';
+    connection.query(query, [UserID, QuizID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+
+        if (results.length === 0) {
+            console.log('No quiz found with that ID.');
+            return res.status(404).json({ error: 'Quiz not found' });
+        }
+
+        res.json(results);
+    });
+}
+
+module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers };
