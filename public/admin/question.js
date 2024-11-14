@@ -217,7 +217,7 @@ function addEditAnswer(questionID) {
     newAnswerDiv.innerHTML = `
         <input type="text" placeholder="Enter question answer">
         <label style="margin-left:10px;">
-            <input class="checkBox" style="margin-left:10px;" type="checkbox">
+            <input class="checkBox"  type="checkbox">
             Correct
         </label>
         <button class="btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${questionID}, ${container.children.length})">Delete</button>
