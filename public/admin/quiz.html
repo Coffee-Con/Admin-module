@@ -379,7 +379,7 @@
                     <td>${quiz.QuizID}</td>
                     <td>${quiz.QuizName}</td>
                     <td>${quiz.QuizDescription}</td>
-                    <td><button onclick="removeQuizFromCourse(${courseID},${quiz.QuizID})">Delete</button></td>
+                    <td><button class="btn btn-danger button-Animation"onclick="removeQuizFromCourse(${courseID},${quiz.QuizID})">Delete</button></td>
                 `;
                 quizzesOfCourseTableBody.appendChild(row);
             });
