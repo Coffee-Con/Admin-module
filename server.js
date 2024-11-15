@@ -253,6 +253,14 @@ app.delete('/delete-template/:id', deleteTemplate);
 app.get('/template/:id', getTemplate);
 // Template end
 
+// Reward
+const { createReward, getRewards, deleteReward, getReward } = require('./functions/api/reward');
+app.use('/api/create-reward', createReward);
+app.get('/api/getRewards', getRewards);
+app.delete('/api/delete-reward/:RewardID', deleteReward);
+app.get('/api/getReward/:RewardID', getReward);
+// Reward end
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

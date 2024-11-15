@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reward Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="form.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #333333;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .subHeader{
+            font-size: 24px;
+            color: #333333;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .back-button {
+          position: absolute; /* Change to absolute positioning */
+          top: 12px; /* Maintain distance from the top */
+          left: 10px; /* Align to the left */
+          background-color: transparent; /* Button background color */
+          color: black; /* Button text color */
+          border: none !important;
+          border-radius: 5px;
+          padding: 10px 15px;
+          cursor: pointer;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+            font-size: 1.2em; /* Adjust icon size for consistency */
+        }
+
+        .back-button {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: lightgray; 
+            transform: translateY(-2px); 
+        }
+
+        .back-button:active {
+            transform: scale(0.95); 
+        }
+
+        .button-Animation {
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease; 
+        }
+
+        .button-Animation:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='quiz.html'">
+        <i class="fa-solid fa-arrow-left"></i> 
+        <span>Back</span>
+    </button>
+    <header class="header">
+        <h1>Reward Management
+            <i class="fas fa-book" style="color: #007bff;"></i>
+        </h1>
+    </header>
+    <div class="container">
+
+        <!-- Create Reward Section -->
+        <h2 class="subHeader">Create Reward</h2>
+        <div class="form-group">
+            <label for="rewardName">Reward Name</label>
+            <input type="text" id="rewardName" placeholder="Enter reward name">
+        </div>
+        <div class="form-group">
+            <label for="rewardDescription">Reward Description</label>
+            <input type="text" id="rewardDescription" placeholder="Enter reward description">
+        </div>
+        <div class="form-group">
+            <label for="rewardDescription">Reward Point</label>
+            <input type="number" id="rewardPoint" placeholder="Enter reward point" min="0" step="1" required>
+        </div>
+        <button class="btn btn-primary button-Animation" onclick="createReward()">Create Reward</button>
+
+        <!-- Update Reward Section -->
+        <h2 class="subHeader" style="margin-top: 10px;">Update Reward</h2>
+        <div class="form-group">
+            <label for="rewardSelect">Select Reward</label>
+            <select id="rewardSelect" onchange="loadReward(this.value)">
+                <option value="">Select a reward</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="updateRewardName">Reward Name</label>
+            <input type="text" id="updateRewardName" placeholder="Enter reward name">
+        </div>
+        <div class="form-group">
+            <label for="updateRewardDescription">Reward Description</label>
+            <input type="text" id="updateRewardDescription" placeholder="Enter reward description">
+        </div>
+        <div class="form-group">
+            <label for="rewardDescription">Reward Point</label>
+            <input type="number" id="updateRewardPoint" placeholder="Enter reward point" min="0" step="1" required>
+        </div>
+        <button class="btn btn-primary button-Animation" onclick="updateReward()">Update Reward</button>
+
+        <!-- Reward List Section -->
+        <h2 class="subHeader" style="margin-top: 10px;">Rewards List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Reward ID</th>
+                    <th>Reward Name</th>
+                    <th>Description</th>
+                    <th>Reward Point</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="rewardsTableBody">
+                <!-- Reward list will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Function to create a new reward
+        function createReward() {
+            const rewardName = document.getElementById('rewardName').value;
+            const rewardDescription = document.getElementById('rewardDescription').value;
+            const rewardPoint = document.getElementById('rewardPoint').value;
+
+            if (!rewardName || !rewardPoint) {
+                alert('Reward Name and Reward Point are required');
+                return;
+            }
+
+            fetch('/api/create-reward', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ RewardName: rewardName, RewardDescription: rewardDescription, RewardPoint: rewardPoint })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Reward created successfully with ID: ' + data.id);
+                    loadRewards(); // Refresh the reward list
+                } else {
+                    alert('Error creating reward');
+                }
+            })
+            .catch(err => console.error('Error creating reward:', err));
+        }
+
+        // Function to update an existing reward
+        function updateReward() {
+            const rewardID = document.getElementById('rewardSelect').value;
+            const rewardName = document.getElementById('updateRewardName').value;
+            const rewardDescription = document.getElementById('updateRewardDescription').value;
+            const rewardPoint = document.getElementById('updateRewardPoint').value;
+            if (!rewardID || !rewardName || !rewardPoint) {
+                alert('Reward ID and Name are required');
+                return;
+            }
+
+            fetch(`/api/update-reward/${rewardID}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ RewardName: rewardName, RewardDescription: rewardDescription, RewardPoint: rewardPoint })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Reward updated successfully');
+                    loadRewards(); // Refresh the reward list
+                } else {
+                    alert(data.error || 'Error updating reward');
+                }
+            })
+            .catch(err => console.error('Error updating reward:', err));
+        }
+
+        // Function to delete a reward
+        function deleteReward(rewardID) {
+            fetch(`/api/delete-reward/${rewardID}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Reward deleted successfully');
+                    loadRewards(); // Refresh the reward list
+                } else {
+                    alert(data.error || 'Error deleting reward');
+                }
+            })
+            .catch(err => console.error('Error deleting reward:', err));
+        }
+
+        // Function to load rewards into the table
+        function loadRewards() {
+            fetch('/api/getRewards')
+            .then(response => response.json())
+            .then(rewards => {
+                const rewardsTableBody = document.getElementById('rewardsTableBody');
+                rewardsTableBody.innerHTML = ''; // Clear the table
+
+                rewards.forEach(reward => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${reward.RewardID}</td>
+                        <td>${reward.RewardName}</td>
+                        <td>${reward.RewardDescription}</td>
+                        <td>${reward.RewardPoint}</td>
+                        <td><button class="btn btn-danger button-Animation" onclick="deleteReward(${reward.RewardID})">Delete</button></td>
+                    `;
+                    rewardsTableBody.appendChild(row);
+                });
+
+                const rewardSelect = document.getElementById('rewardSelect');
+                rewards.forEach(reward => {
+                    const option = document.createElement('option');
+                    option.value = reward.RewardID;
+                    option.textContent = reward.RewardName;
+                    rewardSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error('Error loading rewards:', err));
+        }
+
+        // Fetch reward details when a reward is selected
+        async function loadReward(rewardID) {
+            if (!rewardID) {
+                document.getElementById('updateRewardName').value = '';
+                document.getElementById('updateRewardDescription').value = '';
+                document.getElementById('updateRewardPoint').value = '';
+                return;
+            }
+            const response = await fetch(`/api/getReward/${rewardID}`);
+            const reward = await response.json();
+
+            document.getElementById('updateRewardName').value = reward.RewardName;
+            document.getElementById('updateRewardDescription').value = reward.RewardDescription;
+            document.getElementById('updateRewardPoint').value = reward.RewardPoint;
+        }
+
+        // Call loadRewards on page load
+        document.addEventListener('DOMContentLoaded', loadRewards);
+    </script>
+</body>
+</html>
