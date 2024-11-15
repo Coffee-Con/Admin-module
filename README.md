@@ -1,30 +1,42 @@
 # Admin module
 
-## how to use
+## How to use
 
 ### Create and eidt [.env](.env) file:
 
-PORT= html port
+> SMTP For testing: https://ethereal.email/
 
-SMTP For testing: https://ethereal.email/
+PORT= HTML port
+
+BASEHOST= Server host/domain
+
+COMPANY_HOST=
 
 SMTP_HOST = SMTP host
 
-SMTP_PORT = SMTP Port
+SMTP_PORT = SMTP port
 
-ACCOUNT= e-mail address
+ACCOUNT= E-mail address
 
-PASS= e-mail pass
+PASS= E-mail pass
 
-~~SENDER= send e-mail address~~
+DBHost= Database host
+
+DBPort= Database port
+
+DBUser= Database user
+
+DBName= Database name(default CMOP)
+
+DBPassword= Your database password
 
 ### install mysql8.0
 
-run .sql file https://github.com/Coffee-Con/Database/blob/main/mysql.sql
+run [mysql.sql](https://github.com/Coffee-Con/Database/blob/main/mysql.sql) file.
 
 ### run by termmal:
 
-install node.js v22.9.0 https://nodejs.org/en/download/package-manager
+install [node.js v22.9.0](https://nodejs.org/en/download/package-manager)
 
 npm install cors dotenv express multiparty nodemailer nodemon cookie-parser
 
