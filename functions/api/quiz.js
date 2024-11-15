@@ -119,7 +119,7 @@ const getCourseQuizzes = (req, res) => {
         return res.status(400).json({ error: 'Course ID is required.' });
     }
 
-    const query = 'SELECT * FROM `QuizCourse` JOIN `Quiz` WHERE CourseID = ?;';
+    const query = 'SELECT * FROM `QuizCourse` JOIN `Quiz` ON `QuizCourse`.`QuizID` = `Quiz`.`QuizID` WHERE `QuizCourse`.`CourseID` = ?;';
     connection.query(query, [CourseID], (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
