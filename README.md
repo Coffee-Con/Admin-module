@@ -21,14 +21,15 @@ DBUser= Database user
 DBName= Database name(default CMOP)  
 DBPassword= Your database password  
 
-### install mysql8.0
+### Install mysql8.0
 
-run [mysql.sql](https://github.com/Coffee-Con/Database/blob/main/mysql.sql) file.
+> Install [MySQL](https://dev.mysql.com/downloads/mysql/)
 
-### run by termmal:
+Run [mysql.sql](https://github.com/Coffee-Con/Database/blob/main/mysql.sql) file.
 
-install [node.js v22.9.0](https://nodejs.org/en/download/package-manager)
+### Run via terminal:
 
-npm install cors dotenv express multiparty nodemailer nodemon cookie-parser
+> Install [node.js v22.9.0](https://nodejs.org/en/download/package-manager)  
 
+npm install cors dotenv express multiparty nodemailer nodemon cookie-parser  
 npm start
