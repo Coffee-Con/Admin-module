@@ -230,6 +230,10 @@
                 }
             })
             .catch(err => console.error('Error creating quiz:', err));
+
+            // refresh the quizzes of course list
+            CourseID = document.getElementById('addCourseID').value;
+            loadQuizzesNotInCourse(CourseID);
         }
 
         // Function to update an existing quiz
@@ -364,6 +368,7 @@
 
             // Refresh the quizzes of course list
             fetchQuizzesOfCourse(courseID);
+            loadQuizzesNotInCourse(courseID);
         }
 
         // Fetch quizzes of a course
