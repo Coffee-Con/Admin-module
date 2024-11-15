@@ -6,29 +6,20 @@
 
 > SMTP For testing: https://ethereal.email/
 
-PORT= HTML port
+PORT= HTML port  
+BASEHOST= Server host/domain  
+COMPANY_HOST=  
 
-BASEHOST= Server host/domain
+SMTP_HOST = SMTP host  
+SMTP_PORT = SMTP port  
+ACCOUNT= E-mail address  
+PASS= E-mail pass  
 
-COMPANY_HOST=
-
-SMTP_HOST = SMTP host
-
-SMTP_PORT = SMTP port
-
-ACCOUNT= E-mail address
-
-PASS= E-mail pass
-
-DBHost= Database host
-
-DBPort= Database port
-
-DBUser= Database user
-
-DBName= Database name(default CMOP)
-
-DBPassword= Your database password
+DBHost= Database host  
+DBPort= Database port  
+DBUser= Database user  
+DBName= Database name(default CMOP)  
+DBPassword= Your database password  
 
 ### install mysql8.0
 
