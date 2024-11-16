@@ -11,7 +11,7 @@ const connection = mysql.createConnection(dbConfig);
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    console.log("Authorization Header:", authHeader); // 打印请求头
+    // console.log("Authorization Header:", authHeader); // 打印请求头
 
     if (!token) {
         return res.status(401).json({ message: 'No token provided' });
@@ -36,26 +36,23 @@ function login(req, res) {
     const query = 'SELECT * FROM User WHERE Email = ?';
     connection.query(query, [email], (err, results) => {
         if (err) {
-        console.error('Error querying the database:', err.stack);
-        res.status(500).send('Internal server error');
-        return;
+            console.error('Error querying the database:', err.stack);
+            return res.status(500).send('Internal server error');
         }
 
         if (results.length === 0) {
-            res.status(401).send('Email error'); // change to email and password error
-            return;
+            return res.status(401).send('Email error'); // change to email and password error
         }
 
         const user = results[0];
         const hashedPW = crypto.createHash('md5').update(password + user.Salt).digest('hex');
 
         if (hashedPW !== user.HashedPW) {
-            res.status(401).send('Password error'); // change to email and password error
-            return;
+            return res.status(401).send('Password error'); // change to email and password error
         }else{ 
             // 生成 JWT Token
-            console.log("User from database:", user); // 打印从数据库中获取的用户信息
-            console.log("Login successful for user:", email);
+            // console.log("User from database:", user); // 打印从数据库中获取的用户信息
+            // console.log("Login successful for user:", email);
             // 确保生成的 JWT 包含 Role 属性
             const token = jwt.sign({ id: user.UserID, email: user.Email, Role: user.Role }, SECRET_KEY, { expiresIn: '8h' });
             res.json({ token });
