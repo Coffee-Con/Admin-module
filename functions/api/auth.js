@@ -60,6 +60,50 @@ function login(req, res) {
     }
 )};
 
+const webLogin = (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const query = 'SELECT * FROM User WHERE Email = ?';
+    connection.query(query, [email], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+
+        if (results.length === 0) {
+            res.status(401).send('Email error'); // change to email and password error
+            return;
+        }
+
+        const user = results[0];
+        const hashedPW = crypto.createHash('md5').update(password + user.Salt).digest('hex');
+
+        if (hashedPW !== user.HashedPW) {
+            return res.status(401).send('Password error'); // change to email and password error
+        } else {
+            const token = jwt.sign({ id: user.UserID, email: user.Email, Role: user.Role }, SECRET_KEY, { expiresIn: '1h' });
+            res.cookie('token', token, { httpOnly: true });
+        }
+
+        // 根据用户角色跳转到不同页面
+        if (user.Role === 0) {
+        res.redirect('/user'); // 404 后续修改
+        } else if (user.Role === 1) {
+        res.redirect('/admin/index.html');
+        } else {
+        res.status(401).send('Unknown role'); // 如果出现需要修改
+        }
+  });
+};
+
+// logout
+const logout = (req, res) => {
+    res.clearCookie('token');
+    res.redirect('/login.html');
+};
+
 // 要求登录的中间件
 function requireAuth(req, res, next) {
     const token = req.cookies.token; // 从 cookie 中获取 token
@@ -79,4 +123,4 @@ function requireAuth(req, res, next) {
     }
   }
 
-module.exports = { authenticateToken, login, requireAuth };
+module.exports = { authenticateToken, login, requireAuth, webLogin, logout };
