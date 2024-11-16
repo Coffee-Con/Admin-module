@@ -46,9 +46,11 @@ body {
 
 /* Adjust the width of text inputs */
 .form-group input {
-  width: 300px; /* Adjust width as needed */
-  margin-top: 2em;
-  
+}
+
+.form-group {
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 /* Margin for form groups */

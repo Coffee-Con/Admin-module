@@ -37,7 +37,7 @@ const { requireAuth } = require('./functions/api/authFunctions');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'your_secret_key';  // JWT 秘钥
 // 处理登录请求
-app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间件处理表单数据
+app.post('/login', (req, res) => { // 使用 upload.none() 中间件处理表单数据
   const email = req.body.email;
   const password = req.body.password;
 
@@ -69,12 +69,13 @@ app.post('/login', upload.none(), (req, res) => { // 使用 upload.none() 中间
     if (user.Role === 0) {
       res.redirect('/user'); // 404 后续修改
     } else if (user.Role === 1) {
-      res.redirect('/admin/index');
+      res.redirect('/admin/index.html');
     } else {
       res.status(401).send('Unknown role'); // 如果出现需要修改
     }
   });
 });
+
 // logout
 app.post('/logout', (req, res) => {
   res.clearCookie('token');
