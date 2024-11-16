@@ -6,7 +6,6 @@ const svgCaptcha = require('svg-captcha');
 // 导入数据库配置
 const mysql = require('mysql2');
 const dbConfig = require('../dbConfig');
-const e = require('express');
 const connection = mysql.createConnection(dbConfig);
 
 // 验证 JWT Token 的中间件
