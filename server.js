@@ -13,7 +13,7 @@ const cors = require('cors');
 
 const dbConfig = require('./functions/dbConfig'); // 导入数据库配置
 const mailer = require('./functions/mailer'); // 导入邮件发送模块
-const { requireAuth, webLogin, logout } = require('./functions/api/auth');
+const { requireAuth, webLogin, logout, authenticateToken, login } = require('./functions/api/auth');
 const { addUsers } = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
 
 const app = express();
@@ -56,25 +56,7 @@ app.post('/logout', logout); // logout
 
 // Register
 // Handle file upload
-app.post('/addUsers', upload.single('csvfile'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send('No file uploaded.');
-  }
-  console.log('File uploaded:', req.file);
-
-  const filePath = req.file.path;
-
-  console.log('File uploaded:', filePath);
-  // Use the Add_User_by_csv.js script
-  addUsers(filePath, connection, (err, result) => {
-    if (err) {
-      console.error('Error adding users:', err);
-      return res.status(500).send('Error adding users.');
-    }
-    // res.send('Users added successfully!');
-    res.send(result);
-  });
-});
+app.post('/addUsers', upload.single('csvfile'), addUsers);
 
 // 创建验证码路由
 app.get('/captcha', (req, res) => {
@@ -122,7 +104,6 @@ app.get('/available-users/:groupId', getAvailableUsers);
 app.get('/fillRecipient/:groupId', fillRecipient);
 // Group end
 
-const { authenticateToken, login } = require('./functions/api/auth');
 const { checkAdmin } = require('./functions/api/checkAdmin');
 const { getUserInfo } = require('./functions/api/user');
 const { getAllCourses, getUserCourses, getCourse } = require('./functions/api/course');
