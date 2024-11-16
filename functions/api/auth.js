@@ -1,5 +1,7 @@
+require('dotenv').config();
+
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'your_secret_key';  // JWT 秘钥
+const SECRET_KEY = process.env.Secret;  // JWT 秘钥
 const crypto = require('crypto');
 const svgCaptcha = require('svg-captcha');
 

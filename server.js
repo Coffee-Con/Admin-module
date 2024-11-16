@@ -1,9 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
-
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -25,7 +23,7 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser()); // cookie
-app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: true, cookie: { secure: false } })); // 使用 session 中间件，在开发环境下可以不使用 https
+app.use(session({ secret: process.env.Secret, resave: false, saveUninitialized: true, cookie: { secure: false } })); // 使用 session 中间件，在开发环境下可以不使用 https
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
