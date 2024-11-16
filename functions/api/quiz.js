@@ -265,7 +265,7 @@ const getUserCompletedQuizzes = (req, res) => {
         SELECT DISTINCT q.* 
         FROM Quiz q
         LEFT JOIN UserQuizStatus uqs ON q.QuizID = uqs.QuizID AND uqs.UserID = ?
-        WHERE uqs.StatusID IS NULL OR uqs.StatusID = 1;
+        WHERE uqs.StatusID = 2;
     `;
     
     // If CourseID is provided, add it as a condition to filter quizzes by course
@@ -275,7 +275,7 @@ const getUserCompletedQuizzes = (req, res) => {
             FROM QuizCourse qc
             JOIN Quiz q ON qc.QuizID = q.QuizID
             LEFT JOIN UserQuizStatus uqs ON q.QuizID = uqs.QuizID AND uqs.UserID = ?
-            WHERE qc.CourseID = ? AND (uqs.StatusID IS NULL OR uqs.StatusID = 1);
+            WHERE qc.CourseID = ? AND uqs.StatusID = 2;
         `;
     }
 
@@ -291,7 +291,7 @@ const getUserCompletedQuizzes = (req, res) => {
 
 
 // For user submit quiz 
-const addUserQuizAnswer = (req, res) => {
+const addUserQuizAnswer = async (req, res) => {
     const { UserID, QuizID, Answer } = req.body;
 
     if (!UserID || !QuizID || !Answer) {
@@ -304,23 +304,30 @@ const addUserQuizAnswer = (req, res) => {
     // Convert answer object to JSON string format
     const AnswerJson = JSON.stringify(Answer);
 
-    connection.query(query, [UserID, QuizID, AnswerJson], (err, results) => {
-        if (err) {
-            console.error('Error inserting data:', err);
-            return res.status(500).json({ error: 'Database error' });
+    try {
+        await new Promise((resolve, reject) => {
+            connection.query(query, [UserID, QuizID, AnswerJson], (err, results) => {
+                if (err) {
+                    console.error('Error inserting data:', err);
+                    return reject('Database error');
+                }
+                resolve(results);
+            });
+        });
+
+        // 使用 await 等待标记 Quiz 为已完成
+        const statusResult = await markQuizAsCompleted(req);
+        if (statusResult?.message) {
+            console.log(statusResult.message);
         }
 
-        // 调用 `markQuizAsCompleted` 标记 Quiz 为已完成
-        markQuizAsCompleted(req);
-
-        // 调用 `addUserQuizScore` 并使用 Promise 处理结果
-        addUserQuizScore(req)
-            .then((scoreResult) => res.json(scoreResult))
-            .catch((error) => {
-                console.error('Error:', error);
-                res.status(500).json({ error: 'Internal server error' });
-            });
-    });
+        // 使用 await 等待分数计算并返回结果
+        const scoreResult = await addUserQuizScore(req);
+        res.json(scoreResult);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
 
 // For after user submit quiz, add the score to the database
@@ -420,35 +427,33 @@ const addUserQuizScore = (req, res) => {
 };
 
 // Mark as completed
-const markQuizAsCompleted = (req, res) => {
-    const { UserID, QuizID } = req.body;
+const markQuizAsCompleted = (req) => {
+    return new Promise((resolve, reject) => {
+        const { UserID, QuizID } = req.body;
 
-    if (!UserID || !QuizID) {
-        // console.log('Error: User ID and Quiz ID are required.');
-        return res.status(400).json({ error: 'User ID and Quiz ID are required.' });
-    }
+        // 查询是否已经存在
+        const query1 = 'SELECT * FROM `UserQuizStatus` WHERE UserID = ? AND QuizID = ?;';
+        connection.query(query1, [UserID, QuizID], (err, results) => {
+            if (err) {
+                console.error('Error querying the database:', err.stack);
+                return reject('Internal server error');
+            }
 
-    // 查询是否已经存在
-    const query1 = 'SELECT * FROM `UserQuizStatus` WHERE UserID = ? AND QuizID = ?;';
-    connection.query(query1, [UserID, QuizID], (err, results) => {
-        if (err) {
-            // console.error('Error querying the database:', err.stack);
-            return res.status(500).send('Internal server error');
-        }
+            if (results.length > 0) {
+                console.log('User already completed.');
+                return resolve({ message: 'User already completed.' });
+            }
 
-        if (results.length > 0) {
-            // console.log('User already has a score for this quiz.');
-            return res.status(400).json({ error: 'User already has a score for this quiz.' });
-        }
-    });
-
-    const query = 'INSERT INTO `UserQuizStatus` (UserID, QuizID, StatusID) VALUES (?, ?, 2);';
-    connection.query(query, [UserID, QuizID], (err, results) => {
-        if (err) {
-            // console.error('Error inserting data:', err);
-            return res.status(500).json({ error: 'Database error' });
-        }
-        res.json({ success: true });
+            // 插入已完成状态
+            const query2 = 'INSERT INTO `UserQuizStatus` (UserID, QuizID, StatusID) VALUES (?, ?, 2);';
+            connection.query(query2, [UserID, QuizID], (err, results) => {
+                if (err) {
+                    console.error('Error inserting data:', err);
+                    return reject('Database error');
+                }
+                resolve({ success: true });
+            });
+        });
     });
 };
 
