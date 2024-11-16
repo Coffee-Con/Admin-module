@@ -37,47 +37,24 @@
           <div class="text-line text-line-3">Awareness of Email Phishing Scams.<br> To Access Full Usages,</div>
           <div class="text-line text-line-4">Please Access <br><strong><u><a href="https://github.com/Coffee-Con/" target="_blank">https://github.com/Coffee-Con</a></u></strong></div>
         </div>
-        <form id="loginForm">
-          <div class="background-area">
-            <img src="image/logo.png" alt="logo" class="centered-image"  width="100">
-            <!-- 邮箱输入框 -->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group1">
-                  <label for="email" class="form-label">
-                    <i class="fas fa-envelope"></i> Email Address:
-                  </label>
-                  <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
-                </div>
-              </div>
-            </div>
-
-            <!-- 密码输入框 -->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group2">
-                  <label for="password">
-                    <i class="fas fa-lock"></i> Password:
-                  </label>
-                  <input placeholder="Password" type="password" id="password" name="password" class="form-control" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <button type="submit" class="btn btn-primary w-100">
-                  <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-              </div>
-              <div class="col-md-6">
-                <a href="forget.html" class="btn btn-secondary w-100">
-                  <i class="fas fa-question-circle"></i> Forget Password
-                </a>
-              </div>
-            </div>
+        <div class="form-container background-area">
+          <img src="image/logo.png" alt="logo" class="centered-image"  width="100">
+          <div class="form-group">
+            <label for="email" class="form-label">
+              <i class="fas fa-envelope"></i> Email Address:
+            </label>
+            <input type="email" id="email" placeholder="Enter email" class="form-control">
+          <div class="form-group">
+              <label for="password">
+                <i class="fas fa-lock"></i> Password:
+              </label>
+              <input type="password" id="password" placeholder="Enter password" class="form-control">
           </div>
-        </form>
+          <div style="display: flex;">
+            <div class="col-md-6"><button class="btn btn-primary button-Animation w-100" onclick="login()"><i class="fas fa-sign-in-alt"></i> Login</button></div>
+            <div class="col-md-6"><button class="btn btn-secondary button-Animation w-100" onclick="window.location.href = '/forget.html'"><i class="fas fa-question-circle"></i> Forget Password</button></div>
+          </div>
+        </div>
       </div>
   </div>
 
@@ -87,31 +64,28 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   
   <script>
-    // 启用工具提示
-    window.addEventListener('load', function() {
-        document.body.classList.add('loaded');
-    });
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
 
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
-
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-
-      const response = await fetch('/login', {
+      fetch('/login', {
         method: 'POST',
-        body: formData
-      });
-
-      if (response.redirected) {
-        window.location.href = response.url; // 手动处理重定向
-      } else {
-        const result = await response.text();
-        alert(result); // 使用浏览器内置的 alert 显示消息
-      }
-    });
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+        .then(response => {
+          if (response.redirected) {
+            window.location.href = response.url; // 手动处理重定向
+          } else {
+            return response.text();
+          }
+        })
+        .then(result => {
+          alert("Success"); // 使用浏览器内置的 alert 显示消息
+        });
+    }
   </script>
 
 </body>

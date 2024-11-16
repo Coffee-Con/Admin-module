@@ -119,8 +119,7 @@ const getCourse = (req, res) => {
     connection.query(query, [CourseID], (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
-            res.status(500).send('Internal server error');
-            return;
+            return res.status(500).send('Internal server error');
         }
         if (results.length === 0) {
             console.log('No course found with that ID.'); // Debugging line
