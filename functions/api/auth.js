@@ -179,15 +179,6 @@ const authenticate = (req, res, next) => {
         // 将解码后的用户信息存储到 req.user 中
         req.user = user;
 
-        // 如果是从 cookie 登录的用户，成功后根据角色跳转到不同的页面
-        if (cookieToken) {
-            if (user.Role === 0) {
-                return res.redirect('/user/index.html'); // 普通用户页面
-            } else if (user.Role === 1) {
-                return res.redirect('/admin/index.html'); // 管理员页面
-            }
-        }
-
         // 如果是通过 Authorization Header 访问，不进行重定向，继续执行后续操作
         next();
     });
