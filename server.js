@@ -9,9 +9,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const dbConfig = require('./functions/dbConfig'); // 导入数据库配置
-const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler } = require('./functions/mail'); // 导入邮件发送模块
+const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler } = require('./functions/api/mail'); // 导入邮件发送模块
 const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate } = require('./functions/api/auth');
-const { addUsers } = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
+const { addUsers } = require('./functions/api/readCSVAndInsertUsers'); // 导入添加用户模块
 const { checkAdmin } = require('./functions/api/checkAdmin');
 const { getUserInfo } = require('./functions/api/user');
 
@@ -71,7 +71,7 @@ app.get('/click-risk', getClicksRisk);
 // History end
 
 // Group
-const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers, getAvailableUsers, fillRecipient } = require('./functions/group');
+const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers, getAvailableUsers, fillRecipient } = require('./functions/api/group');
 app.get('/groups', groups);
 app.get('/create-group', createGroup);
 app.post('/add-group-member', addGroupMember);
