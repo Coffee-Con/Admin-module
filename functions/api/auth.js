@@ -8,6 +8,7 @@ const svgCaptcha = require('svg-captcha');
 // 导入数据库配置
 const mysql = require('mysql2');
 const dbConfig = require('../dbConfig');
+const e = require('express');
 const connection = mysql.createConnection(dbConfig);
 
 // 验证 JWT Token 的中间件
@@ -157,10 +158,11 @@ const authenticate = (req, res, next) => {
     if (!token) {
         // 如果没有提供 token，返回 401 未授权错误（Authorization Header）
         // 或者重定向到登录页面（cookie）
-        if (cookieToken) {
+        if (!cookieToken) {
             return res.redirect('/login.html');
+        } else {
+            return res.status(401).json({ message: 'No token provided' });
         }
-        return res.status(401).json({ message: 'No token provided' });
     }
 
     // 验证 JWT token
