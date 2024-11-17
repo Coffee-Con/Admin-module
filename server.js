@@ -27,8 +27,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/admin', authenticate, express.static(path.join(__dirname, 'public/admin'))); // 需要登录的静态资源目录（使用 authenticate 中间件）
 app.use(express.static(path.join(__dirname, 'public'))); // 无需登录的静态资源目录
-// app.use((req, res, next) => { res.status(404).send('404 Not Found'); }); // 404
-
 // 连接到MySQL数据库，如果连接失败则会报错
 console.log("Try to connect the databse");
 const connection = mysql.createConnection(dbConfig);
@@ -153,6 +151,8 @@ app.get('/api/getReward/:RewardID', getReward);
 app.get('/api/check-admin', authenticate, checkAdmin); // 管理员判断
 app.get('/api/getUserInfo', getUserInfo); // 获取用户信息
 // Extra end
+
+app.use((req, res) => { res.status(404).sendFile(path.join(__dirname, 'public/404.html')); }); // 404 页面
 
 app.listen(port, () => {
   console.log(`Server is running on ${process.env.BASE_URL}:${port}`);
