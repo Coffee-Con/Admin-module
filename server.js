@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -17,9 +18,6 @@ const { getUserInfo } = require('./functions/api/user');
 const app = express();
 const port = process.env.PORT || 80;
 
-// 无需登录的静态资源目录
-app.use(express.static('public'));
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser()); // cookie
@@ -27,8 +25,9 @@ app.use(session({ secret: process.env.Secret, resave: false, saveUninitialized: 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use('/admin', authenticate, express.static('/public/admin')); // 需要登录的静态资源目录（使用 requireAuth 中间件） // 无效
-app.use((req, res, next) => { res.status(404).send('404 Not Found'); }); // 404
+app.use('/admin', authenticate, express.static(path.join(__dirname, 'public/admin'))); // 需要登录的静态资源目录（使用 authenticate 中间件）
+app.use(express.static(path.join(__dirname, 'public'))); // 无需登录的静态资源目录
+// app.use((req, res, next) => { res.status(404).send('404 Not Found'); }); // 404
 
 // 连接到MySQL数据库，如果连接失败则会报错
 console.log("Try to connect the databse");
