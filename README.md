@@ -27,6 +27,10 @@ DBPassword= Your database password
 
 Run [mysql.sql](https://github.com/Coffee-Con/Database/blob/main/mysql.sql) file.
 
+### Install Ollama
+
+> Install [Ollama](https://ollama.com/)
+
 ### Run via terminal:
 
 > Install [node.js v22.9.0](https://nodejs.org/en/download/package-manager)  
