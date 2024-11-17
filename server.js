@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const dbConfig = require('./functions/dbConfig'); // 导入数据库配置
-const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler } = require('./functions/mailer'); // 导入邮件发送模块
+const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler } = require('./functions/mail'); // 导入邮件发送模块
 const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate } = require('./functions/api/auth');
 const { addUsers } = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
 const { checkAdmin } = require('./functions/api/checkAdmin');
