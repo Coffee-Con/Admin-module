@@ -12,17 +12,15 @@ function addAnswer() {
         const questionTypeSelect = document.getElementById('questionType');
         const correctCheckboxes = document.querySelectorAll('.correct-answer');
     
-            if (questionTypeSelect.value === '2') { // Fill in the Blank
-                correctCheckboxes.forEach(checkbox => {
-                    checkbox.style.display = 'none';
-                });
-            } else {
-                correctCheckboxes.forEach(checkbox => {
-                    checkbox.style.display = 'inline-block';
-                });
-            }
-
-    
+        if (questionTypeSelect.value === '2') { // Fill in the Blank
+            correctCheckboxes.forEach(checkbox => {
+                checkbox.style.display = 'none';
+            });
+        } else {
+            correctCheckboxes.forEach(checkbox => {
+                checkbox.style.display = 'inline-block';
+            });
+        }
 }
 
 function createQuestion() {
