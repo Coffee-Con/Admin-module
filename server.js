@@ -73,7 +73,7 @@ app.get('/click-risk', getClicksRisk);
 // Group
 const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers, getAvailableUsers, fillRecipient } = require('./functions/api/group');
 app.get('/groups', groups);
-app.get('/create-group', createGroup);
+app.post('/create-group', createGroup);
 app.post('/add-group-member', addGroupMember);
 app.delete('/remove-group-member', removeGroupMember);
 app.get('/group-members/:groupId', getGroupMembers);
