@@ -42,7 +42,6 @@ function createQuestion() {
         answers: answers,
     };
 
-    console.log(questionData);
     // Validation: Check if at least one correct answer is selected
     if (answers.length === 0) {
         alert("Please enter at least one answer.");
@@ -55,12 +54,10 @@ function createQuestion() {
         return; 
     }
 
-
     if(!questionType) {
         alert('Please Seletect A Question Type');
         return;
     }
-
 
     // Send questionData to the server
     fetch('/api/createQuestion', {

@@ -143,11 +143,10 @@ const addUsers = (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
-  console.log('File uploaded:', req.file);
+  // console.log('File uploaded:', req.file);
 
   const filePath = req.file.path;
 
-  console.log('File uploaded:', filePath);
   // Use the Add_User_by_csv.js script
   readCSVAndInsertUsers(filePath, connection, (err, result) => {
     if (err) {
