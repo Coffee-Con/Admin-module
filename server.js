@@ -92,7 +92,7 @@ app.get('/api/getUserCourses', getUserCourses);
 // Course end
 
 // Quiz
-const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes } = require('./functions/api/quiz');
+const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard } = require('./functions/api/quiz');
 app.post('/create-quiz', createQuiz);
 app.delete('/delete-quiz/:QuizID', deleteQuiz);
 app.put('/update-quiz/:QuizID', updateQuiz);
@@ -111,6 +111,7 @@ app.get('/api/getUserQuizAnswers/:UserID/:QuizID', getUserQuizAnswers);
 app.get('/api/getUserUnCompletedQuizzes/:UserID/:CourseID', getUserUnCompletedQuizzes);
 app.get('/api/getUserCompletedQuizzes/:UserID/:CourseID', getUserCompletedQuizzes);
 // app.post('/api/addUserQuizScore', addUserQuizScore); use submitQuiz instead
+app.get('/api/getLeaderboard/:QuizID/:CourseID', getLeaderboard);
 // Quiz end
 
 // Question
@@ -146,6 +147,18 @@ app.get('/api/getRewards', getRewards);
 app.delete('/api/delete-reward/:RewardID', deleteReward);
 app.get('/api/getReward/:RewardID', getReward);
 // Reward end
+
+// Material
+const { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse } = require('./functions/api/material');
+const uploadMaterial = multer({ dest: "public/user/material/" });
+app.post('/api/createMaterial', uploadMaterial.single("file"), createMaterial);
+app.get('/api/getMaterials', getMaterials);
+app.get('/api/getMaterialsNotInCourse/:CourseID', getMaterialsNotInCourse);
+app.delete('/api/deleteMaterial/:MaterialID', deleteMaterial);
+app.post('/api/addMaterialToCourse', addMaterialToCourse);
+app.delete('/api/deleteCourseMaterial', deleteCourseMaterial);
+app.get('/api/getCourseMaterials/:CourseID', getCourseMaterials);
+// Material end
 
 // Extra
 app.get('/api/check-admin', authenticate, checkAdmin); // 管理员判断
