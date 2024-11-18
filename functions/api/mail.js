@@ -123,7 +123,7 @@ const verifyCaptcha = async (req, res) => {
           }
 
           // 构建带 Token 的重置密码链接
-          const resetLink = `${process.env.BASE_URL}:${process.env.PORT}/resetPassword.html?changepasswordToken=${token}`;
+          const resetLink = `${process.env.BASEHOST}:${process.env.PORT}/resetPassword.html?changepasswordToken=${token}`;
 
           // 发送邮件
           const mailOptions = {
