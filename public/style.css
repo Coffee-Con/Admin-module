@@ -42,12 +42,6 @@ body {
   justify-content: center; /* Center horizontally if needed */
 }
 
-/* Styling for the image */
-
-/* Adjust the width of text inputs */
-.form-group input {
-}
-
 .form-group {
   margin-top: 16px;
   margin-bottom: 16px;
