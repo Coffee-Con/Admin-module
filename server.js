@@ -148,6 +148,13 @@ app.delete('/api/delete-reward/:RewardID', deleteReward);
 app.get('/api/getReward/:RewardID', getReward);
 // Reward end
 
+// Material
+const { createMaterial, getMaterials } = require('./functions/api/material');
+const uploadMaterial = multer({ dest: "public/user/material/" });
+app.post('/api/createMaterial', uploadMaterial.single("file"), createMaterial);
+app.get('/api/getMaterials', getMaterials);
+// Material end
+
 // Extra
 app.get('/api/check-admin', authenticate, checkAdmin); // 管理员判断
 app.get('/api/getUserInfo', getUserInfo); // 获取用户信息

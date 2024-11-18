@@ -1,0 +1,190 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0064d0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.answer-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.answer-input input {
+    width: auto !important;
+}
+
+.answer {
+    flex: 1;
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.delete-button {
+    margin-right: 10px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.correct-answer {
+    margin-right: 5px;
+}
+
+.header {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #333333;
+    margin: 0;
+    font-weight: bold;
+}
+
+.subHeader {
+    font-size: 24px;
+    color: #333333;
+    margin: 0;
+    font-weight: bold;
+}
+
+.back-button {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    background-color: transparent;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button i {
+    margin-right: 5px;
+    font-size: 1.2em;
+}
+
+.back-button:hover {
+    background-color: lightgray;
+    transform: translateY(-2px);
+}
+
+.back-button:active {
+    transform: scale(0.95);
+}
+
+.button-Animation {
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.button-Animation:hover {
+    transform: scale(1.1);
+}
+
+.button-Animation2 {
+    border: none;
+    cursor: pointer;
+    outline: none;
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    background-color: transparent;
+    color: black;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button-Animation2 i {
+    margin-right: 5px;
+    font-size: 1.2em;
+}
+
+.button-Animation2:hover {
+    background-color: lightgray;
+    transform: translateY(-2px);
+}
+
+.question-item {
+    margin-bottom: 15px;
+}

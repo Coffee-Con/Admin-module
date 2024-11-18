@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Material Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Back Button -->
+    <button class="back-button" onclick="window.location.href='index.html'">
+        <i class="fa-solid fa-arrow-left"></i> 
+        <span>Back</span>
+    </button>
+    <!-- Navigate to Course Page Button -->
+    <button class="button-Animation2" onclick="window.location.href='course.html'">
+        <i class="fa-solid fa-book"></i>
+        <span>Course Page</span>
+    </button>
+    
+    <!-- Header -->
+    <header class="header">
+        <h1>Material Management
+            <i class="fas fa-folder-open" style="color: #007bff;"></i>
+        </h1>
+    </header>
+
+    <div class="container">
+        <!-- Create Material Section -->
+        <h2 class="subHeader">Add New Material</h2>
+        <div class="form-group">
+            <label for="materialName">Material Name</label>
+            <input type="text" id="materialName" placeholder="Enter material name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="materialDescription">Material Description</label>
+            <input type="text" id="materialDescription" placeholder="Enter material description">
+        </div>
+
+        <div class="form-group">
+            <label for="courseID">Select Course</label>
+            <select id="courseID" required>
+                <option value="" selected>Select a course</option>
+                <!-- 动态加载课程列表 -->
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="materialType">Material Type</label>
+            <select id="materialType" required onchange="toggleMaterialInput()">
+                <option value="" selected>Select material type</option>
+                <option value="1">Video Link</option>
+                <option value="2">PDF File</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="videoLinkContainer" style="display: none;">
+            <label for="materialLink">Video Link (YouTube)</label>
+            <input type="text" id="materialLink" placeholder="Enter video link">
+        </div>
+
+        <div class="form-group" id="pdfFileContainer" style="display: none;">
+            <label for="materialFile">Upload PDF File</label>
+            <input type="file" id="materialFile" accept="application/pdf">
+        </div>
+
+        <div style="margin-top: 15px;">
+            <button class="btn btn-primary button-Animation" onclick="addMaterial()">Add Material</button>
+        </div>
+
+        <!-- Material List Section -->
+        <h2 style="margin-top: 20px; margin-bottom: 20px;" class="subHeader">Material List</h2>
+        <div id="materialList"></div>
+    </div>
+
+    <script src="./material.js"></script>
+</body>
+</html>
