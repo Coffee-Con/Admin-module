@@ -52,4 +52,16 @@ const getMaterials = (req, res) => {
     });
 };
 
-module.exports = { createMaterial, getMaterials };
+const deleteMaterial = (req, res) => {
+    const { MaterialID } = req.params;
+    const query = 'DELETE FROM `CourseMaterial` WHERE `MaterialID` = ?;';
+    connection.query(query, [MaterialID], (err) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({ success: true });
+    });
+}
+
+module.exports = { createMaterial, getMaterials, deleteMaterial };

@@ -149,10 +149,11 @@ app.get('/api/getReward/:RewardID', getReward);
 // Reward end
 
 // Material
-const { createMaterial, getMaterials } = require('./functions/api/material');
+const { createMaterial, getMaterials, deleteMaterial } = require('./functions/api/material');
 const uploadMaterial = multer({ dest: "public/user/material/" });
 app.post('/api/createMaterial', uploadMaterial.single("file"), createMaterial);
 app.get('/api/getMaterials', getMaterials);
+app.delete('/api/deleteMaterial/:MaterialID', deleteMaterial);
 // Material end
 
 // Extra

@@ -86,24 +86,43 @@ function addMaterial() {
     .catch((error) => console.error("Error:", error));
 }
 
+// 删除材料
+function deleteMaterial(MaterialID) {
+    fetch(`/api/deleteMaterial/${MaterialID}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Material deleted successfully');
+            loadMaterialList(); // Refresh the material list
+        } else {
+            alert(data.error || 'Error deleting material');
+        }
+    })
+    .catch(err => console.error('Error deleting material:', err));
+}
+
 // 加载材料列表
 function loadMaterialList() {
     fetch("/api/getMaterials")
-        .then((response) => response.json())
-        .then((data) => {
-            const materialList = document.getElementById("materialList");
-            materialList.innerHTML = "";
+    .then((response) => response.json())
+    .then((data) => {
+        const materialList = document.getElementById("materialList");
+        materialList.innerHTML = "";
 
-            data.forEach((material) => {
-                const div = document.createElement("div");
-                div.className = "material-item";
-                div.innerHTML = `
-                  <h4>${material.MaterialName}</h4>
-                  <p>${material.MaterialDescription}</p>
-                  <a href="${material.MaterialLink}" target="_blank">Open Material</a>
-              `;
-                materialList.appendChild(div);
-            });
-        })
-        .catch((error) => console.error("Error loading materials:", error));
+        data.forEach((material) => {
+            const div = document.createElement("div");
+            div.className = "material-item";
+            div.innerHTML = `
+                <h4>${material.MaterialName}</h4>
+                <p>${material.MaterialDescription}</p>
+                <a href="${material.MaterialLink}" target="_blank">Open Material</a>
+                <button onclick="deleteMaterial(${material.MaterialID})">Delete</button>
+            `;
+            materialList.appendChild(div);
+        });
+    })
+    .catch((error) => console.error("Error loading materials:", error));
 }
