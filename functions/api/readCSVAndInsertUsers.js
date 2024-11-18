@@ -1,5 +1,5 @@
 const mysql = require('mysql2');
-const dbConfig = require('./dbConfig');
+const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
 
 const fs = require('fs');
@@ -138,6 +138,27 @@ const register = (req, res) => {
   });
 };
 
+
+const addUsers = (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  console.log('File uploaded:', req.file);
+
+  const filePath = req.file.path;
+
+  console.log('File uploaded:', filePath);
+  // Use the Add_User_by_csv.js script
+  readCSVAndInsertUsers(filePath, connection, (err, result) => {
+    if (err) {
+      console.error('Error adding users:', err);
+      return res.status(500).send('Error adding users.');
+    }
+    // res.send('Users added successfully!');
+    res.send(result);
+  });
+};
+
 // 读取并插入用户
 // readCSVAndInsertUsers('user-import.csv');
-module.exports = { addUsers: readCSVAndInsertUsers, addUser: register };
+module.exports = { addUsers, addUser: register };

@@ -119,7 +119,7 @@ const getCourseQuizzes = (req, res) => {
         return res.status(400).json({ error: 'Course ID is required.' });
     }
 
-    const query = 'SELECT * FROM `QuizCourse` JOIN `Quiz` WHERE CourseID = ?;';
+    const query = 'SELECT * FROM `QuizCourse` JOIN `Quiz` ON `QuizCourse`.`QuizID` = `Quiz`.`QuizID` WHERE `QuizCourse`.`CourseID` = ?;';
     connection.query(query, [CourseID], (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
@@ -163,7 +163,6 @@ const addQuizToCourse = (req, res) => {
             console.error('Error inserting data:', err); // Log the error
             return res.status(500).json({ error: 'Database error' });
         }
-        console.log('Quiz added to course success.'); // Debugging line
         res.json({ success: true });
     });
 };
@@ -186,17 +185,19 @@ const removeQuizFromCourse = (req, res) => {
             console.log('No quiz found with that ID.'); // Debugging line
             return res.status(404).json({ error: 'Quiz not found' });
         }
-        console.log('Quiz removed from course with ID:', QuizID); // Debugging line
         res.json({ success: true, message: 'Quiz removed from course successfully' });
     });
 };
 
-// 获取用户未完成的所有quiz（对应课程）
-function getUserCourseQuizzes(req, res) {
-    console.log('Getting user course quizzes');
+// 获取用户的所有quiz（对应课程）
+const getUserCourseQuizzes = (req, res) => {
     const userID = req.user.id;
     const { CourseID } = req.params;
-    console.log('CourseID:', CourseID);
+
+    if (!CourseID || !userID) {
+        return res.status(400).json({ error: 'Course ID and User ID are required.' });
+    }
+
     const query = `
         SELECT DISTINCT * 
         FROM QuizCourse 
@@ -214,8 +215,83 @@ function getUserCourseQuizzes(req, res) {
     });
 }
 
+const getUserUnCompletedQuizzes = (req, res) => {
+    const { UserID, CourseID } = req.params;
+
+    if (!UserID) {
+        // console.log('Error: User ID is required.');
+        return res.status(400).json({ error: 'User ID is required.' });
+    }
+
+    // Base query to get uncompleted quizzes for a user
+    let query = `
+        SELECT DISTINCT q.* 
+        FROM Quiz q
+        LEFT JOIN UserQuizStatus uqs ON q.QuizID = uqs.QuizID AND uqs.UserID = ?
+        WHERE uqs.StatusID IS NULL OR uqs.StatusID != 2
+    `;
+    
+    // If CourseID is provided, add it as a condition to filter quizzes by course
+    if (CourseID) {
+        query = `
+            SELECT DISTINCT q.* 
+            FROM QuizCourse qc
+            JOIN Quiz q ON qc.QuizID = q.QuizID
+            LEFT JOIN UserQuizStatus uqs ON q.QuizID = uqs.QuizID AND uqs.UserID = ?
+            WHERE qc.CourseID = ? AND (uqs.StatusID IS NULL OR uqs.StatusID != 2);
+        `;
+    }
+
+    // Execute the query
+    connection.query(query, CourseID ? [UserID, CourseID] : [UserID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            return res.status(500).send('Internal server error');
+        }
+        res.json(results);
+    });
+}
+
+const getUserCompletedQuizzes = (req, res) => {
+    const { UserID, CourseID } = req.params;
+
+    if (!UserID) {
+        // console.log('Error: User ID is required.');
+        return res.status(400).json({ error: 'User ID is required.' });
+    }
+
+    // Base query to get uncompleted quizzes for a user
+    let query = `
+        SELECT DISTINCT q.* 
+        FROM Quiz q
+        LEFT JOIN UserQuizStatus uqs ON q.QuizID = uqs.QuizID AND uqs.UserID = ?
+        WHERE uqs.StatusID = 2;
+    `;
+    
+    // If CourseID is provided, add it as a condition to filter quizzes by course
+    if (CourseID) {
+        query = `
+            SELECT DISTINCT q.* 
+            FROM QuizCourse qc
+            JOIN Quiz q ON qc.QuizID = q.QuizID
+            LEFT JOIN UserQuizStatus uqs ON q.QuizID = uqs.QuizID AND uqs.UserID = ?
+            WHERE qc.CourseID = ? AND uqs.StatusID = 2;
+        `;
+    }
+
+    // Execute the query
+    connection.query(query, CourseID ? [UserID, CourseID] : [UserID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            return res.status(500).send('Internal server error');
+        }
+        res.json(results);
+    });
+}
+
+
 // For user submit quiz 
-const addUserQuizAnswer = (req, res) => {
+const addUserQuizAnswer = async (req, res) => {
     const { UserID, QuizID, Answer } = req.body;
 
     if (!UserID || !QuizID || !Answer) {
@@ -228,20 +304,30 @@ const addUserQuizAnswer = (req, res) => {
     // Convert answer object to JSON string format
     const AnswerJson = JSON.stringify(Answer);
 
-    connection.query(query, [UserID, QuizID, AnswerJson], (err, results) => {
-        if (err) {
-            console.error('Error inserting data:', err);
-            return res.status(500).json({ error: 'Database error' });
+    try {
+        await new Promise((resolve, reject) => {
+            connection.query(query, [UserID, QuizID, AnswerJson], (err, results) => {
+                if (err) {
+                    console.error('Error inserting data:', err);
+                    return reject('Database error');
+                }
+                resolve(results);
+            });
+        });
+
+        // 使用 await 等待标记 Quiz 为已完成
+        const statusResult = await markQuizAsCompleted(req);
+        if (statusResult?.message) {
+            console.log(statusResult.message);
         }
 
-        // 调用 `addUserQuizScore` 并使用 Promise 处理结果
-        addUserQuizScore(req)
-            .then((scoreResult) => res.json(scoreResult))
-            .catch((error) => {
-                console.error('Error:', error);
-                res.status(500).json({ error: 'Internal server error' });
-            });
-    });
+        // 使用 await 等待分数计算并返回结果
+        const scoreResult = await addUserQuizScore(req);
+        res.json(scoreResult);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
 
 // For after user submit quiz, add the score to the database
@@ -340,6 +426,36 @@ const addUserQuizScore = (req, res) => {
         });
 };
 
+// Mark as completed
+const markQuizAsCompleted = (req) => {
+    return new Promise((resolve, reject) => {
+        const { UserID, QuizID } = req.body;
+
+        // 查询是否已经存在
+        const query1 = 'SELECT * FROM `UserQuizStatus` WHERE UserID = ? AND QuizID = ?;';
+        connection.query(query1, [UserID, QuizID], (err, results) => {
+            if (err) {
+                console.error('Error querying the database:', err.stack);
+                return reject('Internal server error');
+            }
+
+            if (results.length > 0) {
+                console.log('User already completed.');
+                return resolve({ message: 'User already completed.' });
+            }
+
+            // 插入已完成状态
+            const query2 = 'INSERT INTO `UserQuizStatus` (UserID, QuizID, StatusID) VALUES (?, ?, 2);';
+            connection.query(query2, [UserID, QuizID], (err, results) => {
+                if (err) {
+                    console.error('Error inserting data:', err);
+                    return reject('Database error');
+                }
+                resolve({ success: true });
+            });
+        });
+    });
+};
 
 // Get user quiz socre
 const getUserQuizScores = (req, res) => {
@@ -460,4 +576,4 @@ const getUserQuizAnswers = (req, res) => {
     });
 }
 
-module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers };
+module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes };

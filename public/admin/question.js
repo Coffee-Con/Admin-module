@@ -70,15 +70,17 @@ function createQuestion() {
         },
         body: JSON.stringify(questionData)
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(`Question created with ID: ${data.id}`);
-            } else {
-                alert(`Error: ${data.error}`);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Question created with ID: ${data.id}`);
+        } else {
+            alert(`Error: ${data.error}`);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+
+    fetchQuestions(); // Refresh list
 }
 
 function deleteAnswer(button) {
