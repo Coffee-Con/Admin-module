@@ -125,7 +125,7 @@ app.put('/api/updateQuestion/:QuestionID', updateQuestion);
 // Question end
 
 // User
-const { addUser } = require('./functions/readCSVAndInsertUsers');
+const { addUser } = require('./functions/api/readCSVAndInsertUsers');
 app.post('/addUser', addUser);
 app.post('/addUsers', upload.single('csvfile'), addUsers);
 // User end
