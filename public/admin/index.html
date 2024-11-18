@@ -15,7 +15,7 @@
             .catch(err => console.error('Logout failed', err));
         }
     </script>
-    <title>Home Page</title>
+    <title>Index Page</title>
     <style>
         html, body {
             height: 100%;
@@ -23,6 +23,7 @@
         }
 
         body {
+            font-family: Arial, sans-serif;
             display: flex; 
             justify-content: center;
             align-items: center;
@@ -31,7 +32,7 @@
 
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
@@ -95,7 +96,7 @@
 
  <body>
     <div class="content">
-        <h1 class="title" style="font-size: 4em; font-weight: bold; margin-bottom: 1em; margin-top: 1em;">PHISHING HOME PAGE</h1>
+        <h1 class="title" style="font-size: 4em; font-weight: bold; margin-bottom: 1em; margin-top: 2em;">PHISHING HOME PAGE</h1>
         <div class="centered-container" style="margin-bottom: 1em;">
             <div class="link-box button-Animation">
                 <a href="send.html" style="font-weight: bold;">
@@ -115,6 +116,11 @@
             <div class="link-box button-Animation" style="font-weight: bold;">
                 <a href="./question.html">
                     <i class="fas fa-question-circle" style="padding-right: 5px;"></i>Question Management
+                </a>
+            </div>
+            <div class="link-box button-Animation" style="font-weight: bold;">
+                <a href="./reward.html">
+                    <i class="fas fa-medal" style="padding-right: 5px;"></i>Reward Management
                 </a>
             </div>
             <div class="link-box button-Animation" style="font-weight: bold;">

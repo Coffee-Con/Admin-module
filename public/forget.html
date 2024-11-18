@@ -11,7 +11,7 @@
 </head>
 <body>
   <div class="container">
-    <h1 style="margin-top: 2em;">
+    <h1 style="margin-top: 2em; font-weight: bolder;">
       Forget Password
       <i class="fas fa-question-circle" data-toggle="tooltip" title="Enter your email to receive a verification code." style="color: #007bff;"></i>
     </h1>
@@ -42,10 +42,16 @@
               }
               </script>
             </div>
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-sign-in-alt"></i> 
-              Submit Verification
-            </button>
+            <div style="display: flex; padding-top: 20px;">
+              <button type="submit" class="btn btn-primary button-Animation">
+                <i class="fas fa-paper-plane"></i> 
+                Submit Verification
+              </button>
+              <button class="btn btn-primary button-Animation" style="margin-left: 330px;" onclick="window.location.href='login.html'">
+                <i class="fa fa-sign-in-alt"></i> 
+                <span>Continue Login</span>
+             </button>
+            </div>
           </form>
         </div>
       </div>

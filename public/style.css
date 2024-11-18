@@ -6,7 +6,7 @@ h1 {
 }
 body {
   font-family: 'Arial', sans-serif;
-  background-image: url('image/login-background.jpg'); /* 背景图路径 */
+  background-image: url('image/loginBackground.avif'); /* 背景图路径 */
   background-size: cover; /* 让背景图覆盖整个页面 */
   background-repeat: no-repeat; /* 防止背景图重复 */
   background-position: center center; /* 将背景图置于页面中央 */
@@ -78,18 +78,19 @@ body {
   margin-right: 5em;
   margin-top: 5em; 
 }
+
 .background-area {
   background-color: white; /* White background */
-  padding: 60px; /* Padding inside the area */
+  padding: 50px; /* Padding inside the area */
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  max-width: 800px; /* 限制背景区域的宽度 */
+  max-width: 650px; /* 限制背景区域的宽度 */
   position: fixed; /* 使背景区域固定 */
-  right: 10em; /* 固定在页面的右侧 */
-  top: 60%; /* 垂直居中 */
+  top: 55%; /* 垂直居中 */
   transform: translateY(-50%); /* 垂直居中修正 */
   z-index: 1; /* 保持在文字渐变下方 */
 }
+
 .centered-image {
   display: block;
   margin: 0 auto; 
@@ -222,3 +223,12 @@ body.loaded .text-container {
   }
 }
 
+.button-Animation {
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease; 
+}
+
+.button-Animation:hover {
+  transform: scale(1.1);
+}
