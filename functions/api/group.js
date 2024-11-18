@@ -21,7 +21,7 @@ const createGroup = (req, res) => {
           console.error('Error inserting data:', err); // Log the error
           return res.status(500).json({ error: 'Database error' });
       }
-      console.log('Group created with ID:', results.insertId); // Debugging line
+      // console.log('Group created with ID:', results.insertId); // Debugging line
       res.json({ success: true, id: results.insertId });
   });
 };
