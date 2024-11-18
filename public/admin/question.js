@@ -6,7 +6,7 @@ function addAnswer() {
     newAnswerDiv.innerHTML = `
       <button class="btn btn-danger button-Animation" style="margin-right:10px; "type="button" class="delete-button" onclick="deleteAnswer(this)">Delete</button>
       <input type="text" class="answer" placeholder="Enter question answer">
-      <input type="checkbox" class="correct-answer"> Correct
+      <input type="checkbox" class="correct-answer" onclick="toggleSingleCheck(this)"> Correct
   `;
     container.insertBefore(newAnswerDiv, container.lastElementChild);
         const questionTypeSelect = document.getElementById('questionType');
@@ -21,6 +21,17 @@ function addAnswer() {
                 checkbox.style.display = 'inline-block';
             });
         }
+}
+
+function toggleSingleCheck(checkbox) {
+    if (checkbox.checked) {
+        // Uncheck all other checkboxes
+        document.querySelectorAll('.correct-answer').forEach(cb => {
+            if (cb !== checkbox) {
+                cb.checked = false;
+            }
+        });
+    }
 }
 
 function createQuestion() {
@@ -131,7 +142,7 @@ function fetchQuestions() {
                                     <div class="answer-input">
                                         <input type="text" id="editAnswerText-${question.QuestionID}-${index}" value="${answer.text}" placeholder="Edit answer ${index + 1}">
                                         <label style="margin-left:10px;" >
-                                            <input type="checkbox" id="correct-${question.QuestionID}-${index}" ${answer.correct ? 'checked' : ''}>
+                                            <input type="checkbox" class="correct-answer" onclick="toggleSingleCheck(this)" id="correct-${question.QuestionID}-${index}" ${answer.correct ? 'checked' : ''}>
                                             Correct
                                         </label>
                                         <button class="deleteButton btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${question.QuestionID}, ${index})">Delete</button>
