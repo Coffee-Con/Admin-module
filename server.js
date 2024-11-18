@@ -9,9 +9,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const dbConfig = require('./functions/dbConfig'); // 导入数据库配置
-const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler } = require('./functions/mailer'); // 导入邮件发送模块
+const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler } = require('./functions/api/mail'); // 导入邮件发送模块
 const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate } = require('./functions/api/auth');
-const { addUsers } = require('./functions/readCSVAndInsertUsers'); // 导入添加用户模块
+const { addUsers } = require('./functions/api/readCSVAndInsertUsers'); // 导入添加用户模块
 const { checkAdmin } = require('./functions/api/checkAdmin');
 const { getUserInfo } = require('./functions/api/user');
 
@@ -27,8 +27,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/admin', authenticate, express.static(path.join(__dirname, 'public/admin'))); // 需要登录的静态资源目录（使用 authenticate 中间件）
 app.use(express.static(path.join(__dirname, 'public'))); // 无需登录的静态资源目录
-// app.use((req, res, next) => { res.status(404).send('404 Not Found'); }); // 404
-
 // 连接到MySQL数据库，如果连接失败则会报错
 console.log("Try to connect the databse");
 const connection = mysql.createConnection(dbConfig);
@@ -73,7 +71,7 @@ app.get('/click-risk', getClicksRisk);
 // History end
 
 // Group
-const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers, getAvailableUsers, fillRecipient } = require('./functions/group');
+const { createGroup, groups, addGroupMember, removeGroupMember, getGroupMembers, getAvailableUsers, fillRecipient } = require('./functions/api/group');
 app.get('/groups', groups);
 app.get('/create-group', createGroup);
 app.post('/add-group-member', addGroupMember);
@@ -127,7 +125,7 @@ app.put('/api/updateQuestion/:QuestionID', updateQuestion);
 // Question end
 
 // User
-const { addUser } = require('./functions/readCSVAndInsertUsers');
+const { addUser } = require('./functions/api/readCSVAndInsertUsers');
 app.post('/addUser', addUser);
 app.post('/addUsers', upload.single('csvfile'), addUsers);
 // User end
@@ -153,6 +151,8 @@ app.get('/api/getReward/:RewardID', getReward);
 app.get('/api/check-admin', authenticate, checkAdmin); // 管理员判断
 app.get('/api/getUserInfo', getUserInfo); // 获取用户信息
 // Extra end
+
+app.use((req, res) => { res.status(404).sendFile(path.join(__dirname, 'public/404.html')); }); // 404 页面
 
 app.listen(port, () => {
   console.log(`Server is running on ${process.env.BASE_URL}:${port}`);

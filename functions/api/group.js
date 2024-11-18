@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const mysql = require('mysql2');
-const dbConfig = require('./dbConfig'); // 导入数据库配置
+const dbConfig = require('../dbConfig'); // 导入数据库配置
 
 // 连接到MySQL数据库
 const connection = mysql.createConnection(dbConfig);
