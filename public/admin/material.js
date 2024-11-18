@@ -63,7 +63,7 @@ function addMaterial() {
     const materialData = {
         MaterialName: materialName,
         MaterialDescription: materialDescription,
-        MaterialType: materialType,
+        MaterialType: (materialType === "1") ? 1 : (materialType === "2" ? 2 : materialType), // 1: video, 2: pdf
         MaterialLink: materialType === "1" ? materialLink : null,
     };
 
