@@ -12,17 +12,15 @@ function addAnswer() {
         const questionTypeSelect = document.getElementById('questionType');
         const correctCheckboxes = document.querySelectorAll('.correct-answer');
     
-            if (questionTypeSelect.value === '2') { // Fill in the Blank
-                correctCheckboxes.forEach(checkbox => {
-                    checkbox.style.display = 'none';
-                });
-            } else {
-                correctCheckboxes.forEach(checkbox => {
-                    checkbox.style.display = 'inline-block';
-                });
-            }
-
-    
+        if (questionTypeSelect.value === '2') { // Fill in the Blank
+            correctCheckboxes.forEach(checkbox => {
+                checkbox.style.display = 'none';
+            });
+        } else {
+            correctCheckboxes.forEach(checkbox => {
+                checkbox.style.display = 'inline-block';
+            });
+        }
 }
 
 function createQuestion() {
@@ -42,7 +40,6 @@ function createQuestion() {
         answers: answers,
     };
 
-    console.log(questionData);
     // Validation: Check if at least one correct answer is selected
     if (answers.length === 0) {
         alert("Please enter at least one answer.");
@@ -55,12 +52,10 @@ function createQuestion() {
         return; 
     }
 
-
     if(!questionType) {
         alert('Please Seletect A Question Type');
         return;
     }
-
 
     // Send questionData to the server
     fetch('/api/createQuestion', {

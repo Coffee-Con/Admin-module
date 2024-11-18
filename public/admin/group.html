@@ -224,7 +224,7 @@
         async function loadGroups() {
             const response = await fetch('/groups');
             const groups = await response.json();
-            console.log(groups);
+            // console.log(groups);
             
             const groupSelect = document.getElementById('groupSelect'); // Get the select element
             groupSelect.innerHTML = '<option value="">Select a group</option>'; // Reset options
