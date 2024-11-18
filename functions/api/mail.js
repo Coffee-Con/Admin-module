@@ -293,7 +293,7 @@ const clickLinkHandler = (req, res) => {
   const key = req.params.key;
 
   // 记录点击事件
-  connection.query('INSERT INTO click_event (`key`) VALUES (?)', [key], (err) => {
+  connection.query('INSERT INTO ClickEvent (`key`) VALUES (?)', [key], (err) => {
     if (err) {
       console.error('Error inserting click event into the database:', err.stack);
     }
