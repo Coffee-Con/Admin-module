@@ -42,14 +42,6 @@
         </div>
 
         <div class="form-group">
-            <label for="courseID">Select Course</label>
-            <select id="courseID" required>
-                <option value="" selected>Select a course</option>
-                <!-- 动态加载课程列表 -->
-            </select>
-        </div>
-
-        <div class="form-group">
             <label for="materialType">Material Type</label>
             <select id="materialType" required onchange="toggleMaterialInput()">
                 <option value="" selected>Select material type</option>
@@ -72,9 +64,53 @@
             <button class="btn btn-primary button-Animation" onclick="addMaterial()">Add Material</button>
         </div>
 
+        <!-- Add material to course -->
+        <h2 style="margin-top: 20px; margin-bottom: 20px;" class="subHeader">Add Material to Course</h2>
+        <div class="form-group">
+            <label for="courseID">Select Course</label>
+            <select id="courseID" onchange="getMaterialsNotInCourse(this.value)" required>
+                <option value="" selected>Select a course</option>
+                <!-- 动态加载课程列表 -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="materialID">Select Material</label>
+            <select id="materialID" required>
+                <option value="" selected>Select a material</option>
+                <!-- 动态加载材料列表 -->
+            </select>
+        </div>
+        <div style="margin-top: 15px;">
+            <button class="btn btn-primary button-Animation" onclick="addMaterialToCourse()">Add Material to Course</button>
+        </div>
+
         <!-- Material List Section -->
         <h2 style="margin-top: 20px; margin-bottom: 20px;" class="subHeader">Material List</h2>
         <div id="materialList"></div>
+
+        <!-- Remove Material from Course -->
+        <h2 style="margin-top: 20px; margin-bottom: 20px;" class="subHeader">Remove Material from Course</h2>
+        <div class="form-group">
+            <label for="courseID2">Select Course</label>
+            <select id="courseID2" onchange="loadCourseMaterial(this.value)" required>
+                <option value="" selected>Select a Course</option>
+                <!-- 动态加载课程列表 -->
+            </select>
+        </div> 
+        <table>
+            <thead>
+                <tr id="RemoveMaterialList">
+                    <th>Material ID</th>
+                    <th>Material Name</th>
+                    <th>Material Description</th>
+                    <th>Material Link</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody id="RemoveMaterialListBody">
+                <!-- 动态加载材料列表 -->
+            </tbody>
+        </table>
     </div>
 
     <script src="./material.js"></script>

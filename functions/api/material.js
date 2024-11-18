@@ -17,7 +17,7 @@ const createMaterial = async (req, res) => {
 
     // 解析 JSON 格式的数据
     const material = JSON.parse(materialData);
-    const { CourseID, MaterialName, MaterialDescription, MaterialType, MaterialLink } = material;
+    const { MaterialName, MaterialDescription, MaterialType, MaterialLink } = material;
 
     // 检查上传文件（如果有）
     let materialLinkFinal = MaterialLink;
@@ -27,10 +27,10 @@ const createMaterial = async (req, res) => {
     }
 
     const query = `
-        INSERT INTO CourseMaterial (CourseID, MaterialName, MaterialDescription, MaterialLink)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO Material (MaterialName, MaterialDescription, MaterialLink)
+        VALUES (?, ?, ?)
     `;
-    const values = [CourseID, MaterialName, MaterialDescription, materialLinkFinal];
+    const values = [MaterialName, MaterialDescription, materialLinkFinal];
 
     connection.query(query, values, (err, result) => {
         if (err) {
@@ -42,7 +42,7 @@ const createMaterial = async (req, res) => {
 };
 
 const getMaterials = (req, res) => {
-    const query = 'SELECT * FROM `CourseMaterial`;';
+    const query = 'SELECT * FROM `Material`;';
     connection.query(query, (err, results) => {
         if (err) {
             console.error('Database error:', err);
@@ -52,9 +52,29 @@ const getMaterials = (req, res) => {
     });
 };
 
+const getMaterialsNotInCourse = (req, res) => {
+    const { CourseID } = req.params;
+    const query = `
+        SELECT Material.*
+        FROM Material
+        WHERE Material.MaterialID NOT IN (
+            SELECT MaterialID
+            FROM CourseMaterial
+            WHERE CourseID = ?
+        );
+    `;
+    connection.query(query, [CourseID], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
+}
+
 const deleteMaterial = (req, res) => {
     const { MaterialID } = req.params;
-    const query = 'DELETE FROM `CourseMaterial` WHERE `MaterialID` = ?;';
+    const query = 'DELETE FROM `Material` WHERE `MaterialID` = ?;';
     connection.query(query, [MaterialID], (err) => {
         if (err) {
             console.error('Database error:', err);
@@ -64,4 +84,45 @@ const deleteMaterial = (req, res) => {
     });
 }
 
-module.exports = { createMaterial, getMaterials, deleteMaterial };
+const addMaterialToCourse = (req, res) => {
+    const { CourseID, MaterialID } = req.body;
+    const query = 'INSERT INTO `CourseMaterial` (CourseID, MaterialID) VALUES (?, ?);';
+    connection.query(query, [CourseID, MaterialID], (err) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({ success: true });
+    });
+}
+
+const deleteCourseMaterial = (req, res) => {
+    const { CourseID, MaterialID } = req.body;
+    const query = 'DELETE FROM `CourseMaterial` WHERE `CourseID` = ? AND `MaterialID` = ?;';
+    connection.query(query, [CourseID, MaterialID], (err) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({ success: true });
+    });
+}
+
+const getCourseMaterials = (req, res) => {
+    const { CourseID } = req.params;
+    const query = `
+        SELECT Material.*
+        FROM Material
+        JOIN CourseMaterial ON Material.MaterialID = CourseMaterial.MaterialID
+        WHERE CourseMaterial.CourseID = ?;
+    `;
+    connection.query(query, [CourseID], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
+}
+
+module.exports = { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse };
