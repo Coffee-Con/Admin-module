@@ -187,3 +187,29 @@ https.createServer(options, app).listen(443, () => {
   console.log(`Server is running on ${process.env.BASE_URL}:${port}`);
   console.log('HTTPS server running on port 443');
 });
+
+// Mobile App API
+const mobile = express();
+mobile.use(express.json());
+
+mobile.post('/api/login', login);
+mobile.use(authenticateToken);
+mobile.get('/api/getUserCourses', getUserCourses);
+mobile.get('/api/getUserInfo', getUserInfo);
+mobile.get('/captcha', captcha);
+mobile.post('/api/verify-captcha', verifyCaptcha2);
+mobile.get('/api/getUserUnCompletedQuizzes/:UserID/:CourseID', getUserUnCompletedQuizzes);
+mobile.get('/api/getUserCompletedQuizzes/:UserID/:CourseID', getUserCompletedQuizzes);
+mobile.get('/api/getQuizQuestions/:QuizID', getQuizQuestions);
+mobile.post('/api/getQuestion/:QuestionID', getQuestion);
+mobile.get('/api/getQuestions/:QuizID' , getQuestions);
+mobile.post('/api/submitQuiz', addUserQuizAnswer);
+mobile.post('/api/saveUserQuizQuestionAnswer', saveUserQuizQuestionAnswer);
+mobile.get('/api/getUserQuizAnswers/:UserID/:QuizID', getUserQuizAnswers);
+mobile.get('/api/getRewards', getRewards);
+mobile.get('/api/getReward/:RewardID', getReward);
+mobile.get('/api/getCourseMaterials/:CourseID', getCourseMaterials);
+
+mobile.listen(4000, () => {
+  console.log('Mobile Api listening on port 4000');
+});
