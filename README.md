@@ -23,7 +23,7 @@ DBPassword= Your database password
 
 ### SSL Certificate
 
-Run via terminal and put the file into ssl folder:  
+Run via terminal and put the file into [ssl](./ssl/) folder:  
 openssl genrsa -out key.pem 2048  
 openssl req -new -key key.pem -out csr.pem  
 openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem  
