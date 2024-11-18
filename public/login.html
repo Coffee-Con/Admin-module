@@ -79,12 +79,9 @@
           if (response.redirected) {
             window.location.href = response.url; // 手动处理重定向
           } else {
-            return response.text();
+            alert('Login failed');
           }
         })
-        .then(result => {
-          alert("Success"); // 使用浏览器内置的 alert 显示消息
-        });
     }
   </script>
 
