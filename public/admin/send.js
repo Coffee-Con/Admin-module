@@ -38,7 +38,9 @@ const sendMail = (mail) => {
     return response.text();
   }).then((data) => {
     document.getElementById("result-message").innerHTML = data;
+    alert(data);
   }).catch((error) => {
     document.getElementById("result-message").innerHTML = "An error occurred: " + error;
+    alert("An error occurred: " + error);
   });
 };
