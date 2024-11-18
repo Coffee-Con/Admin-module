@@ -31,11 +31,11 @@
             <!-- <label for="password">Password:</label> -->
               <label for="VerificationCode" class="form-label">
                 <i class="fas fa-check" style="color:black; margin-right: 5px;"></i>
-                VerificationCode:
+                Verification Code:
               </label>
               <input type="text" name="captchaInput" placeholder="Verification Code" class="form-control" required />
 
-              <img id="captchaImg" src="/captcha" alt="验证码" onclick="reloadCaptcha()" />
+              <img id="captchaImg" src="/captcha" alt="Verification Code" onclick="reloadCaptcha()" />
               <script>
               function reloadCaptcha() {
                   document.getElementById('captchaImg').src = '/captcha?' + Date.now(); // 防止缓存
