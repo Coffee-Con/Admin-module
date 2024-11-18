@@ -8,7 +8,7 @@
   }
   body {
     font-family: 'Arial', sans-serif;
-    background-image: url('image/login-background.jpg'); /* 背景图路径 */
+    background-image: url('image/loginBackground.avif'); /* 背景图路径 */
     background-size: cover; /* 让背景图覆盖整个页面 */
     background-repeat: no-repeat; /* 防止背景图重复 */
     background-position: center center; /* 将背景图置于页面中央 */
@@ -22,6 +22,7 @@
     height: 100vh;
     box-sizing: border-box;
   }
+
 h1 {
     text-align: center;
     margin-top: 2em;
@@ -47,4 +48,14 @@ h1 {
     width: 100px; /* 设置宽度 */
     height: auto; 
     margin-top: 2em;
+}
+
+.button-Animation {
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease; 
+}
+
+.button-Animation:hover {
+  transform: scale(1.1);
 }

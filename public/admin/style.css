@@ -188,3 +188,13 @@ th {
 .question-item {
     margin-bottom: 15px;
 }
+
+.button-Animation {
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease; 
+}
+
+.button-Animation:hover {
+    transform: scale(1.1);
+}
