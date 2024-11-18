@@ -92,7 +92,7 @@ app.get('/api/getUserCourses', getUserCourses);
 // Course end
 
 // Quiz
-const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes } = require('./functions/api/quiz');
+const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard } = require('./functions/api/quiz');
 app.post('/create-quiz', createQuiz);
 app.delete('/delete-quiz/:QuizID', deleteQuiz);
 app.put('/update-quiz/:QuizID', updateQuiz);
@@ -111,6 +111,7 @@ app.get('/api/getUserQuizAnswers/:UserID/:QuizID', getUserQuizAnswers);
 app.get('/api/getUserUnCompletedQuizzes/:UserID/:CourseID', getUserUnCompletedQuizzes);
 app.get('/api/getUserCompletedQuizzes/:UserID/:CourseID', getUserCompletedQuizzes);
 // app.post('/api/addUserQuizScore', addUserQuizScore); use submitQuiz instead
+app.get('/api/getLeaderboard/:QuizID/:CourseID', getLeaderboard);
 // Quiz end
 
 // Question
