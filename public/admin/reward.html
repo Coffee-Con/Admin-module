@@ -245,6 +245,7 @@
                 });
 
                 const rewardSelect = document.getElementById('rewardSelect');
+                rewardSelect.innerHTML = '<option value="">Select a reward</option>'; // Clear the select
                 rewards.forEach(reward => {
                     const option = document.createElement('option');
                     option.value = reward.RewardID;
