@@ -43,7 +43,8 @@ const deleteReward = (req, res) => {
 }
 
 const updateReward = (req, res) => {
-    const { RewardID, RewardName, RewardDescription, RewardPoint } = req.body;
+    const { RewardID } = req.params;
+    const { RewardName, RewardDescription, RewardPoint } = req.body;
 
     // Validate required fields
     if (!RewardID || !RewardName || !RewardDescription || !RewardPoint) {
