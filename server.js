@@ -157,8 +157,8 @@ app.put('/api/updateReward/:RewardID', updateReward);
 // Reward end
 
 // Material
-const { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse, updateMaterial, uploadMaterial } = require('./functions/api/material');
-const uploadFile = multer({ uploadMaterial });
+const { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse, updateMaterial } = require('./functions/api/material');
+const uploadFile = require('./functions/uploadConfig');
 app.post('/api/createMaterial', uploadFile.single("file"), createMaterial);
 app.get('/api/getMaterials', getMaterials);
 app.get('/api/getMaterialsNotInCourse/:CourseID', getMaterialsNotInCourse);
