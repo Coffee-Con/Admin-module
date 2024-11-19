@@ -211,7 +211,6 @@ const verifyCaptcha2 = async (req, res) => {
 
 // 验证 Token 并展示重置密码页面
 const resetPassword = (req, res) => {
-  console.log(req.body);
   const { newPassword, changepasswordToken } = req.body;
 
   if (!newPassword || !changepasswordToken) {
@@ -235,7 +234,7 @@ const resetPassword = (req, res) => {
           return res.status(400).json({ success: false, message: 'Token 无效或已过期，请重新请求重置密码。' });
       }
 
-      const userId = rows[0].user_id;
+      const userId = rows[0].UserID;
       const salt = rows[0].Salt;
 
       // 对新密码进行哈希处理
