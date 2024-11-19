@@ -110,29 +110,49 @@
             transform: scale(1.1);
         }
 
-        .button-Animation2 {
-            border: none;
-            cursor: pointer;
-            outline: none;
-            position: absolute; 
+        /* 样式定义 */
+        .dropdown {
+            position: absolute;
+            display: inline-block;
+            border: none !important;
             top: 12px; 
-            right:20px; 
-            background-color: transparent; 
+            right: 10px; 
+        }
+
+        .dropdown-button {
+            background-color: transparent; /* Button background color */
             color: black;
-            transition: background-color 0.3s ease, transform 0.3s ease; 
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .button-Animation2 i {
-            margin-right: 5px;
-            font-size: 1.2em; /* Adjust icon size for consistency */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 1;
         }
-        
-        .button-Animation2:hover {
+
+        .dropdown-content a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: black;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-content a:hover {
             background-color: lightgray;
-            transform: translateY(-2px); 
         }
 
-
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -140,6 +160,23 @@
         <i class="fa-solid fa-arrow-left"></i> 
         <span>Back</span>
     </button>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-button">
+                <i class="fa-solid fa-arrow-down"></i>
+                <span>Other Management Pages</span>
+            </button>
+            <div class="dropdown-content">
+                <a href="quiz.html" target="_blank">
+                    <i class="fas fa-pencil-alt" style="padding-right: 5px;"></i>Quiz Management
+                </a>
+                <a href="course.html" target="_blank">
+                    <i class="fas fa-book" style="padding-right: 5px;"></i>Course Management
+                </a>
+                <a href="material.html" target="_blank">
+                    <i class="fas fa-folder-open" style="padding-right: 5px;"></i>Material Management
+                </a>
+            </div>
+        </div>
     <header class="header">
         <h1>Question Management
             <i class="fas fa-question-circle" style="color: #007bff;"></i>
