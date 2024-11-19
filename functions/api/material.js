@@ -85,6 +85,22 @@ const deleteMaterial = (req, res) => {
     });
 }
 
+const updateMaterial = (req, res) => {
+    const { MaterialID, MaterialName, MaterialDescription, MaterialType, MaterialLink } = req.body;
+    const query = `
+        UPDATE Material
+        SET MaterialName = ?, MaterialDescription = ?, MaterialType = ?, MaterialLink = ?
+        WHERE MaterialID = ?;
+    `;
+    connection.query(query, [MaterialName, MaterialDescription, MaterialType, MaterialLink, MaterialID], (err) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({ success: true });
+    });
+}
+
 const addMaterialToCourse = (req, res) => {
     const { CourseID, MaterialID } = req.body;
     const query = 'INSERT INTO `CourseMaterial` (CourseID, MaterialID) VALUES (?, ?);';
@@ -139,4 +155,4 @@ const uploadMaterial = multer.diskStorage({
     },
 });
 
-module.exports = { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse, uploadMaterial };
+module.exports = { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse, uploadMaterial, updateMaterial };
