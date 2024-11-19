@@ -250,7 +250,7 @@ const resetPassword = (req, res) => {
           }
 
           // 可选：删除已使用的重置 token
-          const deleteQuery = 'DELETE FROM reset_tokens WHERE token = ?';
+          const deleteQuery = 'DELETE FROM ResetTokens WHERE token = ?';
           connection.query(deleteQuery, [changepasswordToken], (err) => {
               if (err) {
                   console.error('删除 Token 错误:', err);
