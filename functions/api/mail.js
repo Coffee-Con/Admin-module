@@ -221,7 +221,7 @@ const resetPassword = (req, res) => {
   // 查找与 token 关联的用户
   const query = `
     SELECT u.UserID, u.Salt 
-    FROM reset_tokens rt
+    FROM ResetTokens rt
     JOIN User u ON rt.user_id = u.UserID
     WHERE rt.token = ? AND rt.token_expiry > NOW()
   `;
