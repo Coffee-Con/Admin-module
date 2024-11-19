@@ -1,3 +1,6 @@
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const express = require('express');
 const mysql = require('mysql2');
 const multer = require('multer');
@@ -9,6 +12,10 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const dbConfig = require('./functions/dbConfig'); // 导入数据库配置
+const options = {
+  key: fs.readFileSync('ssl/key.pem'),
+  cert: fs.readFileSync('ssl/cert.pem')
+};
 const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler } = require('./functions/api/mail'); // 导入邮件发送模块
 const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate } = require('./functions/api/auth');
 const { addUsers } = require('./functions/api/readCSVAndInsertUsers'); // 导入添加用户模块
@@ -167,6 +174,42 @@ app.get('/api/getUserInfo', getUserInfo); // 获取用户信息
 
 app.use((req, res) => { res.status(404).sendFile(path.join(__dirname, 'public/404.html')); }); // 404 页面
 
-app.listen(port, () => {
+http.createServer((req, res) => {
+  const host = req.headers.host.split(':')[0];  // 获取不带端口的主机名
+  const redirectUrl = `https://${host}${req.url}`;
+  
+  res.writeHead(301, { "Location": redirectUrl });
+  res.end();
+}).listen(port);  // 监听端口
+
+// Create HTTPS server
+https.createServer(options, app).listen(443, () => {
   console.log(`Server is running on ${process.env.BASE_URL}:${port}`);
+  console.log('HTTPS server running on port 443');
+});
+
+// Mobile App API
+const mobile = express();
+mobile.use(express.json());
+
+mobile.post('/api/login', login);
+mobile.use(authenticateToken);
+mobile.get('/api/getUserCourses', getUserCourses);
+mobile.get('/api/getUserInfo', getUserInfo);
+mobile.get('/captcha', captcha);
+mobile.post('/api/verify-captcha', verifyCaptcha2);
+mobile.get('/api/getUserUnCompletedQuizzes/:UserID/:CourseID', getUserUnCompletedQuizzes);
+mobile.get('/api/getUserCompletedQuizzes/:UserID/:CourseID', getUserCompletedQuizzes);
+mobile.get('/api/getQuizQuestions/:QuizID', getQuizQuestions);
+mobile.post('/api/getQuestion/:QuestionID', getQuestion);
+mobile.get('/api/getQuestions/:QuizID' , getQuestions);
+mobile.post('/api/submitQuiz', addUserQuizAnswer);
+mobile.post('/api/saveUserQuizQuestionAnswer', saveUserQuizQuestionAnswer);
+mobile.get('/api/getUserQuizAnswers/:UserID/:QuizID', getUserQuizAnswers);
+mobile.get('/api/getRewards', getRewards);
+mobile.get('/api/getReward/:RewardID', getReward);
+mobile.get('/api/getCourseMaterials/:CourseID', getCourseMaterials);
+
+mobile.listen(4000, () => {
+  console.log('Mobile Api listening on port 4000');
 });

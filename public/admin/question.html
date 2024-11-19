@@ -132,19 +132,13 @@
             transform: translateY(-2px); 
         }
 
-        .question-item {
-            margin-bottom: 15px;
-        }
+
     </style>
 </head>
 <body>
     <button class="back-button" onclick="window.location.href='index.html'">
         <i class="fa-solid fa-arrow-left"></i> 
         <span>Back</span>
-    </button>
-    <button class="button-Animation2" onclick="window.location.href='quiz.html'">
-        <i class="fa-solid fa-arrow-right"></i>
-        <span>Quiz Page</span>
     </button>
     <header class="header">
         <h1>Question Management
@@ -170,7 +164,7 @@
             <label for="questionAnswer">Question Answers</label>
             <div class="answer-input">
                 <input type="text" class="answer" placeholder="Enter question answer" required>
-                <input type="checkbox" class="correct-answer" checked> Correct
+                <input type="checkbox" class="correct-answer" onclick="toggleSingleCheck(this)"> Correct
             </div>
             <div style="display: flex; margin-top: 15px;">
                 <button class="btn btn-primary button-Animation" type="button" onclick="addAnswer()">Add Answer</button>

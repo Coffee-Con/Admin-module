@@ -6,7 +6,7 @@ function addAnswer() {
     newAnswerDiv.innerHTML = `
       <button class="btn btn-danger button-Animation" style="margin-right:10px; "type="button" class="delete-button" onclick="deleteAnswer(this)">Delete</button>
       <input type="text" class="answer" placeholder="Enter question answer">
-      <input type="checkbox" class="correct-answer"> Correct
+      <input type="checkbox" class="correct-answer" onclick="toggleSingleCheck(this)"> Correct
   `;
     container.insertBefore(newAnswerDiv, container.lastElementChild);
         const questionTypeSelect = document.getElementById('questionType');
@@ -21,6 +21,17 @@ function addAnswer() {
                 checkbox.style.display = 'inline-block';
             });
         }
+}
+
+function toggleSingleCheck(checkbox) {
+    if (checkbox.checked) {
+        // Uncheck all other checkboxes
+        document.querySelectorAll('.correct-answer').forEach(cb => {
+            if (cb !== checkbox) {
+                cb.checked = false;
+            }
+        });
+    }
 }
 
 function createQuestion() {
@@ -102,9 +113,11 @@ function fetchQuestions() {
 
                 questionDiv.innerHTML = `
                     <div class="question-header">
-                        <span style="font-weight:bold;">Q: ${question.Question}</span>
-                        <button class="btn btn-danger button-Animation" style="margin-left:5px;" onclick="deleteQuestion(${question.QuestionID})">Delete</button>
-                        <button class="btn btn-success button-Animation" style="margin-left:5px;" onclick="toggleDetails(this)">Edit</button>
+                        <span style="font-weight:bold; margin-bottom:20px;">Q${question.QuestionID}: ${question.Question}</span>
+                        <button class="btn btn-danger button-Animation" style="margin-left:5px; padding:5px 10px; font-size:12px;" onclick="deleteQuestion(${question.QuestionID})" title="Delete">
+                        <i class="fas fa-trash" style="font-size:12px;"></i></button>
+                        <button class="btn btn-success button-Animation" style="margin-left:5px; padding:5px 10px; font-size:12px;" onclick="toggleDetails(this)" title="Edit">
+                        <i class="fas fa-edit" style="font-size:12px;"></i></button>
                         <hr>
                     </div>
                     <div class="question-details" style="display: none;">
@@ -131,7 +144,7 @@ function fetchQuestions() {
                                     <div class="answer-input">
                                         <input type="text" id="editAnswerText-${question.QuestionID}-${index}" value="${answer.text}" placeholder="Edit answer ${index + 1}">
                                         <label style="margin-left:10px;" >
-                                            <input type="checkbox" id="correct-${question.QuestionID}-${index}" ${answer.correct ? 'checked' : ''}>
+                                            <input type="checkbox" class="correct-answer" onclick="toggleSingleCheck(this)" id="correct-${question.QuestionID}-${index}" ${answer.correct ? 'checked' : ''}>
                                             Correct
                                         </label>
                                         <button class="deleteButton btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${question.QuestionID}, ${index})">Delete</button>
@@ -214,7 +227,7 @@ function addEditAnswer(questionID) {
     newAnswerDiv.innerHTML = `
         <input type="text" placeholder="Enter question answer">
         <label style="margin-left:10px;">
-            <input class="checkBox"  type="checkbox">
+            <input class="checkBox correct-answer"  type="checkbox" onclick="toggleSingleCheck(this)">
             Correct
         </label>
         <button class="btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${questionID}, ${container.children.length})">Delete</button>

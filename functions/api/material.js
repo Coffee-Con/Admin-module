@@ -7,7 +7,7 @@ const path = require('path');
 const fs = require('fs');
 
 // 创建 material 文件夹（如果不存在）
-const materialFolderPath = path.join(__dirname, 'public/user/material');
+const materialFolderPath = path.join(__dirname, '../../public/user/material');
 if (!fs.existsSync(materialFolderPath)) {
     fs.mkdirSync(materialFolderPath, { recursive: true });
 }
@@ -21,16 +21,16 @@ const createMaterial = async (req, res) => {
 
     // 检查上传文件（如果有）
     let materialLinkFinal = MaterialLink;
-    if (MaterialType === "2" && req.file) {
+    if (MaterialType == 2 && req.file) {
         // PDF 文件的保存路径
         materialLinkFinal = `/user/material/${req.file.filename}`;
     }
 
     const query = `
-        INSERT INTO Material (MaterialName, MaterialDescription, MaterialLink)
-        VALUES (?, ?, ?)
+        INSERT INTO Material (MaterialName, MaterialDescription, MaterialType, MaterialLink)
+        VALUES (?, ?, ?, ?)
     `;
-    const values = [MaterialName, MaterialDescription, materialLinkFinal];
+    const values = [MaterialName, MaterialDescription, MaterialType, materialLinkFinal];
 
     connection.query(query, values, (err, result) => {
         if (err) {

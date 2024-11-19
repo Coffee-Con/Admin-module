@@ -15,7 +15,6 @@ const createQuestion = (req, res) => {
 
     const query = 'INSERT INTO `Question` (Question, QuestionType, Answer) VALUES (?, ?, ?);';
     connection.query(query, [topic, type, JSON.stringify(answers)], (err, results) => {
-        console.log('Query:', query);
         if (err) {
             console.error('Error inserting data:', err);
             return res.status(500).json({ error: 'Database error' });
