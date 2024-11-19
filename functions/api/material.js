@@ -4,6 +4,7 @@ const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
 
 const path = require('path');
+const multer = require("multer");
 const fs = require('fs');
 
 // 创建 material 文件夹（如果不存在）
@@ -125,4 +126,17 @@ const getCourseMaterials = (req, res) => {
     });
 }
 
-module.exports = { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse };
+const uploadMaterial = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "public/user/material/"); // 设置保存目录
+    },
+    filename: (req, file, cb) => {
+        // 提取原始文件名并保留后缀
+        const ext = path.extname(file.originalname); // 获取文件后缀
+        const baseName = path.basename(file.originalname, ext); // 去除后缀的文件名
+        const timestamp = Date.now(); // 加时间戳防止文件名冲突
+        cb(null, `${baseName}-${timestamp}${ext}`);
+    },
+});
+
+module.exports = { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse, uploadMaterial };
