@@ -115,7 +115,7 @@ const verifyCaptcha = async (req, res) => {
         const token = generateToken();
         const expiryTime = new Date(Date.now() + 60 * 60 * 1000); // Token 有效期1小时
 
-        const insertQuery = 'INSERT INTO reset_tokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
+        const insertQuery = 'INSERT INTO ResetTokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
         connection.query(insertQuery, [userID, token, expiryTime], (err, results) => {
           if (err) {
             console.error('Token 数据库插入错误:', err);
@@ -211,7 +211,6 @@ const verifyCaptcha2 = async (req, res) => {
 
 // 验证 Token 并展示重置密码页面
 const resetPassword = (req, res) => {
-  console.log(req.body);
   const { newPassword, changepasswordToken } = req.body;
 
   if (!newPassword || !changepasswordToken) {
@@ -221,7 +220,7 @@ const resetPassword = (req, res) => {
   // 查找与 token 关联的用户
   const query = `
     SELECT u.UserID, u.Salt 
-    FROM reset_tokens rt
+    FROM ResetTokens rt
     JOIN User u ON rt.user_id = u.UserID
     WHERE rt.token = ? AND rt.token_expiry > NOW()
   `;
@@ -235,7 +234,7 @@ const resetPassword = (req, res) => {
           return res.status(400).json({ success: false, message: 'Token 无效或已过期，请重新请求重置密码。' });
       }
 
-      const userId = rows[0].user_id;
+      const userId = rows[0].UserID;
       const salt = rows[0].Salt;
 
       // 对新密码进行哈希处理
@@ -250,7 +249,7 @@ const resetPassword = (req, res) => {
           }
 
           // 可选：删除已使用的重置 token
-          const deleteQuery = 'DELETE FROM reset_tokens WHERE token = ?';
+          const deleteQuery = 'DELETE FROM ResetTokens WHERE token = ?';
           connection.query(deleteQuery, [changepasswordToken], (err) => {
               if (err) {
                   console.error('删除 Token 错误:', err);

@@ -6,21 +6,19 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="forget.css">
-  
-  <title>Forget</title>
+  <title>Forget/Reset</title>
 </head>
 <body>
   <div class="container">
     <h1 style="margin-top: 2em; font-weight: bolder;">
       Forget Password
-      <i class="fas fa-question-circle" data-toggle="tooltip" title="Enter your email to receive a verification code." style="color: #007bff;"></i>
+      <i class="fas fa-question-circle" data-toggle="tooltip" title="Enter your email to receive a verification code." style="color:rgb(5,143,216);   text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.8); "></i>
     </h1>
     <div class="background-area">
       <div class="row">
         <div class="col-md-12 section-title">
           <form id="loginForm" action="/verify-captcha" method="POST">
             <div class="form-group1">
-            <!-- <label for="email">Email:</label> -->
               <label for="email" class="form-label">
                 <i class="fas fa-envelope" style="color:black; margin-right: 5px;"></i>
                 Email Address:
@@ -37,9 +35,9 @@
 
               <img id="captchaImg" src="/captcha" alt="Verification Code" onclick="reloadCaptcha()" />
               <script>
-              function reloadCaptcha() {
-                  document.getElementById('captchaImg').src = '/captcha?' + Date.now(); // 防止缓存
-              }
+                function reloadCaptcha() {
+                    document.getElementById('captchaImg').src = '/captcha?' + Date.now(); // 防止缓存
+                }
               </script>
             </div>
             <div style="display: flex; padding-top: 20px;">
@@ -56,8 +54,6 @@
         </div>
       </div>
     </div>
-    <!-- for testing -->
-    <div id="message"></div>
   </div>
 </body>
 </html>
