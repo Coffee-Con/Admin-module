@@ -115,7 +115,7 @@ const verifyCaptcha = async (req, res) => {
         const token = generateToken();
         const expiryTime = new Date(Date.now() + 60 * 60 * 1000); // Token 有效期1小时
 
-        const insertQuery = 'INSERT INTO reset_tokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
+        const insertQuery = 'INSERT INTO ResetTokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
         connection.query(insertQuery, [userID, token, expiryTime], (err, results) => {
           if (err) {
             console.error('Token 数据库插入错误:', err);
