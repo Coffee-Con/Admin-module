@@ -3,14 +3,15 @@ h1 {
   text-align: center;
   margin-top: 2em;
   color: rgb(5, 143, 216);
+  text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.9); 
 }
 body {
   font-family: 'Arial', sans-serif;
-  background-image: url('image/loginBackground.avif'); /* 背景图路径 */
-  background-size: cover; /* 让背景图覆盖整个页面 */
-  background-repeat: no-repeat; /* 防止背景图重复 */
-  background-position: center center; /* 将背景图置于页面中央 */
-  background-attachment: fixed; /* 背景图固定，不随页面滚动 */
+  background-image: url('image/loginBackground.avif'); 
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-position: center center; 
+  background-attachment: fixed; 
   margin: 0;
   padding: 0;
   display: flex;
@@ -20,6 +21,7 @@ body {
   height: 100vh;
   box-sizing: border-box;
 }
+
 .container {
   display: flex;
   flex-direction: column;
@@ -232,3 +234,4 @@ body.loaded .text-container {
 .button-Animation:hover {
   transform: scale(1.1);
 }
+

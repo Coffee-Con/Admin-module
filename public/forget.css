@@ -27,6 +27,7 @@ h1 {
     text-align: center;
     margin-top: 2em;
     color: rgb(5, 143, 216);
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9); 
 }
 .form-group1 {
     margin-bottom: 1em;
