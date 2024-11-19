@@ -37,9 +37,9 @@
 
               <img id="captchaImg" src="/captcha" alt="Verification Code" onclick="reloadCaptcha()" />
               <script>
-              function reloadCaptcha() {
-                  document.getElementById('captchaImg').src = '/captcha?' + Date.now(); // 防止缓存
-              }
+                function reloadCaptcha() {
+                    document.getElementById('captchaImg').src = '/captcha?' + Date.now(); // 防止缓存
+                }
               </script>
             </div>
             <div style="display: flex; padding-top: 20px;">
@@ -56,8 +56,6 @@
         </div>
       </div>
     </div>
-    <!-- for testing -->
-    <div id="message"></div>
   </div>
 </body>
 </html>
