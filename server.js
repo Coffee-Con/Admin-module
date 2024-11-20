@@ -195,15 +195,15 @@ const mobile = express();
 mobile.use(express.json());
 
 mobile.post('/api/login', login);
+mobile.get('/captcha', captcha);
+mobile.post('/api/verify-captcha', verifyCaptcha2);
 mobile.use(authenticateToken);
 mobile.get('/api/getUserCourses', getUserCourses);
 mobile.get('/api/getUserInfo', getUserInfo);
-mobile.get('/captcha', captcha);
-mobile.post('/api/verify-captcha', verifyCaptcha2);
 mobile.get('/api/getUserUnCompletedQuizzes/:UserID/:CourseID', getUserUnCompletedQuizzes);
 mobile.get('/api/getUserCompletedQuizzes/:UserID/:CourseID', getUserCompletedQuizzes);
 mobile.get('/api/getQuizQuestions/:QuizID', getQuizQuestions);
-mobile.post('/api/getQuestion/:QuestionID', getQuestion);
+mobile.get('/api/getQuestion/:QuestionID', getQuestion);
 mobile.get('/api/getQuestions/:QuizID' , getQuestions);
 mobile.post('/api/submitQuiz', addUserQuizAnswer);
 mobile.post('/api/saveUserQuizQuestionAnswer', saveUserQuizQuestionAnswer);

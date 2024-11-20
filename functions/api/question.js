@@ -47,8 +47,7 @@ const getQuestion = (req, res) => {
     connection.query(query, [QuestionID], (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
-            res.status(500).send('Internal server error');
-            return;
+            return res.status(500).send('Internal server error');
         }
 
         if (results.length > 0) {
