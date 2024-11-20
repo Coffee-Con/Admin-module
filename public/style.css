@@ -3,8 +3,8 @@ h1 {
   text-align: center;
   margin-top: 2em;
   color: rgb(5, 143, 216);
-  text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.9); 
 }
+
 body {
   font-family: 'Arial', sans-serif;
   background-image: url('image/loginBackground.avif'); 
@@ -88,10 +88,11 @@ body {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   max-width: 650px; /* 限制背景区域的宽度 */
   position: fixed; /* 使背景区域固定 */
-  top: 55%; /* 垂直居中 */
+  top: 50%; /* 垂直居中 */
   transform: translateY(-50%); /* 垂直居中修正 */
   z-index: 1; /* 保持在文字渐变下方 */
 }
+
 
 .centered-image {
   display: block;
