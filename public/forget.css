@@ -1,11 +1,15 @@
 .background-area {
     background-color: white; /* White background */
-    padding: 60px; /* Padding inside the area */
+    padding: 50px; /* Padding inside the area */
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
     max-width: 800px; /* Limit width */
     margin: 2em auto; 
+    margin-top:8em ;
   }
+  
+
+
   body {
     font-family: 'Arial', sans-serif;
     background-image: url('image/loginBackground.avif'); /* 背景图路径 */
@@ -27,8 +31,8 @@ h1 {
     text-align: center;
     margin-top: 2em;
     color: rgb(5, 143, 216);
-    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9); 
 }
+
 .form-group1 {
     margin-bottom: 1em;
     margin-top: 1em;

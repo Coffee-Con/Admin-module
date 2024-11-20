@@ -10,11 +10,11 @@
 </head>
 <body>
   <div class="container">
-    <h1 style="margin-top: 2em; font-weight: bolder;">
-      Forget Password
-      <i class="fas fa-question-circle" data-toggle="tooltip" title="Enter your email to receive a verification code." style="color:rgb(5,143,216);   text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.8); "></i>
-    </h1>
-    <div class="background-area">
+    <div class="form-container background-area">
+      <h1 style="font-weight: bolder; margin: 0px; margin-bottom: 30px;">
+        Forget Password
+        <i class="fas fa-question-circle" data-toggle="tooltip" title="Enter your email, you will receive a email that can change your password." style="color:rgb(5,143,216);"></i>
+      </h1>
       <div class="row">
         <div class="col-md-12 section-title">
           <form id="loginForm" action="/verify-captcha" method="POST">
@@ -28,7 +28,7 @@
             <div class="form-group2">
             <!-- <label for="password">Password:</label> -->
               <label for="VerificationCode" class="form-label">
-                <i class="fas fa-check" style="color:black; margin-right: 5px;"></i>
+                <i class="fas fa-check" style=" margin-right: 5px;"></i>
                 Verification Code:
               </label>
               <input type="text" name="captchaInput" placeholder="Verification Code" class="form-control" required />
@@ -45,7 +45,7 @@
                 <i class="fas fa-paper-plane"></i> 
                 Submit Verification
               </button>
-              <button class="btn btn-primary button-Animation" style="margin-left: 330px;" onclick="window.location.href='login.html'">
+              <button class="btn btn-secondary button-Animation" style="margin-left: 330px;" onclick="window.location.href='login.html'">
                 <i class="fa fa-sign-in-alt"></i> 
                 <span>Continue Login</span>
              </button>
