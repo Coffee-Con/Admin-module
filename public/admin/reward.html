@@ -161,7 +161,7 @@
                 return;
             }
 
-            fetch('/api/create-reward', {
+            fetch('/api/createReward', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ RewardName: rewardName, RewardDescription: rewardDescription, RewardPoint: rewardPoint })
@@ -189,7 +189,7 @@
                 return;
             }
 
-            fetch(`/api/update-reward/${rewardID}`, {
+            fetch(`/api/updateReward/${rewardID}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ RewardName: rewardName, RewardDescription: rewardDescription, RewardPoint: rewardPoint })
@@ -208,7 +208,7 @@
 
         // Function to delete a reward
         function deleteReward(rewardID) {
-            fetch(`/api/delete-reward/${rewardID}`, {
+            fetch(`/api/deleteReward/${rewardID}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             })

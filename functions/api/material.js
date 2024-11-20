@@ -19,6 +19,8 @@ const createMaterial = async (req, res) => {
     const material = JSON.parse(materialData);
     const { MaterialName, MaterialDescription, MaterialType, MaterialLink } = material;
 
+    console.log(req.file);
+
     // 检查上传文件（如果有）
     let materialLinkFinal = MaterialLink;
     if (MaterialType == 2 && req.file) {
@@ -84,6 +86,22 @@ const deleteMaterial = (req, res) => {
     });
 }
 
+const updateMaterial = (req, res) => {
+    const { MaterialID, MaterialName, MaterialDescription, MaterialType, MaterialLink } = req.body;
+    const query = `
+        UPDATE Material
+        SET MaterialName = ?, MaterialDescription = ?, MaterialType = ?, MaterialLink = ?
+        WHERE MaterialID = ?;
+    `;
+    connection.query(query, [MaterialName, MaterialDescription, MaterialType, MaterialLink, MaterialID], (err) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({ success: true });
+    });
+}
+
 const addMaterialToCourse = (req, res) => {
     const { CourseID, MaterialID } = req.body;
     const query = 'INSERT INTO `CourseMaterial` (CourseID, MaterialID) VALUES (?, ?);';
@@ -125,4 +143,4 @@ const getCourseMaterials = (req, res) => {
     });
 }
 
-module.exports = { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse };
+module.exports = { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse, updateMaterial };

@@ -148,23 +148,25 @@ app.get('/template/:id', getTemplate);
 // Template end
 
 // Reward
-const { createReward, getRewards, deleteReward, getReward } = require('./functions/api/reward');
-app.post('/api/create-reward', createReward);
+const { createReward, getRewards, deleteReward, getReward, updateReward } = require('./functions/api/reward');
+app.post('/api/createReward', createReward);
 app.get('/api/getRewards', getRewards);
-app.delete('/api/delete-reward/:RewardID', deleteReward);
+app.delete('/api/deleteReward/:RewardID', deleteReward);
 app.get('/api/getReward/:RewardID', getReward);
+app.put('/api/updateReward/:RewardID', updateReward);
 // Reward end
 
 // Material
-const { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse } = require('./functions/api/material');
-const uploadMaterial = multer({ dest: "public/user/material/" });
-app.post('/api/createMaterial', uploadMaterial.single("file"), createMaterial);
+const { createMaterial, getMaterials, deleteMaterial, addMaterialToCourse, deleteCourseMaterial, getCourseMaterials, getMaterialsNotInCourse, updateMaterial } = require('./functions/api/material');
+const uploadFile = require('./functions/uploadConfig');
+app.post('/api/createMaterial', uploadFile.single("file"), createMaterial);
 app.get('/api/getMaterials', getMaterials);
 app.get('/api/getMaterialsNotInCourse/:CourseID', getMaterialsNotInCourse);
 app.delete('/api/deleteMaterial/:MaterialID', deleteMaterial);
 app.post('/api/addMaterialToCourse', addMaterialToCourse);
 app.delete('/api/deleteCourseMaterial', deleteCourseMaterial);
 app.get('/api/getCourseMaterials/:CourseID', getCourseMaterials);
+app.put('/api/updateMaterial/:MaterialID', updateMaterial);
 // Material end
 
 // Extra
