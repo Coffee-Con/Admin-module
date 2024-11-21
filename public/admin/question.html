@@ -166,13 +166,13 @@
                 <span>Other Management Pages</span>
             </button>
             <div class="dropdown-content">
-                <a href="quiz.html" target="_blank">
+                <a href="quiz.html">
                     <i class="fas fa-pencil-alt" style="padding-right: 5px;"></i>Quiz Management
                 </a>
-                <a href="course.html" target="_blank">
+                <a href="course.html">
                     <i class="fas fa-book" style="padding-right: 5px;"></i>Course Management
                 </a>
-                <a href="material.html" target="_blank">
+                <a href="material.html">
                     <i class="fas fa-folder-open" style="padding-right: 5px;"></i>Material Management
                 </a>
             </div>
@@ -184,7 +184,7 @@
     </header>
     <div class="container">
         <!-- Create Question Section -->
-        <h2 class="subHeader">Create Question</h2>
+        <h2 style="margin-bottom: 5px;" class="subHeader">Create Question</h2>
         <div class="form-group">
             <label for="questionType">Question Type</label>
             <select id="questionType" required onchange="questionTypecss()">
@@ -203,12 +203,37 @@
                 <input type="text" class="answer" placeholder="Enter question answer" required>
                 <input type="checkbox" class="correct-answer" onclick="toggleSingleCheck(this)"> Correct
             </div>
-            <div style="display: flex; margin-top: 15px;">
+            <div style="display: flex; margin-top: 15px; margin-bottom: 2em;">
                 <button class="btn btn-primary button-Animation" type="button" onclick="addAnswer()">Add Answer</button>
                 <button style="margin-left: 620px; position: absolute;" class="btn btn-primary button-Animation" onclick="createQuestion()">Create Question</button>
             </div>
         </div>
-        <h2 style="margin-top: 20px; margin-bottom: 20px;" class="subHeader">Question List</h2>
+
+        <!-- Add question to quiz -->
+        <h2 style=" margin-bottom: 5px;" class="subHeader">Add Question to Quiz</h2>
+        <div class="form-group">
+            <label for="addQuestionToQuizQuizID">Quiz ID</label>
+            <input type="text" id="addQuestionToQuizQuizID" placeholder="Enter quiz ID" required>
+        </div>
+        <div class="form-group">
+            <label for="addQuestionToQuizQuestionID">Question ID</label>
+            <input type="text" id="addQuestionToQuizQuestionID" placeholder="Enter question ID" required>
+        </div>
+        <button style="margin-bottom: 2em;" class="btn btn-primary button-Animation" onclick="addQuestionToQuiz()">Add Question to Quiz</button>
+
+        <!-- Rmove question from quiz -->
+        <h2 style=" margin-bottom: 5px;" class="subHeader">Remove Question from Quiz</h2>
+        <div class="form-group">
+            <label for="removeQuestionFromQuizQuizID">Quiz ID</label>
+            <input type="text" id="removeQuestionFromQuizQuizID" placeholder="Enter quiz ID" required>
+        </div>
+        <div class="form-group">
+            <label for="removeQuestionFromQuizQuestionID">Question ID</label>
+            <input type="text" id="removeQuestionFromQuizQuestionID" placeholder="Enter question ID" required>
+        </div>
+        <button style="margin-bottom: 2em;" class="btn btn-primary button-Animation" onclick="removeQuestionFromQuiz()">Remove Question from Quiz</button>
+
+        <h2 style=" margin-bottom: 20px;" class="subHeader">Question List</h2>
         <div id="questionList"></div>
     </div>
 

@@ -115,19 +115,19 @@ function loadMaterialList() {
     fetch("/api/getMaterials")
     .then((response) => response.json())
     .then((data) => {
-        const materialList = document.getElementById("materialList");
+        const materialList = document.getElementById("materialListBody");
         materialList.innerHTML = "";
 
         data.forEach((material) => {
-            const div = document.createElement("div");
-            div.className = "material-item";
-            div.innerHTML = `
-                <h4>${material.MaterialName}</h4>
-                <p>${material.MaterialDescription}</p>
-                <a href="${material.MaterialLink}" target="_blank">Open Material</a>
-                <button onclick="deleteMaterial(${material.MaterialID})">Delete</button>
+            const tr = document.createElement("tr");
+            tr.className = "material-item";
+            tr.innerHTML = `
+                <td>${material.MaterialName}</td>
+                <td>${material.MaterialDescription}</td>
+                <td><a href="${material.MaterialLink}" target="_blank">Open Material</a></td>
+                <td><button class="btn btn-danger button-Animation" onclick="deleteMaterial(${material.MaterialID})">Delete</button></td>
             `;
-            materialList.appendChild(div);
+            materialList.appendChild(tr);
         });
     })
     .catch((error) => console.error("Error loading materials:", error));
@@ -177,7 +177,7 @@ function loadCourseMaterial(CourseID) {
                 <td>${material.MaterialName}</td>
                 <td>${material.MaterialDescription}</td>
                 <td><a href="${material.MaterialLink}" target="_blank">Link</a></td>
-                <td><button onclick="deleteCourseMaterial(${material.CourseMaterialID})">Delete</button></td>
+                <td><button class="btn btn-danger button-Animation" onclick="deleteCourseMaterial(${material.CourseMaterialID})">Delete</button></td>
             `;
             
             // Append the new row to the table body

@@ -617,4 +617,43 @@ const getLeaderboard = (req, res) => {
     });
 };
 
-module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard };
+// Add question to quiz
+const addQuestionToQuiz = (req, res) => {
+    const { QuizID, QuestionID } = req.params;
+    if (!QuizID || !QuestionID) {
+        console.log('Error: Quiz ID and Question ID are required.'); // Debugging line
+        return res.status(400).json({ error: 'Quiz ID and Question ID are required.' });
+    }
+
+    const query = 'INSERT INTO `QuizQuestion` (QuizID, QuestionID) VALUES (?, ?);';
+    connection.query(query, [QuizID, QuestionID], (err, results) => {
+        if (err) {
+            console.error('Error inserting data:', err); // Log the error
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({ success: true });
+    });
+};
+
+const removeQuiestionFromQuiz = (req, res) => {
+    const { QuizID, QuestionID } = req.params;
+    if (!QuizID || !QuestionID) {
+        console.log('Error: Quiz ID and Question ID are required.'); // Debugging line
+        return res.status(400).json({ error: 'Quiz ID and Question ID are required.' });
+    }
+
+    const query = 'DELETE FROM `QuizQuestion` WHERE QuizID = ? AND QuestionID = ?;';
+    connection.query(query, [QuizID, QuestionID], (err, results) => {
+        if (err) {
+            console.error('Error deleting question from quiz:', err); // Log the error
+            return res.status(500).json({ error: 'Database error' });
+        }
+        if (results.affectedRows === 0) {
+            console.log('No question found with that ID.'); // Debugging line
+            return res.status(404).json({ error: 'Question not found' });
+        }
+        res.json({ success: true, message: 'Question removed from quiz successfully' });
+    });
+};
+
+module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard, addQuestionToQuiz, removeQuiestionFromQuiz };

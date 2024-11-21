@@ -116,7 +116,7 @@
     <div class="container">
 
         <!-- Create Quiz Section -->
-        <h2 class="subHeader">Create Quiz</h2>
+        <h2 style="margin-bottom: 5px;" class="subHeader">Create Quiz</h2>
         <div class="form-group">
             <label for="quizName">Quiz Name</label>
             <input type="text" id="quizName" placeholder="Enter quiz name">
@@ -125,10 +125,10 @@
             <label for="quizDescription">Quiz Description</label>
             <input type="text" id="quizDescription" placeholder="Enter quiz description">
         </div>
-        <button class="btn btn-primary button-Animation" onclick="createQuiz()">Create Quiz</button>
+        <button style="margin-bottom: 2em;" class="btn btn-primary button-Animation" onclick="createQuiz()">Create Quiz</button>
 
         <!-- Update Quiz Section -->
-        <h2 class="subHeader" style="margin-top: 10px;">Update Quiz</h2>
+        <h2 class="subHeader" style="margin-bottom: 5px;">Update Quiz</h2>
         <div class="form-group">
             <label for="quizSelect">Select Quiz ID</label>
             <select id="quizSelect" onchange="fetchQuizDetails(this.value)">
@@ -143,11 +143,11 @@
             <label for="updateQuizDescription">Quiz Description</label>
             <input type="text" id="updateQuizDescription" placeholder="Enter quiz description">
         </div>
-        <button class="btn btn-primary button-Animation" onclick="updateQuiz()">Update Quiz</button>
+        <button style="margin-bottom: 2em;" class="btn btn-primary button-Animation" onclick="updateQuiz()">Update Quiz</button>
 
         <!-- Quiz List Section -->
-        <h2 class="subHeader" style="margin-top: 10px;">Quizzes List</h2>
-        <table>
+        <h2 class="subHeader" style="margin-bottom: 5px;">Quizzes List</h2>
+        <table style="margin-bottom: 2em;">
             <thead>
                 <tr>
                     <th>Quiz ID</th>
@@ -162,7 +162,7 @@
         </table>
 
         <!-- Add Quiz to course -->
-        <h2 class="subHeader" style="margin-top: 10px;">Add Quiz to course</h2>
+        <h2 class="subHeader" style="margin-bottom: 5px;">Add Quiz to Course</h2>
         <div class="form-group">
             <label for="addCourseID">Select Course ID</label>
             <select id="addCourseID" onchange="loadQuizzesNotInCourse(this.value)">
@@ -178,11 +178,11 @@
             </select>
         </div>
         <div class="form-group">
-            <button class="btn btn-primary button-Animation" onclick="addQuizToCourse()">Add Quiz to Course</button>
+            <button style=" margin-bottom: 1em;" class="btn btn-primary button-Animation" onclick="addQuizToCourse()">Add Quiz to Course</button>
         </div>
 
         <!-- Display all quizzes of selected course -->
-        <h2 class="subHeader">Quizzes of Course</h2>
+        <h2 style="margin-bottom: 5px;" class="subHeader">Quizzes of Course</h2>
         <div class="form-group">
             <label for="courseSelect">Select Course ID</label>
             <select id="courseSelect" onchange="fetchQuizzesOfCourse(this.value)">

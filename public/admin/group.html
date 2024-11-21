@@ -146,14 +146,14 @@
         </h1>
     </header>
     <div class="container">
-        <h2 class="subHeader">Create Group</h2>
+        <h2 style="margin-bottom: 5px;" class="subHeader">Create Group</h2>
         <div class="form-group">
             <label for="groupName">Group Name</label>
             <input type="text" id="groupName" placeholder="Enter group name">
         </div>
-        <button class="btn btn-primary button-Animation" onclick="createGroup()">Create Group</button>
+        <button class="btn btn-primary button-Animation" style="margin-bottom: 2em;" onclick="createGroup()">Create Group</button>
 
-        <h2 class="subHeader">Manage Group Members</h2>
+        <h2 style="margin-bottom: 5px;" class="subHeader">Manage Group Members</h2>
         <div class="form-group">
             <label for="groupSelect">Select Group</label>
             <select id="groupSelect" name="groupSelect" onchange="fetchGroupMembers(this.value)">
@@ -168,7 +168,7 @@
                 <!-- Options will be populated here -->
             </select>
         </div>
-        <div style="display: flex;">
+        <div style="display: flex; margin-bottom: 2em;">
             <button class="btn btn-primary button-Animation" onclick="addGroupMember()">Add Member</button>
             <button  style="margin-left: 550px ;" class="btn btn-success button-Animation" onclick="window.location.href='register.html'">Register</button>
         </div>
