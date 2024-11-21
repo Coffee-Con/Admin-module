@@ -99,7 +99,7 @@ app.get('/api/getUserCourses', getUserCourses);
 // Course end
 
 // Quiz
-const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard } = require('./functions/api/quiz');
+const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard, addQuestionToQuiz, removeQuiestionFromQuiz } = require('./functions/api/quiz');
 app.post('/create-quiz', createQuiz);
 app.delete('/delete-quiz/:QuizID', deleteQuiz);
 app.put('/update-quiz/:QuizID', updateQuiz);
@@ -119,6 +119,8 @@ app.get('/api/getUserUnCompletedQuizzes/:UserID/:CourseID', getUserUnCompletedQu
 app.get('/api/getUserCompletedQuizzes/:UserID/:CourseID', getUserCompletedQuizzes);
 // app.post('/api/addUserQuizScore', addUserQuizScore); use submitQuiz instead
 app.get('/api/getLeaderboard/:QuizID/:CourseID', getLeaderboard);
+app.post('/api/addQuestionToQuiz/:QuizID/:QuestionID', addQuestionToQuiz);
+app.delete('/api/removeQuestionFromQuiz/:QuizID/:QuestionID', removeQuiestionFromQuiz);
 // Quiz end
 
 // Question
@@ -170,7 +172,7 @@ app.put('/api/updateMaterial/:MaterialID', updateMaterial);
 // Material end
 
 // Extra
-app.get('/api/check-admin', authenticate, checkAdmin); // 管理员判断
+app.get('/api/check-admin', checkAdmin); // 管理员判断
 app.get('/api/getUserInfo', getUserInfo); // 获取用户信息
 // Extra end
 

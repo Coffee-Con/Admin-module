@@ -309,6 +309,46 @@ function questionTypecss() {
     }
 }
 
+function addQuestionToQuiz() {
+    const quizSelect = document.getElementById('addQuestionToQuizQuizID');
+    const questionSelect = document.getElementById('addQuestionToQuizQuestionID');
+    const quizID = quizSelect.value;
+    const questionID = questionSelect.value;
+
+    fetch(`/api/addQuestionToQuiz/${quizID}/${questionID}`, {
+        method: 'POST'
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Question added to quiz');
+            } else {
+                alert('Error adding question to quiz');
+            }
+        })
+        .catch(error => console.error('Error adding question to quiz:', error));
+}
+
+function removeQuestionFromQuiz() {
+    const quizSelect = document.getElementById('removeQuestionFromQuizQuizID');
+    const questionSelect = document.getElementById('removeQuestionFromQuizQuestionID');
+    const quizID = quizSelect.value;
+    const questionID = questionSelect.value;
+
+    fetch(`/api/removeQuestionFromQuiz/${quizID}/${questionID}`, {
+        method: 'DELETE'
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Question removed from quiz');
+            } else {
+                alert('Error removing question from quiz');
+            }
+        })
+        .catch(error => console.error('Error removing question from quiz:', error));
+}
+
 // Initialize question list on page load
 window.onload = fetchQuestions;
 
