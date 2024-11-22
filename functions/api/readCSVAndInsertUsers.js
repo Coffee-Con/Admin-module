@@ -114,7 +114,7 @@ const register = (req, res) => {
   const { user, email, name, password, role } = req.body;
 
   // Password strength regular expression: at least 8 characters, including uppercase letters, lowercase letters, numbers, and special characters
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
   if (!passwordRegex.test(password)) {
     return res.status(400).send('The password must contain uppercase letters, lowercase letters, numbers, special characters and be at least 8 characters long.');

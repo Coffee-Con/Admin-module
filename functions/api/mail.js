@@ -205,7 +205,7 @@ const verifyCaptcha2 = async (req, res) => {
     });
   } catch (err) {
     console.error('服务器错误:', err);
-    return res.status(500).json({ success: false, message: '内部服务器错误，请稍后重试。' });
+    return res.status(500).json({ success: false, message: 'Internal server error, please try again later.' });
   }
 };
 
@@ -215,6 +215,11 @@ const resetPassword = (req, res) => {
 
   if (!newPassword || !changepasswordToken) {
       return res.status(400).json({ success: false, message: '新密码和 Token 是必需的。' });
+  }
+  
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+  if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({ success: false, message: 'The password must contain uppercase letters, lowercase letters, numbers, special characters and be at least 8 characters long.'});
   }
 
   // 查找与 token 关联的用户
@@ -227,7 +232,7 @@ const resetPassword = (req, res) => {
   connection.query(query, [changepasswordToken], async (err, rows) => {
       if (err) {
           console.error('数据库查询错误:', err);
-          return res.status(500).json({ success: false, message: '内部服务器错误，请稍后重试。' });
+          return res.status(500).json({ success: false, message: 'Internal server error, please try again later.' });
       }
 
       if (rows.length === 0) {
