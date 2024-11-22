@@ -2,7 +2,7 @@
 
 ## How to use
 
-### Create and eidt [.env](.env) file:
+### Create and edit [.env](.env) file:
 
 > SMTP For testing: https://ethereal.email/
 
