@@ -132,6 +132,19 @@
                 password: document.getElementById('password').value,
                 role: document.getElementById('role').value,
             };
+
+            // Function to validate the password
+            function validatePassword(password) {
+                const passwordCriteria = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+                return passwordCriteria.test(password);
+            }
+            
+            const password = formData.password;
+            // Validate password
+            if (!validatePassword(password)) {
+                alert('Password must be at least 8 characters long and include a number, an uppercase letter, a lowercase letter, and a special character.');
+                return;
+            }
     
             try {
                 const response = await fetch('/addUser', {

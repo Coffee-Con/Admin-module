@@ -5,9 +5,9 @@ const multiparty = require('multiparty');
 const marked = require('marked');
 const crypto = require('crypto');
 
-// 连接到MySQL数据库
+
 const mysql = require('mysql2');
-const dbConfig = require('../dbConfig'); // 导入数据库配置
+const dbConfig = require('../dbConfig'); 
 const connection = mysql.createConnection(dbConfig);
 
 const transporter = nodemailer.createTransport({
