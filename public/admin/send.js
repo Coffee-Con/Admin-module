@@ -14,9 +14,9 @@ const sendMail = (mail) => {
   }).then((response) => {
     return response.text(); // 更改为返回文本
   }).then((data) => {
-    document.getElementById("result-message").innerHTML = data;
+    alert(data);
   }).catch((error) => {
-    document.getElementById("result-message").innerHTML = "An error occurred: " + error;
+    alert("An error occurred: " + error);
   });
 };
 */
@@ -37,10 +37,8 @@ const sendMail = (mail) => {
   }).then((response) => {
     return response.text();
   }).then((data) => {
-    document.getElementById("result-message").innerHTML = data;
     alert(data);
   }).catch((error) => {
-    document.getElementById("result-message").innerHTML = "An error occurred: " + error;
     alert("An error occurred: " + error);
   });
 };

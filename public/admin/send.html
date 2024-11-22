@@ -292,7 +292,7 @@
           });
         } catch (error) {
           console.error('Error fetching groups:', error);
-          document.getElementById("result-message").innerHTML = "An error occurred while loading groups: " + error;
+          alert("An error occurred while loading groups: " + error.message);
         }
       }
       /*
@@ -373,7 +373,7 @@
           }
         } catch (error) {
           console.error('Error fetching recipients:', error);
-          document.getElementById("result-message").innerHTML = "An error occurred while loading recipients: " + error;
+          alert("An error occurred while loading recipients: " + error.message);
         }
       }
       document.addEventListener('DOMContentLoaded', () => {
