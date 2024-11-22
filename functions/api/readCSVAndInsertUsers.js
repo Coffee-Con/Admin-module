@@ -109,10 +109,18 @@ const readCSVAndInsertUsers = (filePath, connection, callback) => {
     });
 };
 
-// 处理表单提交的注册请求
+// Register a new user
 const register = (req, res) => {
   const { user, email, name, password, role } = req.body;
-  // 检查邮箱是否已经存在
+
+  // Password strength regular expression: at least 8 characters, including uppercase letters, lowercase letters, numbers, and special characters
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    return res.status(400).send('The password must contain uppercase letters, lowercase letters, numbers, special characters and be at least 8 characters long.');
+  }
+
+  // Check if the mailbox already exists
   checkEmailExists(email, connection, (err, exists) => {
     if (err) {
       console.error('Error during email existence check:', err);
