@@ -189,7 +189,6 @@ const removeQuizFromCourse = (req, res) => {
     });
 };
 
-// 获取用户的所有quiz（对应课程）
 const getUserCourseQuizzes = (req, res) => {
     const userID = req.user.id;
     const { CourseID } = req.params;
@@ -315,13 +314,11 @@ const addUserQuizAnswer = async (req, res) => {
             });
         });
 
-        // 使用 await 等待标记 Quiz 为已完成
         const statusResult = await markQuizAsCompleted(req);
         if (statusResult?.message) {
             console.log(statusResult.message);
         }
 
-        // 使用 await 等待分数计算并返回结果
         const scoreResult = await addUserQuizScore(req);
         res.json(scoreResult);
     } catch (error) {
@@ -341,7 +338,6 @@ const addUserQuizScore = (req, res) => {
         }
 
         /*
-        // 查询数据库中是否已经存在该用户对该 Quiz 的答题记录，如果存在则不再重复计算分数，直接返回错误
         const query = 'SELECT * FROM `UserQuizScore` WHERE UserID = ? AND QuizID = ?;';
         connection.query(query, [UserID, QuizID], (err, results) => {
             if (err) {
@@ -356,14 +352,14 @@ const addUserQuizScore = (req, res) => {
         });
         */
 
-        // 初始化总分和正确答题计数
+
         let totalScore = 0;
         let correctAnswersCount = 0;
 
-        // 遍历用户提交的答案数组，逐题查询数据库以获取正确答案
+
         const checkAnswerPromises = Answer.map(({ QuestionID, Answer: userAnswer }) => {
             return new Promise((resolve, reject) => {
-                // 查询数据库，获取指定 questionid 的正确答案
+
                 const query = 'SELECT Answer, QuestionType FROM `Question` WHERE QuestionID = ?;';
                 connection.query(query, [QuestionID], (err, results) => {
                     if (err) {
@@ -376,26 +372,26 @@ const addUserQuizScore = (req, res) => {
                         return resolve(false);
                     }
 
-                    // 解析数据库中的正确答案
+                 
                     const answerData = results[0].Answer;
                     const questionType = results[0].QuestionType;
 
-                    // 提取正确答案列表
+                   
                     const correctAnswers = answerData
                         .filter((option) => option.correct)
                         .map((option) => option.text);
 
-                    // 判断用户答案是否正确
+                   
                     let isCorrect = false;
-                    if (questionType === 2) { // 填空题
-                        // 填空题：用户答案匹配任意一个正确答案
+                    if (questionType === 2) { 
+                        
                         isCorrect = correctAnswers.includes(userAnswer);
-                    } else if (questionType === 1) { // 选择题
-                        // 选择题：用户答案与正确答案匹配
+                    } else if (questionType === 1) { 
+                        
                         isCorrect = correctAnswers.includes(userAnswer);
                     }
 
-                    // 统计正确答案的数量
+   
                     if (isCorrect) {
                         correctAnswersCount += 1;
                     }
@@ -405,13 +401,12 @@ const addUserQuizScore = (req, res) => {
             });
         });
 
-        // 使用 Promise.all 处理所有答题结果
         Promise.all(checkAnswerPromises)
             .then(() => {
-                // 计算总分
+              
                 totalScore = Math.round((correctAnswersCount / Answer.length) * 100);
 
-                // 插入用户分数到 UserQuizScore 表
+             
                 const insertQuery = 'INSERT INTO `UserQuizScore` (UserID, QuizID, Score) VALUES (?, ?, ?);';
                 connection.query(insertQuery, [UserID, QuizID, totalScore], (err, results) => {
                     if (err) {
@@ -431,7 +426,7 @@ const markQuizAsCompleted = (req) => {
     return new Promise((resolve, reject) => {
         const { UserID, QuizID } = req.body;
 
-        // 查询是否已经存在
+        
         const query1 = 'SELECT * FROM `UserQuizStatus` WHERE UserID = ? AND QuizID = ?;';
         connection.query(query1, [UserID, QuizID], (err, results) => {
             if (err) {
@@ -444,7 +439,7 @@ const markQuizAsCompleted = (req) => {
                 return resolve({ message: 'User already completed.' });
             }
 
-            // 插入已完成状态
+            
             const query2 = 'INSERT INTO `UserQuizStatus` (UserID, QuizID, StatusID) VALUES (?, ?, 2);';
             connection.query(query2, [UserID, QuizID], (err, results) => {
                 if (err) {
@@ -517,7 +512,7 @@ const saveUserQuizQuestionAnswer = (req, res) => {
         return res.status(400).json({ error: 'User ID, Quiz ID, Question ID, and Answer are required.' });
     }
 
-    // 查询数据库中是否已经存在该用户对该 Question 的答题记录，如果有则更新，否则插入
+    
     const query = 'SELECT * FROM `UserQuizQuestionAnswer` WHERE UserID = ? AND QuizID = ? AND QuestionID = ?;';
 
     connection.query(query, [UserID, QuizID, QuestionID], (err, results) => {
@@ -527,7 +522,7 @@ const saveUserQuizQuestionAnswer = (req, res) => {
         }
 
         if (results.length > 0) {
-            // 更新用户答题记录
+            
             const updateQuery = 'UPDATE `UserQuizQuestionAnswer` SET Answer = ? WHERE UserID = ? AND QuizID = ? AND QuestionID = ?;';
             connection.query(updateQuery, [Answer, UserID, QuizID, QuestionID], (err, results) => {
                 if (err) {
@@ -537,7 +532,7 @@ const saveUserQuizQuestionAnswer = (req, res) => {
                 res.json({ success: true, message: 'User quiz answer updated successfully' });
             });
         } else {
-            // 插入用户答题记录
+           
             const insertQuery = 'INSERT INTO `UserQuizQuestionAnswer` (UserID, QuizID, QuestionID, Answer) VALUES (?, ?, ?, ?);';
             connection.query(insertQuery, [UserID, QuizID, QuestionID, Answer], (err, results) => {
                 if (err) {
