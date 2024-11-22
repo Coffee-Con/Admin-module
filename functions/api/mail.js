@@ -44,20 +44,29 @@ const sendMailHandler = async (req, res) => {
       });
     });
 
-    // 获取名称和邮箱的数组
+    // Get name and email arrays
     const nameArray = data['name[]'];
     const emailArray = data['email[]'];
-    const message = data.message[0]; // 将 data.message 作为字符串处理
+    const message = data.message[0];
+    const senderName = data.sendername[0];
+    const senderEmail = data.senderemail[0];
+    const subject = data.subject[0];
 
     // 确保名称和邮箱的数组长度相同
     if (nameArray.length !== emailArray.length) {
       return res.status(400).send('Names and emails count mismatch');
     }
 
+    // Prepare to store data for MailEvent
+    const emailsData = [];
+    const clickKeysData = [];
+    const contentData = [];
+
     // 依次遍历每个收件人并发送邮件
     for (let i = 0; i < nameArray.length; i++) {
       const namePlaceholder = nameArray[i];
-      const linkPlaceholder = await generateLink(emailArray[i]);
+      const email = emailArray[i];
+      const { linkPlaceholder, key } = await generateLink(emailArray[i]);
 
       // 用模板内容替换占位符
       const content = message
@@ -75,7 +84,20 @@ const sendMailHandler = async (req, res) => {
       };
 
       await transporter.sendMail(mail);
+
+      // Store details for MailEvent
+      emailsData.push(email);
+      clickKeysData.push(key);
     }
+
+    const query = `INSERT INTO MailEvent (Emails, ClickKeys, Content) VALUES (?, ?, ?);`;
+    connection.query(query, [JSON.stringify(emailsData), JSON.stringify(clickKeysData), JSON.stringify({sendername: data.sendername[0],
+      senderemail: data.senderemail[0], subject: data.subject[0], message: data.message[0]})], (err, results) => {
+      if (err) {
+        console.error('Error inserting data:', err);
+        return res.status(500).json({ error: 'Database error' });
+      }}
+    );
 
     res.status(200).send('Email successfully sent to all recipients!'); 
 
@@ -287,7 +309,7 @@ const generateLink = async (email) => {
         }
 
         const link = `${process.env.BASE_URL}:${process.env.PORT}/click/${key}`;
-        resolve(link);
+        resolve({ link, key });
       });
     });
   });
