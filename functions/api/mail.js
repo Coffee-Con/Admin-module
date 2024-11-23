@@ -310,10 +310,7 @@ const clickLinkHandler = (req, res) => {
     }
 
     // 显示一个确认页面
-    res.send(
-      `<h1>Your click has been recorded.</h1>
-      `
-    );
+    res.sendFile('public', 'ClickRecorded.html');
   });
 };
 
