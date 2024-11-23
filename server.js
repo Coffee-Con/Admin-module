@@ -192,7 +192,7 @@ http.createServer((req, res) => {
 
 // Create HTTPS server
 https.createServer(options, app).listen(443, () => {
-  console.log(`Server is running on ${process.env.BASE_URL}:${port}`);
+  console.log(`Server is running on ${process.env.BASE_URL}:443`);
   console.log('HTTPS server running on port 443');
 });
 
