@@ -122,7 +122,7 @@ app.get('/api/getUserQuizAnswers/:UserID/:QuizID', getUserQuizAnswers);
 app.get('/api/getUserUnCompletedQuizzes/:UserID/:CourseID', getUserUnCompletedQuizzes);
 app.get('/api/getUserCompletedQuizzes/:UserID/:CourseID', getUserCompletedQuizzes);
 // app.post('/api/addUserQuizScore', addUserQuizScore); use submitQuiz instead
-app.get('/api/getLeaderboard/:QuizID/:CourseID', getLeaderboard);
+app.get('/api/getCourseQuizRank', getLeaderboard);
 app.post('/api/addQuestionToQuiz/:QuizID/:QuestionID', addQuestionToQuiz);
 app.delete('/api/removeQuestionFromQuiz/:QuizID/:QuestionID', removeQuiestionFromQuiz);
 // Quiz end

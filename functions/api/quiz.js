@@ -573,8 +573,8 @@ const getUserQuizAnswers = (req, res) => {
 
 // Rank the user's quiz score
 const getLeaderboard = (req, res) => {
-    const { QuizID } = req.params;
-    const { CourseID } = req.params;
+    const { QuizID } = req.query;
+    const { CourseID } = req.query;
 
     if (!QuizID) {
         console.log('Error: Quiz ID is required.');
