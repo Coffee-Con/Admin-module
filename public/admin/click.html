@@ -178,8 +178,8 @@
             eventSection.innerHTML = `
               <h3>${event.Content.subject || 'No Subject'}</h3>
               <p><strong>Time:</strong> ${new Date(event.Time).toLocaleString()}</p>
-              <button class="btn btn-primary" onclick="">All</button>
-              <button class="btn btn-primary" onclick="">Click</button>
+              <button class="btn btn-primary" onclick="AddAllToCourse(${event.ID})">All</button>
+              <button class="btn btn-primary" onclick="AddClickedToCourse(${event.ID})">Clicked</button>
             `;
 
             // Create table
