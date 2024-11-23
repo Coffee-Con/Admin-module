@@ -188,12 +188,12 @@ const verifyCaptcha2 = async (req, res) => {
     const query = 'SELECT UserID FROM `User` WHERE email = ?';
     connection.query(query, [email], (err, rows) => {
       if (err) {
-        console.error('数据库查询错误:', err);
-        return res.status(500).json({ success: false, message: '数据库错误，请稍后重试。' });
+        console.error('Database Query Error:', err);
+        return res.status(500).json({ success: false, message: 'Database Error, Please Try Again Later.' });
       }
 
       if (rows.length === 0) {
-        return res.status(400).json({ success: false, message: '该邮箱未注册，请重试。' });
+        return res.status(400).json({ success: false, message: 'This Email Account is NOT Registered, Please Try Again.' });
       }
 
       const userID = rows[0].UserID;
@@ -206,7 +206,7 @@ const verifyCaptcha2 = async (req, res) => {
       connection.query(insertQuery, [userID, token, expiryTime], (err, results) => {
         if (err) {
           console.error('Token 数据库插入错误:', err);
-          return res.status(500).json({ success: false, message: '数据库错误，请稍后重试。' });
+          return res.status(500).json({ success: false, message: 'Database Error, Please Try Again Later.' });
         }
 
         // 构建带 Token 的重置密码链接
@@ -223,9 +223,9 @@ const verifyCaptcha2 = async (req, res) => {
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
             console.error('邮件发送错误:', err);
-            return res.status(500).json({ success: false, message: '邮件发送失败，请稍后重试。' });
+            return res.status(500).json({ success: false, message: 'Email was Unsuccessfully Sent, Please Try again later!' });
           }
-          return res.status(200).json({ success: true, message: '验证码正确！请到对应邮箱更新密码。' });
+          return res.status(200).json({ success: true, message: 'Verfication Code is Correct! Please Procceed To The Corresponding Email for Reset' });
         });
       });
     });
@@ -240,7 +240,7 @@ const resetPassword = (req, res) => {
   const { newPassword, changepasswordToken } = req.body;
 
   if (!newPassword || !changepasswordToken) {
-      return res.status(400).json({ success: false, message: '新密码和 Token 是必需的。' });
+      return res.status(400).json({ success: false, message: 'New Password and Token is Required.' });
   }
   
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -262,7 +262,7 @@ const resetPassword = (req, res) => {
       }
 
       if (rows.length === 0) {
-          return res.status(400).json({ success: false, message: 'Token 无效或已过期，请重新请求重置密码。' });
+          return res.status(400).json({ success: false, message: 'Token Invalid or Out of Date, Please Request For New Password Reset。' });
       }
 
       const userId = rows[0].UserID;
@@ -275,18 +275,18 @@ const resetPassword = (req, res) => {
       const updateQuery = 'UPDATE User SET HashedPW = ? WHERE UserID = ?';
       connection.query(updateQuery, [hashedPW, userId], (err, results) => {
           if (err) {
-              console.error('更新密码错误:', err);
-              return res.status(500).json({ success: false, message: '内部服务器错误，请稍后重试。' });
+              console.error('Update Password Error:', err);
+              return res.status(500).json({ success: false, message: 'Interal Server Error, Please Try Again Later!' });
           }
 
           // 可选：删除已使用的重置 token
           const deleteQuery = 'DELETE FROM ResetTokens WHERE token = ?';
           connection.query(deleteQuery, [changepasswordToken], (err) => {
               if (err) {
-                  console.error('删除 Token 错误:', err);
+                  console.error('Delete Token Error:', err);
               }
           });
-          return res.status(200).json({ success: true, message: '密码重置成功！' });
+          return res.status(200).json({ success: true, message: 'Reset Password Successful!' });
       });
   });
 };
@@ -319,7 +319,8 @@ const clickLinkHandler = (req, res) => {
 
     // 显示一个确认页面
     res.send(
-      '<h1>Your click has been recorded.</h1>'
+      `<h1>Your click has been recorded.</h1>
+      `
     );
   });
 };
