@@ -74,12 +74,11 @@
   </button>
    <div class="container">
     <h1 style="margin-top: 1em;">Risk Analysis</h1>
-    <hr>
     <p>Clicks in the last month: <strong id="click-count">Loading...</strong></p>
     <p id="risk-level" class="risk">Current risk level: <strong>Loading...</strong></p>
 
-    <h1 style="margin-top: 1em;">Event History</h1>
     <hr>
+    <h1 style="margin-top: 1em;">Event History</h1>
     <table>
       <thead>
         <tr>
@@ -95,7 +94,10 @@
       </tbody>
     </table>
 
+    <hr>
     <h1>Email Events</h1>
+    <label for="courseSelect">Select a course:</label>
+    <select id="courseSelect"></select>
     <div id="email-events-container"></div>
   </div>
 
@@ -176,6 +178,8 @@
             eventSection.innerHTML = `
               <h3>${event.Content.subject || 'No Subject'}</h3>
               <p><strong>Time:</strong> ${new Date(event.Time).toLocaleString()}</p>
+              <button class="btn btn-primary" onclick="">All</button>
+              <button class="btn btn-primary" onclick="">Click</button>
             `;
 
             // Create table
@@ -191,6 +195,7 @@
               </thead>
               <tbody>
               </tbody>
+              <br>
             `;
 
             // Fill table with data
@@ -269,6 +274,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       fetchClickData();
       getAllEmailEvents();
+      loadCourses();
     });
   </script>
 </body>
