@@ -190,8 +190,8 @@
               <h3>${event.Content.subject || 'No Subject'}</h3>
               <p><strong>Time:</strong> ${new Date(event.Time).toLocaleString()}</p>
               <div style="display:flex; margin-bottom:15px">
-                <button class="btn btn-primary button-Animation" title="Sent to Everyone Within This Test Phase" onclick="AddToCourse(${event.ID}, 'All')">All</button>
-                <button style="margin-left:10px;" class="btn btn-success button-Animation" title="Only Sent To Member's Clicked" onclick="AddToCourse(${event.ID}, 'Clicked')">Clicked</button>
+                <button class="btn btn-primary button-Animation" title="Sent Course/Email to Everyone for Studying Materials And Notification" onclick="AddToCourse(${event.ID}, 'All')">Send to All</button>
+                <button style="margin-left:20px;" class="btn btn-success button-Animation" title="Only Sent Course/Email To Member's Clicked" onclick="AddToCourse(${event.ID}, 'Clicked')">Send to Specific Member</button>
               </div>
             `;
 
