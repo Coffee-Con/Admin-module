@@ -217,6 +217,7 @@ mobile.get('/api/getUserQuizAnswers/:UserID/:QuizID', getUserQuizAnswers);
 mobile.get('/api/getRewards', getRewards);
 mobile.get('/api/getReward/:RewardID', getReward);
 mobile.get('/api/getCourseMaterials/:CourseID', getCourseMaterials);
+mobile.get('/api/getCourseQuizRank', getLeaderboard);
 
 mobile.listen(4000, () => {
   console.log('Mobile Api listening on port 4000');
