@@ -4,12 +4,11 @@ const nodemailer = require('nodemailer');
 const multiparty = require('multiparty');
 const marked = require('marked');
 const crypto = require('crypto');
-
+const path = require('path');
 
 const mysql = require('mysql2');
 const dbConfig = require('../dbConfig'); 
 const connection = mysql.createConnection(dbConfig);
-
 const transporter = require('../emailConfig');
 
 // verify connection configuration
@@ -310,10 +309,7 @@ const clickLinkHandler = (req, res) => {
     }
 
     // 显示一个确认页面
-    res.send(
-      `<h1>Your click has been recorded.</h1>
-      `
-    );
+    res.sendFile(path.join(__dirname, '../../public', 'ClickRecorded.html'));
   });
 };
 

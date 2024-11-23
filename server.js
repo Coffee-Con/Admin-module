@@ -122,7 +122,7 @@ app.get('/api/getUserQuizAnswers/:UserID/:QuizID', getUserQuizAnswers);
 app.get('/api/getUserUnCompletedQuizzes/:UserID/:CourseID', getUserUnCompletedQuizzes);
 app.get('/api/getUserCompletedQuizzes/:UserID/:CourseID', getUserCompletedQuizzes);
 // app.post('/api/addUserQuizScore', addUserQuizScore); use submitQuiz instead
-app.get('/api/getLeaderboard/:QuizID/:CourseID', getLeaderboard);
+app.get('/api/getCourseQuizRank', getLeaderboard);
 app.post('/api/addQuestionToQuiz/:QuizID/:QuestionID', addQuestionToQuiz);
 app.delete('/api/removeQuestionFromQuiz/:QuizID/:QuestionID', removeQuiestionFromQuiz);
 // Quiz end
@@ -217,6 +217,7 @@ mobile.get('/api/getUserQuizAnswers/:UserID/:QuizID', getUserQuizAnswers);
 mobile.get('/api/getRewards', getRewards);
 mobile.get('/api/getReward/:RewardID', getReward);
 mobile.get('/api/getCourseMaterials/:CourseID', getCourseMaterials);
+mobile.get('/api/getCourseQuizRank', getLeaderboard);
 
 mobile.listen(4000, () => {
   console.log('Mobile Api listening on port 4000');
