@@ -92,13 +92,14 @@ app.get('/fillRecipient/:groupId', fillRecipient);
 // Group end
 
 // Course
-const { createCourse, deleteCourse, updateCourse, getAllCourses, getUserCourses, getCourse } = require('./functions/api/course');
+const { createCourse, deleteCourse, updateCourse, getAllCourses, getUserCourses, getCourse, addToCourseByEvent } = require('./functions/api/course');
 app.post('/create-course', createCourse);
 app.delete('/delete-course/:CourseID', deleteCourse);
 app.put('/update-course/:CourseID', updateCourse);
 app.get('/getCourses', getAllCourses);
 app.get('/getCourse/:CourseID', getCourse);
 app.get('/api/getUserCourses', getUserCourses);
+app.post('/api/addToCourseByEvent/:Level', addToCourseByEvent);
 // Course end
 
 // Quiz

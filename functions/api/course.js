@@ -129,4 +129,72 @@ const getCourse = (req, res) => {
     });
 }
 
-module.exports = { createCourse, deleteCourse, updateCourse, getAllCourses, getCourse, getUserCourses };
+const addToCourseByEvent = (req, res) => {
+    const { CourseID } = req.body;
+    const { EventID } = req.body;
+    const { Level } = req.params;
+
+    if (!CourseID) {
+        // console.log('Error: Course ID is required.'); // Debugging line
+        return res.status(400).json({ error: 'Course ID is required.' });
+    }
+
+    if (!EventID) {
+        // console.log('Error: Event ID is required.'); // Debugging line
+        return res.status(400).json({ error: 'Event ID is required.' });
+    }
+
+    let query = '';
+    if (Level == 'All') {
+        // get users who attended the event
+        query = `
+            SELECT DISTINCT u.UserID
+            FROM User u
+            JOIN ClickKey ck ON ck.Email = u.Email
+            JOIN MailEvent me ON me.ID
+            JOIN JSON_TABLE(
+                me.ClickKeys,
+                '$[*]' COLUMNS (
+                    email VARCHAR(45) PATH '$.email',
+                    clickkey VARCHAR(45) PATH '$.clickkey'
+                )
+            ) AS jt ON jt.email = ck.Email AND jt.clickkey = ck.key
+            WHERE me.ID = ?;`
+    }
+    if (Level == 'Clicked') {
+        // get users who clicked the event
+        query = `
+            SELECT DISTINCT u.UserID
+            FROM User u
+            JOIN ClickKey ck ON ck.Email = u.Email
+            JOIN MailEvent me ON me.ID
+            JOIN JSON_TABLE(
+                me.ClickKeys,
+                '$[*]' COLUMNS (
+                    email VARCHAR(45) PATH '$.email',
+                    clickkey VARCHAR(45) PATH '$.clickkey'
+                )
+            ) AS jt ON jt.email = ck.Email AND jt.clickkey = ck.key
+            WHERE me.ID = ?;`
+    }
+    connection.query(query, [EventID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            return res.status(500).send('Internal server error');
+        }
+        const users = results.map((result) => [result.UserID, CourseID]);
+
+        // Insert users into the CourseUser table
+        query = 'INSERT INTO `CourseUser` (UserID, CourseID) VALUES ?;';
+        connection.query(query, [users], (err, results) => {
+            if (err) {
+                console.error('Error inserting data:', err); // Log the error
+                return res.status(500).json({ error: 'Database error' });
+            }
+            console.log('Users added to course:', results.affectedRows); // Debugging line
+            res.json({ success: true, message: 'Users added to course' });
+        });
+    });
+}
+
+module.exports = { createCourse, deleteCourse, updateCourse, getAllCourses, getCourse, getUserCourses, addToCourseByEvent };

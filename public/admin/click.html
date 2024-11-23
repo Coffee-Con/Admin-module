@@ -178,8 +178,8 @@
             eventSection.innerHTML = `
               <h3>${event.Content.subject || 'No Subject'}</h3>
               <p><strong>Time:</strong> ${new Date(event.Time).toLocaleString()}</p>
-              <button class="btn btn-primary" onclick="AddAllToCourse(${event.ID})">All</button>
-              <button class="btn btn-primary" onclick="AddClickedToCourse(${event.ID})">Clicked</button>
+              <button class="btn btn-primary" onclick="AddToCourse(${event.ID}, 'All')">All</button>
+              <button class="btn btn-primary" onclick="AddToCourse(${event.ID}, 'Clicked')">Clicked</button>
             `;
 
             // Create table
@@ -268,6 +268,31 @@
           });
         })
         .catch(err => console.error('Error loading courses:', err));
+    }
+
+    function AddToCourse(EventID, AllOrClicked) {
+      const courseSelect = document.getElementById('courseSelect');
+      const courseID = courseSelect.value;
+
+      if (!courseID) {
+        alert('Please select a course');
+        return;
+      }
+
+      fetch(`/api/addToCourseByEvent/${AllOrClicked}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ EventID: EventID, CourseID: courseID })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Event added to course successfully');
+          } else {
+            alert(data.error || 'Error adding event to course');
+          }
+        })
+        .catch(err => console.error('Error adding event to course:', err));
     }
 
     // 页面加载时调用 fetchClickData
