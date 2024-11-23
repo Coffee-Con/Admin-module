@@ -65,6 +65,17 @@
       border-collapse: separate;
       border-spacing: 0 15px;
     }
+
+    .button-Animation {
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease; 
+    }
+
+    .button-Animation:hover {
+      transform: scale(1.1);
+    }
+
   </style>
 </head>
 <body>
@@ -78,7 +89,7 @@
     <p id="risk-level" class="risk">Current risk level: <strong>Loading...</strong></p>
 
     <hr>
-    <h1 style="margin-top: 1em;">Event History</h1>
+    <h1 style="margin-top: 1em; margin-bottom: 20px;">Click History</h1>
     <table>
       <thead>
         <tr>
@@ -93,11 +104,11 @@
         </tr>
       </tbody>
     </table>
-
     <hr>
-    <h1>Email Events</h1>
+
+    <h1 style="margin-top: 1em;">Email Events</h1>
     <label for="courseSelect">Select a course:</label>
-    <select id="courseSelect"></select>
+    <select class="form-control" id="courseSelect" style="margin-bottom: 20px;"></select>
     <div id="email-events-container"></div>
   </div>
 
@@ -178,8 +189,10 @@
             eventSection.innerHTML = `
               <h3>${event.Content.subject || 'No Subject'}</h3>
               <p><strong>Time:</strong> ${new Date(event.Time).toLocaleString()}</p>
-              <button class="btn btn-primary" onclick="AddToCourse(${event.ID}, 'All')">All</button>
-              <button class="btn btn-primary" onclick="AddToCourse(${event.ID}, 'Clicked')">Clicked</button>
+              <div style="display:flex; margin-bottom:15px">
+                <button class="btn btn-primary button-Animation" title="Sent to Everyone Within This Test Phase" onclick="AddToCourse(${event.ID}, 'All')">All</button>
+                <button style="margin-left:10px;" class="btn btn-success button-Animation" title="Only Sent To Member's Clicked" onclick="AddToCourse(${event.ID}, 'Clicked')">Clicked</button>
+              </div>
             `;
 
             // Create table
