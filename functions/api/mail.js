@@ -64,7 +64,8 @@ const sendMailHandler = async (req, res) => {
     for (let i = 0; i < nameArray.length; i++) {
       const namePlaceholder = nameArray[i];
       const email = emailArray[i];
-      const { linkPlaceholder, key } = await generateLink(email); // 生成点击链接和密钥
+      const { link: linkPlaceholder, key } = await generateLink(email); // 生成点击链接和密钥
+      console.log(linkPlaceholder, key);
 
       // 用模板内容替换占位符
       const content = message
