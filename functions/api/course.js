@@ -185,13 +185,13 @@ const addToCourseByEvent = (req, res) => {
         const users = results.map((result) => [result.UserID, CourseID]);
 
         // Insert users into the CourseUser table
-        query = 'INSERT IGNORE INTO `CourseUser` (UserID, CourseID) VALUES ?;';
+        query = 'INSERT IGNORE INTO `CourseUser` (UserID, CourseID) VALUES ?;'; // IGNORE to prevent duplicate entries
         connection.query(query, [users], (err, results) => {
             if (err) {
                 console.error('Error inserting data:', err); // Log the error
                 return res.status(500).json({ error: 'Database error' });
             }
-            console.log('Users added to course:', results.affectedRows); // Debugging line
+            // console.log('Users added to course:', results.affectedRows); // Debugging line
             res.json({ success: true, message: 'Users added to course' });
         });
     });
