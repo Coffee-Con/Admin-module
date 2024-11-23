@@ -185,7 +185,7 @@ const addToCourseByEvent = (req, res) => {
         const users = results.map((result) => [result.UserID, CourseID]);
 
         // Insert users into the CourseUser table
-        query = 'INSERT INTO `CourseUser` (UserID, CourseID) VALUES ?;';
+        query = 'INSERT IGNORE INTO `CourseUser` (UserID, CourseID) VALUES ?;';
         connection.query(query, [users], (err, results) => {
             if (err) {
                 console.error('Error inserting data:', err); // Log the error
