@@ -72,9 +72,12 @@ app.get("/click/:key", clickLinkHandler); // 记录点击事件
 // Email end
 
 // History
-const { getClicks, getClicksRisk } = require('./functions/api/click');
+const { getClicks, getClicksRisk, getAllEmailEvents, getNameByEmail, getIfClicked } = require('./functions/api/click');
 app.get('/click-events-history', getClicks);
 app.get('/click-risk', getClicksRisk);
+app.get('/api/getAllEmailEvents', getAllEmailEvents);
+app.get('/api/getNameByEmail', getNameByEmail);
+app.get('/api/getIfClicked/:Key', getIfClicked);
 // History end
 
 // Group

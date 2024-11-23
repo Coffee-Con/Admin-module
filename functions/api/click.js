@@ -4,11 +4,16 @@ const connection = mysql.createConnection(dbConfig);
 
 const getClicks = (req, res) => {
   const query = `
-    SELECT ce.time, u.Name, u.Email
-    FROM ClickEvent ce
-    JOIN ClickKey ck ON ce.key = ck.key
-    JOIN User u ON ck.userid = u.UserID
-    ORDER BY ce.time DESC;
+    SELECT 
+        ce.time, 
+        ck.Email, 
+        u.Name
+    FROM 
+        ClickEvent ce
+    JOIN 
+        ClickKey ck ON ce.key = ck.key
+    JOIN 
+        User u ON ck.Email = u.Email;
   `;
 
   connection.query(query, (error, results) => {
@@ -32,4 +37,47 @@ const getClicksRisk = (req, res) => {
     res.json(results);});
 }
 
-module.exports = { getClicks, getClicksRisk };
+// Get all email events
+const getAllEmailEvents = (req, res) => {
+  connection.query('SELECT * FROM MailEvent', (err, results) => {
+    if (err) {
+      console.error('Error querying the database:', err.stack);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    res.json(results);
+  });
+}
+
+const getNameByEmail = (req, res) => {
+  const email = req.query.email;
+  connection.query('SELECT Name FROM User WHERE `Email` = ?', [email], (err, results) => {
+    if (err) {
+      console.error('Error querying the database:', err.stack);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    if (results.length > 0) {
+      res.json({ Name: results[0].Name });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  });
+}
+
+const getIfClicked = (req, res) => {
+  const key = req.params.Key;
+  connection.query('SELECT * FROM ClickEvent WHERE `key` = ?', [key], (err, results) => {
+    if (err) {
+      console.error('Error querying the database:', err.stack);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    if (results.length > 0) {
+      res.json({ clicked: true });
+    } else {
+      res.json({ clicked: false });
+    }
+  });
+}
+
+module.exports = { getClicks, getClicksRisk, getAllEmailEvents, getNameByEmail, getIfClicked };

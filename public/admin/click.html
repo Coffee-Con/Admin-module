@@ -94,6 +94,9 @@
         </tr>
       </tbody>
     </table>
+
+    <h1>Email Events</h1>
+    <div id="email-events-container"></div>
   </div>
 
   <script>
@@ -156,8 +159,117 @@
       }
     }
 
+    async function getAllEmailEvents() {
+      try {
+        const response = await fetch('/api/getAllEmailEvents');
+        const data = await response.json();
+
+        const emailEventsContainer = document.getElementById('email-events-container');
+        emailEventsContainer.innerHTML = ''; // Clear the container
+
+        if (data.length > 0) {
+          // Loop through all email events
+          for (const event of data) {
+            // Create event section (title and time)
+            const eventSection = document.createElement('div');
+            eventSection.classList.add('email-event-section'); // Optional styling class
+            eventSection.innerHTML = `
+              <h3>${event.Content.subject || 'No Subject'}</h3>
+              <p><strong>Time:</strong> ${new Date(event.Time).toLocaleString()}</p>
+            `;
+
+            // Create table
+            const table = document.createElement('table');
+            table.classList.add('email-event-table'); // Optional styling class
+            table.innerHTML = `
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Name</th>
+                  <th>Click</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            `;
+
+            // Fill table with data
+            const tableBody = table.querySelector('tbody');
+            for (const clickKey of event.ClickKeys) {
+              // Await to get user name and click status
+              const MailEventUserName = await getNameByEmail(clickKey.email);
+              const ifUserClicked = await getIfClicked(clickKey.clickkey);
+
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${clickKey.email}</td>
+                <td>${MailEventUserName || 'N/A'}</td>
+                <td>${ifUserClicked ? 'Yes' : 'No'}</td>
+              `;
+              tableBody.appendChild(row);
+            }
+
+            // Add the table to the event section, and event section to the container
+            eventSection.appendChild(table);
+            emailEventsContainer.appendChild(eventSection);
+          }
+        } else {
+          emailEventsContainer.innerHTML = '<p>No email events found.</p>';
+        }
+      } catch (error) {
+        console.error('Error fetching email events:', error);
+        document.getElementById('email-events-container').innerHTML = '<p>Error loading email events.</p>';
+      }
+    }
+
+    async function getIfClicked(Key) {
+      return fetch(`/api/getIfClicked/${Key}`)
+        .then(response => response.json())
+        .then(data => data.clicked === true)
+        .catch(error => {
+          console.error('Error fetching click status:', error);
+          return false;
+        });
+    }
+
+    async function getNameByEmail(email) {
+      return fetch(`/api/getNameByEmail?email=${encodeURIComponent(email)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.Name) {
+            return data.Name;
+          } else {
+            throw new Error('User not found');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          return null;
+        });
+    }
+
+    function loadCourses() {
+      fetch('/getCourses')
+        .then(response => response.json())
+        .then(courses => {
+          const courseSelect = document.getElementById('courseSelect');
+          courseSelect.innerHTML = '<option value="">Please select a course</option>';
+
+          courses.forEach(course => {
+            const option = document.createElement('option');
+            option.value = course.CourseID;
+            option.textContent = course.CourseName;
+            courseSelect.appendChild(option);
+          });
+        })
+        .catch(err => console.error('Error loading courses:', err));
+    }
+
     // 页面加载时调用 fetchClickData
-    document.addEventListener('DOMContentLoaded', fetchClickData);
+    document.addEventListener('DOMContentLoaded', function() {
+      fetchClickData();
+      getAllEmailEvents();
+    });
   </script>
 </body>
 </html>

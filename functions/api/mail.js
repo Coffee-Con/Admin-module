@@ -57,16 +57,14 @@ const sendMailHandler = async (req, res) => {
       return res.status(400).send('Names and emails count mismatch');
     }
 
-    // Prepare to store data for MailEvent
-    const emailsData = [];
-    const clickKeysData = [];
-    const contentData = [];
-
+    // Prepare ClickKeys JSON array
+    const clickKeysArray = [];
+    
     // 依次遍历每个收件人并发送邮件
     for (let i = 0; i < nameArray.length; i++) {
       const namePlaceholder = nameArray[i];
       const email = emailArray[i];
-      const { linkPlaceholder, key } = await generateLink(emailArray[i]);
+      const { linkPlaceholder, key } = await generateLink(email); // 生成点击链接和密钥
 
       // 用模板内容替换占位符
       const content = message
@@ -76,30 +74,35 @@ const sendMailHandler = async (req, res) => {
       const htmlContent = marked.marked(content);
 
       const mail = {
-        from: `${data.sendername} <${data.senderemail}>`,
-        to: `${namePlaceholder} <${emailArray[i]}>`,
-        subject: data.subject[0],  // 确保data.subject是字符串
+        from: `${senderName} <${senderEmail}>`,
+        to: `${namePlaceholder} <${email}>`,
+        subject: subject,
         text: content,
         html: htmlContent
       };
 
-      await transporter.sendMail(mail);
+      await transporter.sendMail(mail); // 发送邮件
 
-      // Store details for MailEvent
-      emailsData.push(email);
-      clickKeysData.push(key);
+      // 添加到 ClickKeys 数组
+      clickKeysArray.push({ email, clickkey: key });
     }
 
-    const query = `INSERT INTO MailEvent (Emails, ClickKeys, Content) VALUES (?, ?, ?);`;
-    connection.query(query, [JSON.stringify(emailsData), JSON.stringify(clickKeysData), JSON.stringify({sendername: data.sendername[0],
-      senderemail: data.senderemail[0], subject: data.subject[0], message: data.message[0]})], (err, results) => {
+    // 构建 SQL 插入
+    const query = `INSERT INTO MailEvent (ClickKeys, Content) VALUES (?, ?);`;
+    const contentData = {
+      sendername: senderName,
+      senderemail: senderEmail,
+      subject: subject,
+      message: message
+    };
+
+    connection.query(query,[JSON.stringify(clickKeysArray), JSON.stringify(contentData)],(err, results) => {
       if (err) {
         console.error('Error inserting data:', err);
         return res.status(500).json({ error: 'Database error' });
-      }}
+      }
+      res.status(200).send('Emails successfully sent and data logged to database!');}
     );
-
-    res.status(200).send('Email successfully sent to all recipients!'); 
 
   } catch (error) {
     console.error('Error sending emails:', error);
@@ -282,35 +285,24 @@ const resetPassword = (req, res) => {
                   console.error('删除 Token 错误:', err);
               }
           });
-
           return res.status(200).json({ success: true, message: '密码重置成功！' });
       });
   });
 };
 
-const generateLink = async (email) => {
+const generateLink = async (Email) => {
   return new Promise((resolve, reject) => {
     const key = crypto.randomBytes(16).toString('hex');
 
-    connection.query('SELECT UserID FROM User WHERE (`Email`) = (?)', [email], (err, results) => {
+    connection.query('INSERT INTO ClickKey (`key`, `Email`) VALUES (?, ?)', [key, Email], (err) => {
       if (err) {
-        console.error('Error querying the database:', err.stack);
+        console.error('Error inserting key into the database:', err.stack);
         reject('Internal server error');
         return;
       }
 
-      const userId = results.length > 0 ? results[0].UserID : 0;
-
-      connection.query('INSERT INTO ClickKey (`key`, `userid`) VALUES (?, ?)', [key, userId], (err) => {
-        if (err) {
-          console.error('Error inserting key into the database:', err.stack);
-          reject('Internal server error');
-          return;
-        }
-
-        const link = `${process.env.BASE_URL}:${process.env.PORT}/click/${key}`;
-        resolve({ link, key });
-      });
+      const link = `${process.env.BASE_URL}:${process.env.PORT}/click/${key}`;
+      resolve({ link, key });
     });
   });
 };
