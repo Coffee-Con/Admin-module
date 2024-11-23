@@ -10,14 +10,7 @@ const mysql = require('mysql2');
 const dbConfig = require('../dbConfig'); 
 const connection = mysql.createConnection(dbConfig);
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  auth: {
-    user: process.env.ACCOUNT,
-    pass: process.env.PASS,
-  }
-});
+const transporter = require('../emailConfig');
 
 // verify connection configuration
 transporter.verify(function (error, success) {
@@ -154,8 +147,8 @@ const verifyCaptcha = async (req, res) => {
           const mailOptions = {
             from: 'no-reply@staffcanvas.com',
             to: email,
-            subject: '密码重置请求',
-            text: `请点击以下链接以重置密码：\n\n${resetLink}\n\n该链接将在1小时后失效。`
+            subject: 'Password reset request',
+            text: `Please click on the link below to reset your password: \n\n${resetLink}\n\nThis link will expire in 1 hour.`
           };
 
           transporter.sendMail(mailOptions, (err, info) => {

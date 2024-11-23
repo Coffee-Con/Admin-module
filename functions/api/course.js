@@ -2,6 +2,7 @@
 const mysql = require('mysql2');
 const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
+const transporter = require('../emailConfig');
 
 // 获取所有课程
 function getAllCourses(req, res) {
@@ -192,7 +193,30 @@ const addToCourseByEvent = (req, res) => {
                 return res.status(500).json({ error: 'Database error' });
             }
             // console.log('Users added to course:', results.affectedRows); // Debugging line
-            res.json({ success: true, message: 'Users added to course' });
+
+            queryUsers = 'SELECT Email FROM User WHERE UserID IN (?)';
+            connection.query(queryUsers, [users.map((user) => user[0])], (err, results) => {
+                if (err) {
+                    console.error('Error querying the database:', err.stack);
+                    return res.status(500).send('Internal server error');
+                }
+                const emails = results.map((result) => result.Email);
+
+                // Send a email to the users
+                const mailOptions = {
+                    from: 'no-reply@staffcanvas.com',
+                    to: emails,
+                    subject: 'Enroll in a course',
+                    text: `Please check your mobile app to learn more about the course.`,
+                };
+                transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                    // console.error('Email sending error:', err);
+                    return res.status(500).json({ success: false, message: 'Failed to send email, please try again later.' });
+                    }
+                });
+                res.json({ success: true, message: 'Users added to course' });
+            });
         });
     });
 }
