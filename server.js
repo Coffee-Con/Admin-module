@@ -192,8 +192,9 @@ http.createServer((req, res) => {
 
 // Create HTTPS server
 https.createServer(options, app).listen(443, () => {
-  console.log(`Server is running on ${process.env.BASE_URL}:443`);
-  console.log('HTTPS server running on port 443');
+  const host = new URL(process.env.BASE_URL).host;
+  console.log(`Server is running on http://${host}:${port}`);
+  console.log(`If you are using HTTPS, please visit https://${host}`);
 });
 
 // Mobile App API
