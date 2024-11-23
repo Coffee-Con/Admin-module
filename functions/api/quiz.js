@@ -576,6 +576,7 @@ const getLeaderboard = (req, res) => {
     const { QuizID } = req.query;
     const { CourseID } = req.query;
 
+
     if (!QuizID) {
         console.log('Error: Quiz ID is required.');
         return res.status(400).json({ error: 'Quiz ID is required.' });
@@ -583,7 +584,7 @@ const getLeaderboard = (req, res) => {
 
     // Base query to get leaderboard for a quiz
     let query = `
-        SELECT uqs.UserID, uqs.Score, uqs.SubmitTime, u.FirstName, u.LastName
+        SELECT uqs.UserID, uqs.Score, uqs.SubmitTime, u.Name
         FROM UserQuizScore uqs
         JOIN User u ON uqs.UserID = u.UserID
         WHERE uqs.QuizID = ?
@@ -593,10 +594,10 @@ const getLeaderboard = (req, res) => {
     // If CourseID is provided, add it as a condition to filter quizzes by course
     if (CourseID) {
         query = `
-            SELECT uqs.UserID, uqs.Score, uqs.SubmitTime, u.FirstName, u.LastName
+            SELECT uqs.UserID, uqs.Score, uqs.SubmitTime, u.Name
             FROM UserQuizScore uqs
             JOIN User u ON uqs.UserID = u.UserID
-            JOIN UserCourse uc ON u.UserID = uc.UserID
+            JOIN CourseUser uc ON u.UserID = uc.UserID
             WHERE uqs.QuizID = ? AND uc.CourseID = ?
             ORDER BY uqs.Score DESC, uqs.SubmitTime ASC;
         `;
