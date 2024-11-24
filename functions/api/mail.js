@@ -315,4 +315,17 @@ const clickLinkHandler = (req, res) => {
   });
 };
 
-module.exports = { sendMailHandler, verifyCaptcha, verifyCaptcha2, resetPassword, generateLink, clickLinkHandler };
+const markEmailEventAsCompleted = (req, res) => {
+  const { ID } = req.params;
+
+  connection.query('UPDATE MailEvent SET Status = 1 WHERE ID = ?', [ID], (err) => {
+    if (err) {
+      console.error('Error updating mail event status:', err);
+      return res.status(500).send('Error updating mail event status');
+    }
+    res.send('Mail event status updated successfully!');
+  });
+}
+  
+
+module.exports = { sendMailHandler, verifyCaptcha, verifyCaptcha2, resetPassword, generateLink, clickLinkHandler, markEmailEventAsCompleted };
