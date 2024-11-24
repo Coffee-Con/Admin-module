@@ -109,7 +109,7 @@
     <h1 style="margin-top: 1em;">Email Events</h1>
     <label for="courseSelect">Select a course:</label>
     <select class="form-control" id="courseSelect" style="margin-bottom: 20px;"></select>
-    <div id="email-events-container"></div>
+    <div style="margin-bottom:3em;" id="email-events-container"></div>
   </div>
 
   <script>
@@ -190,8 +190,8 @@
               <h3>${event.Content.subject || 'No Subject'}</h3>
               <p><strong>Time:</strong> ${new Date(event.Time).toLocaleString()}</p>
               <div style="display:flex; margin-bottom:15px">
-                <button class="btn btn-primary button-Animation" title="Sent Course/Email to Everyone for Studying Materials And Notification" onclick="AddToCourse(${event.ID}, 'All')">Send to All</button>
-                <button style="margin-left:20px;" class="btn btn-success button-Animation" title="Only Sent Course/Email To Member's Clicked" onclick="AddToCourse(${event.ID}, 'Clicked')">Send to Specific Member</button>
+                <button class="btn btn-primary button-Animation" title="Sent Course/Email to Everyone for Studying Materials and Notification" onclick="AddToCourse(${event.ID}, 'All')">Send to All</button>
+                <button style="margin-left:20px;" class="btn btn-success button-Animation" title="Only Sent Course/Email to Member's Clicked" onclick="AddToCourse(${event.ID}, 'Clicked')">Send to Specific Member</button>
               </div>
             `;
 

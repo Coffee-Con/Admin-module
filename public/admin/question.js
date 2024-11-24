@@ -116,7 +116,7 @@ function fetchQuestions() {
                         <span style="font-weight:bold; margin-bottom:20px;">Q${question.QuestionID}: ${question.Question}</span>
                         <button class="btn btn-danger button-Animation" style="margin-left:5px; padding:5px 10px; font-size:12px;" onclick="deleteQuestion(${question.QuestionID})" title="Delete">
                         <i class="fas fa-trash" style="font-size:12px;"></i></button>
-                        <button class="btn btn-success button-Animation" style="margin-left:5px; padding:5px 10px; font-size:12px;" onclick="toggleDetails(this)" title="Edit">
+                        <button class="btn btn-success button-Animation" style="margin-left:5px; padding:5px 10px; font-size:12px;" onclick="toggleDetails(this)" title="Click to show details of questions and to edit.">
                         <i class="fas fa-edit" style="font-size:12px;"></i></button>
                         <hr>
                     </div>
