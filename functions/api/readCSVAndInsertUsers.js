@@ -37,7 +37,10 @@ const readCSVAndInsertUsers = (filePath, connection, callback) => {
           email: row.Email,
           password: row.Password,
           role: parseInt(row.Role, 10),
-          user: row.Email
+          user: row.Email,
+          JoinDate: row.JoinDate,
+          Education: row.Education,
+          ITLevel: row.ITLevel,
         });
       }
     })
@@ -73,8 +76,8 @@ const readCSVAndInsertUsers = (filePath, connection, callback) => {
             const salt = crypto.randomBytes(16).toString('hex');
             const hashedPW = crypto.createHash('md5').update(user.password + salt).digest('hex');
 
-            const query = 'INSERT INTO User (User, Email, Name, Role, Salt, HashedPW) VALUES (?, ?, ?, ?, ?, ?)';
-            connection.query(query, [user.user, user.email, user.name, user.role, salt, hashedPW], (err) => {
+            const query = 'INSERT INTO User (User, Email, Name, Role, Salt, HashedPW, JoinDate, Education, ITLevel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            connection.query(query, [user.user, user.email, user.name, user.role, salt, hashedPW, user.JoinDate, user.Education, user.ITLevel], (err) => {
               if (err) {
                 console.error('Error inserting data:', err.stack);
                 hasError = true;
@@ -145,7 +148,6 @@ const register = (req, res) => {
     }
   });
 };
-
 
 const addUsers = (req, res) => {
   if (!req.file) {

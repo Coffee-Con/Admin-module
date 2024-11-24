@@ -96,6 +96,18 @@
                                 <option value="1">Admin</option>
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="JoinDate" class="form-label">Join Date:</label>
+                            <input type="date" class="form-control" id="JoinDate" name="JoinDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Education" class="form-label">Education:</label>
+                            <input type="text" class="form-control" id="Education" name="Education" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ITLevel" class="form-label">IT Level:</label>
+                            <input type="text" class="form-control" id="ITLevel" name="ITLevel" required>
+                        </div>
                         <div class="d-grid">
                             <button type="button" onclick="register()" class="btn btn-primary button-Animation">Register</button>
                         </div>
@@ -131,6 +143,9 @@
                 name: document.getElementById('name').value,
                 password: document.getElementById('password').value,
                 role: document.getElementById('role').value,
+                JoinDate: document.getElementById('JoinDate').value,
+                Education: document.getElementById('Education').value,
+                ITLevel: document.getElementById('ITLevel').value,
             };
 
             // Function to validate the password
