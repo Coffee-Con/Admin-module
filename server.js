@@ -155,12 +155,17 @@ app.get('/template/:id', getTemplate);
 // Template end
 
 // Reward
-const { createReward, getRewards, deleteReward, getReward, updateReward } = require('./functions/api/reward');
+const { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward, getUsersReward, markUserRewardCompleated, getUserPoint, getUsersPoint } = require('./functions/api/reward');
 app.post('/api/createReward', createReward);
 app.get('/api/getRewards', getRewards);
 app.delete('/api/deleteReward/:RewardID', deleteReward);
 app.get('/api/getReward/:RewardID', getReward);
 app.put('/api/updateReward/:RewardID', updateReward);
+app.get('/api/getUserPoint/:UserID', getUserPoint);
+app.get('/api/getUsersPoint', getUsersPoint);
+app.put('/api/updateOrCreateRewardPoint', updateOrCreateRewardPoint);
+app.get('/api/getUsersReward', getUsersReward);
+app.post('/api/markUserRewardCompleated/:ID', markUserRewardCompleated);
 // Reward end
 
 // Material

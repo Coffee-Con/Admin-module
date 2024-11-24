@@ -234,7 +234,7 @@ const markUserRewardCompleated = (req, res) => {
 }
 
 const getUserPoint = (req, res) => {
-    const { UserID } = req.query;
+    const { UserID } = req.params;
 
     // Validate required fields
     if (!UserID) {
