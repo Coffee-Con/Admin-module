@@ -13,11 +13,11 @@
     <div class="form-container background-area">
       <h1 style="font-weight: bolder; margin: 0px; margin-bottom: 30px;">
         Forget Password
-        <i class="fas fa-question-circle" data-toggle="tooltip" title="Enter your email, you will receive a email that can change your password." style="color:rgb(5,143,216);"></i>
+        <i class="fas fa-question-circle" data-toggle="tooltip" title="Enter your email, you will receive an email to change your password." style="color:rgb(5,143,216);"></i>
       </h1>
       <div class="row">
         <div class="col-md-12 section-title">
-          <form id="loginForm" action="/verify-captcha" method="POST">
+          <form id="loginForm">
             <div class="form-group1">
               <label for="email" class="form-label">
                 <i class="fas fa-envelope" style="color:black; margin-right: 5px;"></i>
@@ -26,27 +26,25 @@
               <input placeholder="Email Address" type="email" id="email" name="email" class="form-control" required>
             </div>
             <div class="form-group2">
-            <!-- <label for="password">Password:</label> -->
               <label for="VerificationCode" class="form-label">
-                <i class="fas fa-check" style=" margin-right: 5px;"></i>
+                <i class="fas fa-check" style="margin-right: 5px;"></i>
                 Verification Code:
               </label>
-              <input type="text" name="captchaInput" placeholder="Verification Code" class="form-control" required />
-
+              <input type="text" id="captchaInput" name="captchaInput" placeholder="Verification Code" class="form-control" required>
               <img id="captchaImg" src="/captcha" alt="Verification Code" onclick="reloadCaptcha()" />
               <script>
                 function reloadCaptcha() {
-                    document.getElementById('captchaImg').src = '/captcha?' + Date.now(); // 防止缓存
+                    document.getElementById('captchaImg').src = '/captcha?' + Date.now(); // Prevent caching
                 }
               </script>
             </div>
             <div style="display: flex; padding-top: 20px;">
-              <button type="submit" class="btn btn-primary button-Animation">
-                <i class="fas fa-paper-plane"></i> 
+              <button type="button" class="btn btn-primary button-Animation" onclick="submitForm()">
+                <i class="fas fa-paper-plane"></i>
                 Submit Verification
               </button>
               <button class="btn btn-secondary button-Animation" style="margin-left: 330px;" onclick="window.location.href='login.html'">
-                <i class="fa fa-sign-in-alt"></i> 
+                <i class="fa fa-sign-in-alt"></i>
                 <span>Continue Login</span>
              </button>
             </div>
@@ -55,5 +53,30 @@
       </div>
     </div>
   </div>
+  <script>
+    function submitForm() {
+      const email = document.getElementById("email").value;
+      const captchaInput = document.getElementById("captchaInput").value;
+
+      fetch("/verify-captcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, captchaInput }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Verification successful. Please check your email.");
+        } else {
+          alert(data.error || "Verification failed. Please try again.");
+          reloadCaptcha();
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+      });
+    }
+  </script>
 </body>
 </html>
