@@ -16,7 +16,7 @@ const options = {
   key: fs.readFileSync('ssl/key.pem'),
   cert: fs.readFileSync('ssl/cert.pem')
 };
-const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler } = require('./functions/api/mail'); // 导入邮件发送模块
+const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler, markEmailEventAsCompleted } = require('./functions/api/mail'); // 导入邮件发送模块
 const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate } = require('./functions/api/auth');
 const { addUsers } = require('./functions/api/user'); // 导入添加用户模块
 const { checkAdmin } = require('./functions/api/checkAdmin');
@@ -69,6 +69,7 @@ app.use(authenticate);
 app.post('/send', sendMailHandler); // 处理发送邮件请求
 app.post('/generate-link', generateLink);
 app.get("/click/:key", clickLinkHandler); // 记录点击事件
+app.post('/api/markEmailEventAsCompleted/:ID', markEmailEventAsCompleted); // Email
 // Email end
 
 // History

@@ -203,5 +203,65 @@ const updateOrCreateRewardPoint = (req, res) => {
     });
 };
 
+const getUsersReward = (req, res) => {
+    const query = 'SELECT * FROM `UserRewardPoint`;';
+    connection.query(query, [UserID], (err, results) => {
+        if (err) {
+            console.error('Error querying data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
+}
+
+const markUserRewardCompleated = (req, res) => {
+    const { ID } = req.params;
+
+    // Validate required fields
+    if (!ID) {
+        console.log('Error: Invalid input data.');
+        return res.status(400).json({ error: 'Invalid input data.' });
+    }
+
+    const query = `UPDATE UserReward SET Status = 2 WHERE ID = ?;`;
+    connection.query(query, [ID], (err, results) => {
+        if (err) {
+            console.error('Error inserting data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({ success: true, message: 'User reward updated successfully.' });
+    });
+}
+
+const getUserPoint = (req, res) => {
+    const { UserID } = req.query;
+
+    // Validate required fields
+    if (!UserID) {
+        console.log('Error: Invalid input data.');
+        return res.status(400).json({ error: 'Invalid input data.' });
+    }
+
+    const query = 'SELECT * FROM `UserRewardPoint` WHERE UserID = ?;';
+    connection.query(query, [UserID], (err, results) => {
+        if (err) {
+            console.error('Error querying data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results[0]);
+    });
+}
+
+const getUsersPoint = (req, res) => {
+    const query = 'SELECT * FROM `UserRewardPoint`;';
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error querying data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
+}
+
 // 导出API
-module.exports = { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward };
+module.exports = { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward, getUsersReward, markUserRewardCompleated, getUserPoint, getUsersPoint };
