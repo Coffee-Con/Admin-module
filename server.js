@@ -18,7 +18,7 @@ const options = {
 };
 const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler } = require('./functions/api/mail'); // 导入邮件发送模块
 const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate } = require('./functions/api/auth');
-const { addUsers } = require('./functions/api/readCSVAndInsertUsers'); // 导入添加用户模块
+const { addUsers } = require('./functions/api/user'); // 导入添加用户模块
 const { checkAdmin } = require('./functions/api/checkAdmin');
 const { getUserInfo } = require('./functions/api/user');
 
@@ -139,7 +139,7 @@ app.put('/api/updateQuestion/:QuestionID', updateQuestion);
 // Question end
 
 // User
-const { addUser } = require('./functions/api/readCSVAndInsertUsers');
+const { addUser } = require('./functions/api/user');
 app.post('/addUser', addUser);
 app.post('/addUsers', upload.single('csvfile'), addUsers);
 // User end
