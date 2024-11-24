@@ -253,7 +253,11 @@ const getUserPoint = (req, res) => {
 }
 
 const getUsersPoint = (req, res) => {
-    const query = 'SELECT * FROM `UserRewardPoint`;';
+    const query = `
+        SELECT u.Name, urp.RewardPoint
+        FROM UserRewardPoint urp
+        JOIN User u ON urp.UserID = u.UserID
+        ORDER BY urp.RewardPoint DESC;`;
     connection.query(query, (err, results) => {
         if (err) {
             console.error('Error querying data:', err);
