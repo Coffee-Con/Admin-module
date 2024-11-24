@@ -189,6 +189,45 @@ function getUserInfo(req, res) {
   }
 }
 
+const getUsers = (req, res) => {
+    const query = 'SELECT UserID, Email, Name, Role FROM User;';
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.json(results);
+    });
+}
+
+const deleteUser = (req, res) => {
+    const userID = req.params.userID;
+    const query = 'DELETE FROM User WHERE UserID = ?';
+    connection.query(query, [userID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.json({ success: true, message: 'User deleted successfully'});
+    });
+}
+
+const updateUser = (req, res) => {
+    const userID = req.params.userID;
+    const { email, name, role } = req.body;
+    const query = 'UPDATE User SET Email = ?, Name = ?, Role = ? WHERE UserID = ?';
+    connection.query(query, [email, name, role, userID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.json({ success: true, message: 'User updated successfully'});
+    });
+}
+
 // 读取并插入用户
 // readCSVAndInsertUsers('user-import.csv');
-module.exports = { addUsers, addUser: register, getUserInfo };
+module.exports = { addUsers, addUser: register, getUserInfo, getUsers, deleteUser, updateUser };
