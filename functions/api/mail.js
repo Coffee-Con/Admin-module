@@ -11,6 +11,8 @@ const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
 const transporter = require('../emailConfig');
 
+const host = new URL(process.env.BASE_URL).host;
+
 // verify connection configuration
 transporter.verify(function (error, success) {
   if (error) {
@@ -140,7 +142,7 @@ const verifyCaptcha = async (req, res) => {
           }
 
           // 构建带 Token 的重置密码链接
-          const resetLink = `${process.env.BASE_URL}:${process.env.PORT}/resetPassword.html?changepasswordToken=${token}`;
+          const resetLink = `https://${host}/resetPassword.html?changepasswordToken=${token}`;
 
           // 发送邮件
           const mailOptions = {
@@ -201,14 +203,14 @@ const verifyCaptcha2 = async (req, res) => {
         }
 
         // 构建带 Token 的重置密码链接
-        const resetLink = `${process.env.BASE_URL}:${process.env.PORT}/resetPassword.html?changepasswordToken=${token}`;
+        const resetLink = `https://${host}/resetPassword.html?changepasswordToken=${token}`;
 
         // 发送邮件
         const mailOptions = {
           from: 'no-reply@staffcanvas.com',
           to: email,
-          subject: '密码重置请求',
-          text: `请点击以下链接以重置密码：\n\n${resetLink}\n\n该链接将在1小时后失效。`
+          subject: 'Password reset request',
+          text: `Please click on the link below to reset your password: \n\n${resetLink}\n\nThis link will expire in 1 hour.`
         };
 
         transporter.sendMail(mailOptions, (err, info) => {
@@ -293,7 +295,7 @@ const generateLink = async (Email) => {
         return;
       }
 
-      const link = `${process.env.BASE_URL}:${process.env.PORT}/click/${key}`;
+      const link = `https://${host}/click/${key}`;
       resolve({ link, key });
     });
   });
