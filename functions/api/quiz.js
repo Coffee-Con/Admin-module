@@ -130,6 +130,19 @@ const getCourseQuizzes = (req, res) => {
     });
 };
 
+// API to get all CourseQuizzes
+const getAllCourseQuizzes = (req, res) => {
+    const query = 'SELECT * FROM `QuizCourse` JOIN `Quiz` ON `QuizCourse`.`QuizID` = `Quiz`.`QuizID` JOIN `Course` ON `QuizCourse`.`CourseID` = `Course`.`CourseID`;';
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.json(results);
+    });
+};
+
 // API to get all quizzes not in a course
 const getQuizzesNotInCourse = (req, res) => {
     const { CourseID } = req.params;
@@ -652,4 +665,4 @@ const removeQuiestionFromQuiz = (req, res) => {
     });
 };
 
-module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard, addQuestionToQuiz, removeQuiestionFromQuiz };
+module.exports = { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard, addQuestionToQuiz, removeQuiestionFromQuiz, getAllCourseQuizzes };

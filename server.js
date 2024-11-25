@@ -104,7 +104,7 @@ app.post('/api/addToCourseByEvent/:Level', addToCourseByEvent);
 // Course end
 
 // Quiz
-const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard, addQuestionToQuiz, removeQuiestionFromQuiz } = require('./functions/api/quiz');
+const { createQuiz, deleteQuiz, updateQuiz, getAllQuizzes, getQuiz, getCourseQuizzes, getQuizzesNotInCourse, addQuizToCourse, removeQuizFromCourse, getUserCourseQuizzes, addUserQuizAnswer, addUserQuizScore, getUserQuizScores, getUserQuizScore, saveUserQuizQuestionAnswer, getUserQuizAnswers, getUserUnCompletedQuizzes, getUserCompletedQuizzes, getLeaderboard, addQuestionToQuiz, removeQuiestionFromQuiz, getAllCourseQuizzes } = require('./functions/api/quiz');
 app.post('/create-quiz', createQuiz);
 app.delete('/delete-quiz/:QuizID', deleteQuiz);
 app.put('/update-quiz/:QuizID', updateQuiz);
@@ -126,6 +126,7 @@ app.get('/api/getUserCompletedQuizzes/:UserID/:CourseID', getUserCompletedQuizze
 app.get('/api/getCourseQuizRank', getLeaderboard);
 app.post('/api/addQuestionToQuiz/:QuizID/:QuestionID', addQuestionToQuiz);
 app.delete('/api/removeQuestionFromQuiz/:QuizID/:QuestionID', removeQuiestionFromQuiz);
+app.get('/api/getAllCourseQuizzes', getAllCourseQuizzes);
 // Quiz end
 
 // Question
@@ -166,7 +167,7 @@ app.get('/api/getReward/:RewardID', getReward);
 app.put('/api/updateReward/:RewardID', updateReward);
 app.get('/api/getUserPoint/:UserID', getUserPoint);
 app.get('/api/getUsersPoint', getUsersPoint);
-app.put('/api/updateOrCreateRewardPoint', updateOrCreateRewardPoint);
+app.put('/api/updateUserRewardPoint/:UserID/:Action/:RewardPoint', updateOrCreateRewardPoint);
 app.get('/api/getUsersRewards', getUsersRewards);
 app.post('/api/markUserRewardCompleated/:ID', markUserRewardCompleated);
 // Reward end

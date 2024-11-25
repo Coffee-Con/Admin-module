@@ -96,7 +96,15 @@ const getReward = (req, res) => {
 
 // Get UserRewardPoints
 const updateOrCreateRewardPoint = (req, res) => {
-    const { UserID, Action, ActionDetail, RewardPoint } = req.body;
+    const UserID = req.params.UserID;
+    const Action = req.params.Action;
+    const RewardPoint = req.params.RewardPoint;
+
+    // default ActionDetail to empty string
+    const { ActionDetail } = req.body;
+    if (!ActionDetail) {
+        ActionDetail = '';
+    }
 
     // Validate required fields
     if (!UserID || !Action || !RewardPoint) {

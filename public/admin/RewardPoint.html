@@ -23,10 +23,10 @@
     <div class="container">
         <h2>Give Points</h2>
         <label for="selectCourseQuiz">Quiz</label>
-        <select name="selectCourseQuiz" id="selectCourseQuiz">
+        <select name="selectCourseQuiz" id="selectCourseQuiz" onchange="getUserQuizRank(this.value)">
             <option value="">Please select a quiz</option>
         </select>
-        <table>
+        <table id="UserQuizScore">
             <thead>
                 <tr>
                     <th>Rank</th>
@@ -109,9 +109,58 @@
             });
         }
 
+        function getCourseQuiz() {
+            fetch('/api/getAllCourseQuizzes')
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById('selectCourseQuiz');
+                data.forEach(quiz => {
+                    const option = document.createElement('option');
+                    option.value = quiz.QuizID;
+                    option.innerText = `${quiz.CourseName} - ${quiz.QuizName}`;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        function getUserQuizRank(QuizID) {
+            fetch(`/api/getCourseQuizRank?QuizID=${QuizID}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('UserQuizScore');
+                data.forEach((user, index) => {
+                    const row = table.insertRow();
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${user.Name}</td>
+                        <td>${user.Score}</td>
+                        <td>${user.Time}</td>
+                        <td>
+                            <button onclick="addUsersPoints(${user.UserID}, ${user.Score})">Add Points</button>
+                        </td>
+                    `;
+                });
+            });
+        }
+
+        function addUsersPoints(userID, points) {
+            
+            for (let i = 0; i < points.length; i++) {
+                fetch(`/api/updateUserRewardPoint/${userID}/increase/${points[i].Point}`, {
+                    method: 'POST'
+                })
+                .then(() => {
+                    getUsersPoint();
+                });
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             getUsersPoint();
             getUsersRewards();
+            getCourseQuiz();
         });
     </script>
 </body>
