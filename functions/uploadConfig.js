@@ -6,10 +6,10 @@ const storage = multer.diskStorage({
         cb(null, "public/user/material/");
     },
     filename: (req, file, cb) => {
-        // 确保文件名保留原始后缀
+        // Make sure the file name retains the original suffix
         const ext = path.extname(file.originalname);
         const baseName = path.basename(file.originalname, ext);
-        const timestamp = Date.now(); // 添加时间戳以防止重名
+        const timestamp = Date.now(); // Add timestamp to prevent duplication
         const newFileName = `${baseName}-${timestamp}${ext}`;
         cb(null, newFileName);
     },
