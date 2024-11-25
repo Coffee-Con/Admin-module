@@ -113,6 +113,12 @@ const getAvailableUsers = (req, res) => {
 
 const fillRecipient = (req, res) => {
   const groupId = req.params.groupId;
+
+  if (!groupId) {
+    res.json([]);
+    return;
+  }
+
   const query = 'SELECT u.Name, u.Email FROM `User` u JOIN `GroupUser` gu ON u.UserID = gu.UserID WHERE gu.GroupID = ?';
   connection.query(query, [groupId], (err, results) => {
     if (err) {

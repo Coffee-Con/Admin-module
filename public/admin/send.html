@@ -327,6 +327,9 @@
       */
       async function fillRecipient(groupId) {
         try {
+          if (!groupId) {
+            return;
+          }
           const response = await fetch(`/fillRecipient/${groupId}`);
           const recipients = await response.json();
           // 清空当前的收件人字段
