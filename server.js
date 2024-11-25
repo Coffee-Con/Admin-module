@@ -167,7 +167,7 @@ app.get('/api/getReward/:RewardID', getReward);
 app.put('/api/updateReward/:RewardID', updateReward);
 app.get('/api/getUserPoint/:UserID', getUserPoint);
 app.get('/api/getUsersPoint', getUsersPoint);
-app.put('/api/updateUserRewardPoint/:UserID/:Action/:RewardPoint', updateOrCreateRewardPoint);
+app.post('/api/updateUserRewardPoint', updateOrCreateRewardPoint);
 app.get('/api/getUsersRewards', getUsersRewards);
 app.post('/api/markUserRewardCompleated/:ID', markUserRewardCompleated);
 // Reward end

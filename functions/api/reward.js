@@ -96,12 +96,9 @@ const getReward = (req, res) => {
 
 // Get UserRewardPoints
 const updateOrCreateRewardPoint = (req, res) => {
-    const UserID = req.params.UserID;
-    const Action = req.params.Action;
-    const RewardPoint = req.params.RewardPoint;
+    const { UserID, Action, RewardPoint, ActionDetail } = req.body;
 
     // default ActionDetail to empty string
-    const { ActionDetail } = req.body;
     if (!ActionDetail) {
         ActionDetail = '';
     }
