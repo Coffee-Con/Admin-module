@@ -13,8 +13,8 @@ const cors = require('cors');
 
 const dbConfig = require('./functions/dbConfig'); // 导入数据库配置
 const options = {
-  key: fs.readFileSync('ssl/key.pem'),
-  cert: fs.readFileSync('ssl/cert.pem')
+  key: fs.readFileSync(process.env.SSL_Key),
+  cert: fs.readFileSync(process.env.SSL_Cert)
 };
 const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler, markEmailEventAsCompleted } = require('./functions/api/mail'); // 导入邮件发送模块
 const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate } = require('./functions/api/auth');
