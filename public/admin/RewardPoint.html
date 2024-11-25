@@ -26,6 +26,7 @@
         <select name="selectCourseQuiz" id="selectCourseQuiz" onchange="getUserQuizRank(this.value)">
             <option value="">Please select a quiz</option>
         </select>
+        <button onclick="addUsersPoints()">Add Points</button>
         <table id="UserQuizScore">
             <thead>
                 <tr>
@@ -33,7 +34,7 @@
                     <th>Name</th>
                     <th>Score</th>
                     <th>Time</th>
-                    <th>Add Points Action</th><!-- Default t1 300, t2 250, t3 200, t4 150, t5 100, other (Score >= 50) 50 -->
+                    <th>Add points amount</th><!-- Default t1 300, t2 250, t3 200, t4 150, t5 100, other (Score >= 50) 50 -->
                 </tr>
             </thead>
         </table>
@@ -137,24 +138,23 @@
                         <td>${user.Name}</td>
                         <td>${user.Score}</td>
                         <td>${user.Time}</td>
-                        <td>
-                            <button onclick="addUsersPoints(${user.UserID}, ${user.Score})">Add Points</button>
-                        </td>
+                        <td><input type="number" id="points${user.UserID}" value="${index + 1 == 1 ? 300 : index + 1 == 2 ? 250 : index + 1 == 3 ? 200 : index + 1 == 4 ? 150 : index + 1 == 5 ? 100 : 50}"></td>
                     `;
                 });
             });
         }
 
-        function addUsersPoints(userID, points) {
-            
-            for (let i = 0; i < points.length; i++) {
-                fetch(`/api/updateUserRewardPoint/${userID}/increase/${points[i].Point}`, {
+        function addUsersPoints() {
+            const points = document.querySelectorAll('input[type="number"]');
+            const userID = document.getElementById('UserQuizScore').rows[1].cells[1].innerText;
+
+            points.forEach(point => {
+                fetch(`/api/addUserPoints/${userID}/increase/${point.value}`, {
                     method: 'POST'
-                })
-                .then(() => {
-                    getUsersPoint();
                 });
-            }
+            });
+            getUsersPoint();
+            alert('Points added successfully');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
