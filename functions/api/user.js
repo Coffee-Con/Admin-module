@@ -6,7 +6,7 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const crypto = require('crypto');
 
-// 检查Email是否存在的函数
+// Function to check if Email exists
 const checkEmailExists = (email, connection, callback) => {
   const query = 'SELECT COUNT(*) AS count FROM User WHERE Email = ?';
   connection.query(query, [email], (err, results) => {
@@ -20,10 +20,10 @@ const checkEmailExists = (email, connection, callback) => {
   });
 };
 
-// 读取CSV文件并插入数据
+// Read CSV file and insert data
 const readCSVAndInsertUsers = (filePath, connection, callback) => {
-  const users = new Map(); // 用于存储用户数据，键为Email，值为用户数据对象
-  const duplicateEmails = new Set(); // 用于存储CSV文件中重复的Email
+  const users = new Map(); // Used to store user data, the key is Email and the value is user data object
+  const duplicateEmails = new Set(); // Used to store duplicate Emails in CSV files
 
   fs.createReadStream(filePath)
     .pipe(csv())
@@ -47,12 +47,12 @@ const readCSVAndInsertUsers = (filePath, connection, callback) => {
     .on('end', () => {
       console.log('CSV file successfully processed.');
 
-      // 处理CSV文件中的重复Email
+      // Handling duplicate emails in CSV files
       duplicateEmails.forEach(email => {
         console.log(`Repeat email in CSV: ${email}`);
       });
 
-      // 检查数据库中是否存在相同的Email并插入新用户
+      // Check if the same email exists in the database and insert a new user
       let processedCount = 0;
       let totalUsers = users.size;
       let hasError = false;
@@ -228,6 +228,7 @@ const updateUser = (req, res) => {
     });
 }
 
-// 读取并插入用户
+// Read and insert users
 // readCSVAndInsertUsers('user-import.csv');
+
 module.exports = { addUsers, addUser: register, getUserInfo, getUsers, deleteUser, updateUser };

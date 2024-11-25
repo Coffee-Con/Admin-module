@@ -1,4 +1,4 @@
-// 导入数据库配置
+// Import database config
 const mysql = require('mysql2');
 const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
@@ -6,7 +6,9 @@ const connection = mysql.createConnection(dbConfig);
 const path = require('path');
 const fs = require('fs');
 
-// 创建 material 文件夹（如果不存在）
+const host = new URL(process.env.BASE_URL).host;
+
+// Create a material folder if it does not exist
 const materialFolderPath = path.join(__dirname, '../../public/user/material');
 if (!fs.existsSync(materialFolderPath)) {
     fs.mkdirSync(materialFolderPath, { recursive: true });
@@ -15,17 +17,17 @@ if (!fs.existsSync(materialFolderPath)) {
 const createMaterial = async (req, res) => {
     const { materialData } = req.body;
 
-    // 解析 JSON 格式的数据
+    // Parsing JSON formatted data
     const material = JSON.parse(materialData);
     const { MaterialName, MaterialDescription, MaterialType, MaterialLink } = material;
 
     console.log(req.file);
 
-    // 检查上传文件（如果有）
+    // Check uploaded file (if any)
     let materialLinkFinal = MaterialLink;
     if (MaterialType == 2 && req.file) {
-        // PDF 文件的保存路径
-        materialLinkFinal = `/user/material/${req.file.filename}`;
+        // The path where the PDF file is saved
+        materialLinkFinal = `https://${host}/user/material/${req.file.filename}`;
     }
 
     const query = `

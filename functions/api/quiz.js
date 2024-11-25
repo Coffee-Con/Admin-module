@@ -1,9 +1,9 @@
-// 导入数据库配置
+// Import database config
 const mysql = require('mysql2');
 const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
 
-// 获取所有Quiz
+// Get all Quizzes
 function getAllQuizzes(req, res) {
     const query = 'SELECT * FROM Quiz';
     connection.query(query, (err, results) => {

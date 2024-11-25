@@ -1,4 +1,4 @@
-// 导入数据库配置
+// Import database config
 const mysql = require('mysql2');
 const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
@@ -53,20 +53,20 @@ const getQuestion = (req, res) => {
         if (results.length > 0) {
             const question = results[0];
             
-            // 初始化空数组用于存放答案文本
+            // Initialize an empty array to store the answer text
             let answersList = [];
     
             try {
-                // 检查 Answer 是否为字符串类型，否则转换为 JSON 字符串
+                // Check if the Answer is a string type, otherwise convert it to a JSON string
                 let answerData = question.Answer;
                 if (typeof answerData !== 'string') {
-                    answerData = JSON.stringify(answerData); // 将对象转换为 JSON 字符串
+                    answerData = JSON.stringify(answerData); // Convert an object to a JSON string
                 }
     
-                // 解析 Answer 字段
+                // Parsing the Answer field
                 const answers = JSON.parse(answerData);
     
-                // 提取 text 字段生成 list<string>
+                // Extract the text field to generate list<string>
                 if (Array.isArray(answers)) {
                     answersList = answers.map(answer => answer.text);
                 }
@@ -74,12 +74,12 @@ const getQuestion = (req, res) => {
                 console.error('Error parsing Answer JSON:', parseError);
             }    
     
-            // 返回问题和答案列表，不包含正确性信息
+            // Returns a list of questions and answers without correctness information
             res.json({
                 QuestionID: question.QuestionID,
                 QuestionType: question.QuestionType,
                 Question: question.Question,
-                Answer: answersList, // 如果为空，返回 []
+                Answer: answersList, // If empty, return []
             });
         }
     });
@@ -193,5 +193,5 @@ const updateQuestion = (req, res) => {
     });
 }
 
-// 导出API
+// Export API
 module.exports = { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions, updateQuestion };

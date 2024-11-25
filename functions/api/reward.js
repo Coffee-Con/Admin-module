@@ -1,4 +1,4 @@
-// 导入数据库配置
+// Import databse config
 const mysql = require('mysql2');
 const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
@@ -267,5 +267,5 @@ const getUsersPoint = (req, res) => {
     });
 }
 
-// 导出API
+// Export the functions
 module.exports = { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward, getUsersReward, markUserRewardCompleated, getUserPoint, getUsersPoint };
