@@ -327,13 +327,18 @@
       */
       async function fillRecipient(groupId) {
         try {
+          const recipientFields = document.getElementById('recipient-fields');
           if (!groupId) {
+            const nameInputs = recipientFields.querySelectorAll('input[name="name[]"]');
+            const emailInputs = recipientFields.querySelectorAll('input[name="email[]"]');
+      
+            nameInputs.forEach(input => input.value = '');
+            emailInputs.forEach(input => input.value = '');
             return;
           }
           const response = await fetch(`/fillRecipient/${groupId}`);
           const recipients = await response.json();
           // 清空当前的收件人字段
-          const recipientFields = document.getElementById('recipient-fields');
           recipientFields.innerHTML = '';
           if (recipients.length === 0) {
             // 如果组内没有成员，保留一行空的输入字段
@@ -348,7 +353,7 @@
                   <input placeholder="Email" type="email" name="email[]" class="form-control" aria-describedby="emailHelp" required />
                 </div>
                 <div class="col-md-2">
-                  <button type="button" class="btn btn-danger" onclick="removeRecipient(this)">Delete</button>
+                  <button type="button" class="btn btn-danger button-Animation" onclick="removeRecipient(this)">Delete</button>
                 </div>
               </div>
             `;
@@ -367,7 +372,7 @@
                     <input placeholder="Email" type="email" name="email[]" class="form-control" value="${recipient.Email}" required />
                   </div>
                   <div class="col-md-2">
-                    <button type="button" class="btn btn-danger" onclick="removeRecipient(this)">Delete</button>
+                    <button type="button" class="btn btn-danger button-Animation" onclick="removeRecipient(this)">Delete</button>
                   </div>
                 </div>
               `;
