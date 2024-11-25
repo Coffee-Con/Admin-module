@@ -1,10 +1,10 @@
-// 导入数据库配置
+// Import database config
 const mysql = require('mysql2');
 const dbConfig = require('../dbConfig');
 const connection = mysql.createConnection(dbConfig);
 const transporter = require('../emailConfig');
 
-// 获取所有课程
+// Get all courses
 function getAllCourses(req, res) {
     const query = 'SELECT * FROM Course';
     connection.query(query, (err, results) => {
@@ -17,7 +17,7 @@ function getAllCourses(req, res) {
     });
 }
 
-// 获取对应用户的课程
+// Get courses for a user
 function getUserCourses(req, res) {
     const userID = req.user.id;
     const query = `

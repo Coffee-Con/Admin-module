@@ -46,7 +46,7 @@ const sendMailHandler = async (req, res) => {
     const senderEmail = data.senderemail[0];
     const subject = data.subject[0];
 
-    // 确保名称和邮箱的数组长度相同
+    // Make sure the name and email arrays are the same length
     if (nameArray.length !== emailArray.length) {
       return res.status(400).send('Names and emails count mismatch');
     }
@@ -54,13 +54,13 @@ const sendMailHandler = async (req, res) => {
     // Prepare ClickKeys JSON array
     const clickKeysArray = [];
     
-    // 依次遍历每个收件人并发送邮件
+    // Iterate through each recipient and send mail
     for (let i = 0; i < nameArray.length; i++) {
       const namePlaceholder = nameArray[i];
       const email = emailArray[i];
-      const { link: linkPlaceholder, key } = await generateLink(email); // 生成点击链接和密钥
+      const { link: linkPlaceholder, key } = await generateLink(email); // Generate click link and key
 
-      // 用模板内容替换占位符
+      // Replace placeholder with template content
       const content = message
         .replace(/\[name\]/g, namePlaceholder)
         .replace(/\[link\]/g, linkPlaceholder);
@@ -75,13 +75,13 @@ const sendMailHandler = async (req, res) => {
         html: htmlContent
       };
 
-      await transporter.sendMail(mail); // 发送邮件
+      await transporter.sendMail(mail); // Send mail
 
-      // 添加到 ClickKeys 数组
+      // Add to the ClickKeys array
       clickKeysArray.push({ email, clickkey: key });
     }
 
-    // 构建 SQL 插入
+    // INSERT INTO MailEvent
     const query = `INSERT INTO MailEvent (ClickKeys, Content) VALUES (?, ?);`;
     const contentData = {
       sendername: senderName,
@@ -104,47 +104,47 @@ const sendMailHandler = async (req, res) => {
   }
 };
 
-// 生成随机 Token
+// Generate Random Token
 function generateToken() {
   return crypto.randomBytes(32).toString('hex');
 }
 
-// 验证验证码并发送带 Token 的邮件
+// Verify the verification code and send an email with a token
 const verifyCaptcha = async (req, res) => {
   const { captchaInput, email } = req.body;
 
-  // 验证验证码是否正确（忽略大小写）
+  // Verify that the verification code is correct (ignore case)
   if (req.session.captcha && captchaInput.toLowerCase() === req.session.captcha.toLowerCase()) {
     try {
-      // 检查邮箱是否在数据库中存在
+      // Check if the mailbox exists in the database
       const query = 'SELECT UserID FROM `User` WHERE email = ?';
       connection.query(query, [email], (err, rows) => {
         if (err) {
-          console.error('数据库查询错误:', err);
-          return res.status(500).json({ success: false, message: '数据库错误，请稍后重试。' });
+          console.error('Database query error:', err);
+          return res.status(500).json({ success: false, message: 'Database error, please try again later.' });
         }
 
         if (rows.length === 0) {
-          return res.status(400).json({ success: false, message: '该邮箱未注册，请重试。' });
+          return res.status(400).json({ success: false, message: 'The email address is not registered, please try again.' });
         }
 
         const userID = rows[0].UserID;
 
-        // 生成唯一的 token 并存储到数据库
+        // Generate a unique token and store it in the database
         const token = generateToken();
-        const expiryTime = new Date(Date.now() + 60 * 60 * 1000); // Token 有效期1小时
+        const expiryTime = new Date(Date.now() + 60 * 60 * 1000); // Token is valid for 1 hour
 
         const insertQuery = 'INSERT INTO ResetTokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
         connection.query(insertQuery, [userID, token, expiryTime], (err, results) => {
           if (err) {
-            console.error('Token 数据库插入错误:', err);
-            return res.status(500).json({ success: false, message: '数据库错误，请稍后重试。' });
+            console.error('Token database insertion error:', err);
+            return res.status(500).json({ success: false, message: 'Database error, please try again later.' });
           }
 
-          // 构建带 Token 的重置密码链接
+          // Construct a reset password link with a token
           const resetLink = `https://${host}/resetPassword.html?changepasswordToken=${token}`;
 
-          // 发送邮件
+          // Send email
           const mailOptions = {
             from: 'no-reply@staffcanvas.com',
             to: email,
@@ -154,30 +154,30 @@ const verifyCaptcha = async (req, res) => {
 
           transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
-              console.error('邮件发送错误:', err);
-              return res.status(500).json({ success: false, message: '邮件发送失败，请稍后重试。' });
+              console.error('Email sending error:', err);
+              return res.status(500).json({ success: false, message: 'Failed to send email, please try again later.' });
             }
-            return res.status(200).json({ success: true, message: '验证码正确！请到对应邮箱更新密码。' });
+            return res.status(200).json({ success: true, message: 'The verification code is correct! Please go to the corresponding email address to update your password.' });
           });
         });
       });
     } catch (err) {
-      console.error('服务器错误:', err);
-      return res.status(500).json({ success: false, message: '内部服务器错误，请稍后重试。' });
+      console.error('Server Error:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error, please try again later.' });
     }
   } else {
-    return res.status(400).json({ success: false, message: '验证码错误，请重新输入。' });
+    return res.status(400).json({ success: false, message: 'The verification code is incorrect, please re-enter it.' });
   }
 };
 
 // for mobile app
-// 验证验证码并发送带 Token 的邮件
+// Verify the verification code and send an email with a token
 const verifyCaptcha2 = async (req, res) => {
   const { email } = req.body;
 
-  // 验证验证码是否正确（忽略大小写）
+  // Verify that the verification code is correct (ignore case)
   try {
-    // 检查邮箱是否在数据库中存在
+    // Check if the mailbox exists in the database
     const query = 'SELECT UserID FROM `User` WHERE email = ?';
     connection.query(query, [email], (err, rows) => {
       if (err) {
@@ -191,21 +191,21 @@ const verifyCaptcha2 = async (req, res) => {
 
       const userID = rows[0].UserID;
 
-      // 生成唯一的 token 并存储到数据库
+      // Generate a unique token and store it in the database
       const token = generateToken();
-      const expiryTime = new Date(Date.now() + 60 * 60 * 1000); // Token 有效期1小时
+      const expiryTime = new Date(Date.now() + 60 * 60 * 1000); // Token is valid for 1 hour
 
       const insertQuery = 'INSERT INTO reset_tokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
       connection.query(insertQuery, [userID, token, expiryTime], (err, results) => {
         if (err) {
-          console.error('Token 数据库插入错误:', err);
+          console.error('Token database insertion error:', err);
           return res.status(500).json({ success: false, message: 'Database Error, Please Try Again Later.' });
         }
 
-        // 构建带 Token 的重置密码链接
+        // Construct a reset password link with a token
         const resetLink = `https://${host}/resetPassword.html?changepasswordToken=${token}`;
 
-        // 发送邮件
+        // Send email
         const mailOptions = {
           from: 'no-reply@staffcanvas.com',
           to: email,
@@ -215,7 +215,7 @@ const verifyCaptcha2 = async (req, res) => {
 
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
-            console.error('邮件发送错误:', err);
+            console.error('Email sending error:', err);
             return res.status(500).json({ success: false, message: 'Email was Unsuccessfully Sent, Please Try again later!' });
           }
           return res.status(200).json({ success: true, message: 'Verfication Code is Correct! Please Procceed To The Corresponding Email for Reset' });
@@ -223,12 +223,12 @@ const verifyCaptcha2 = async (req, res) => {
       });
     });
   } catch (err) {
-    console.error('服务器错误:', err);
+    console.error('Server Error:', err);
     return res.status(500).json({ success: false, message: 'Internal server error, please try again later.' });
   }
 };
 
-// 验证 Token 并展示重置密码页面
+// Verify the Token and display the reset password page
 const resetPassword = (req, res) => {
   const { newPassword, changepasswordToken } = req.body;
 
@@ -241,7 +241,7 @@ const resetPassword = (req, res) => {
       return res.status(400).json({ success: false, message: 'The password must contain uppercase letters, lowercase letters, numbers, special characters and be at least 8 characters long.'});
   }
 
-  // 查找与 token 关联的用户
+  // Find the user associated with the token
   const query = `
     SELECT u.UserID, u.Salt 
     FROM ResetTokens rt
@@ -250,7 +250,7 @@ const resetPassword = (req, res) => {
   `;
   connection.query(query, [changepasswordToken], async (err, rows) => {
       if (err) {
-          console.error('数据库查询错误:', err);
+          console.error('Database query error:', err);
           return res.status(500).json({ success: false, message: 'Internal server error, please try again later.' });
       }
 
@@ -261,10 +261,10 @@ const resetPassword = (req, res) => {
       const userId = rows[0].UserID;
       const salt = rows[0].Salt;
 
-      // 对新密码进行哈希处理
+      // Hash the new password
       const hashedPW = crypto.createHash('md5').update(newPassword + salt).digest('hex');
 
-      // 更新用户的密码
+      // Update the user's password
       const updateQuery = 'UPDATE User SET HashedPW = ? WHERE UserID = ?';
       connection.query(updateQuery, [hashedPW, userId], (err, results) => {
           if (err) {
@@ -272,7 +272,7 @@ const resetPassword = (req, res) => {
               return res.status(500).json({ success: false, message: 'Interal Server Error, Please Try Again Later!' });
           }
 
-          // 可选：删除已使用的重置 token
+          // Delete the used reset token
           const deleteQuery = 'DELETE FROM ResetTokens WHERE token = ?';
           connection.query(deleteQuery, [changepasswordToken], (err) => {
               if (err) {
@@ -304,13 +304,13 @@ const generateLink = async (Email) => {
 const clickLinkHandler = (req, res) => {
   const key = req.params.key;
 
-  // 记录点击事件
+  // Recording click events
   connection.query('INSERT INTO ClickEvent (`key`) VALUES (?)', [key], (err) => {
     if (err) {
       console.error('Error inserting click event into the database:', err.stack);
     }
 
-    // 显示一个确认页面
+    // Display a clicked page
     res.sendFile(path.join(__dirname, '../../public', 'ClickRecorded.html'));
   });
 };
