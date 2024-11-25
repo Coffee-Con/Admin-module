@@ -149,7 +149,8 @@ const verifyCaptcha = async (req, res) => {
             from: 'no-reply@staffcanvas.com',
             to: email,
             subject: 'Password reset request',
-            text: `Please click on the link below to reset your password: \n\n${resetLink}\n\nThis link will expire in 1 hour.`
+            text: `Please click on the link below to reset your password: \n\n${resetLink}\n\nThis link will expire in 1 hour.`,
+            html: `Please click on the link below to reset your password: <br><br><a href="${resetLink}">${resetLink}</a><br><br>This link will expire in 1 hour.`
           };
 
           transporter.sendMail(mailOptions, (err, info) => {
@@ -210,7 +211,8 @@ const verifyCaptcha2 = async (req, res) => {
           from: 'no-reply@staffcanvas.com',
           to: email,
           subject: 'Password reset request',
-          text: `Please click on the link below to reset your password: \n\n${resetLink}\n\nThis link will expire in 1 hour.`
+          text: `Please click on the link below to reset your password: \n\n${resetLink}\n\nThis link will expire in 1 hour.`,
+          html: `Please click on the link below to reset your password: <br><br><a href="${resetLink}">${resetLink}</a><br><br>This link will expire in 1 hour.`
         };
 
         transporter.sendMail(mailOptions, (err, info) => {
