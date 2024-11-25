@@ -25,9 +25,10 @@ const getClicks = (req, res) => {
 
 const getClicksRisk = (req, res) => {
   const query = `
-    SELECT COUNT(*) AS click_count_last_month
-    FROM ClickEvent
-    WHERE time >= NOW() - INTERVAL 1 MONTH;
+    SELECT COUNT(DISTINCT ce.key) AS click_count_last_month
+    FROM ClickEvent ce
+    JOIN ClickKey ck ON ce.key = ck.key
+    WHERE ce.time >= NOW() - INTERVAL 1 MONTH;
   `;
 
   connection.query(query, (error, results) => {
