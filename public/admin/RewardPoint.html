@@ -33,18 +33,19 @@
                     <th>Name</th>
                     <th>Score</th>
                     <th>Time</th>
-                    <th>Reward</th>
+                    <th>Add Points Action</th><!-- Default t1 300, t2 250, t3 200, t4 150, t5 100, other (Score >= 50) 50 -->
                 </tr>
             </thead>
         </table>
 
         <h2>Reward Requirements</h2>
-        <table>
+        <table id="UsersRewards">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>UserID</th><!-- 改为name -->
                     <th>Time</th>
                     <th>Reward</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -61,5 +62,57 @@
             </thead>
         </table>
     </div>
+    <script>
+        function getUsersPoint() {
+            fetch('/api/getUsersPoint')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('UsersPoint');
+                data.forEach((user, index) => {
+                    const row = table.insertRow();
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${user.Name}</td>
+                        <td>${user.RewardPoint}</td>
+                    `;
+                });
+            });
+        }
+
+        function getUsersRewards() {
+            fetch('/api/getUsersRewards')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('UsersRewards');
+                data.forEach(reward => {
+                    const row = table.insertRow();
+                    row.innerHTML = `
+                        <td>${reward.UserID}</td>
+                        <td>${reward.RewardTime}</td>
+                        <td>${reward.RewardID}</td>
+                        <td>${reward.Status === 2 ? 'Completed' : 'In Progress'}</td>
+                        <td>
+                            <button onclick="markCompleted(${reward.RewardID})" ${reward.Status === 2 ? 'disabled' : ''}>Completed</button>
+                        </td>
+                    `;
+                });
+            });
+        }
+
+        function markCompleted(rewardID) {
+            fetch(`/api/markUserRewardCompleated/${rewardID}`, {
+                method: 'POST'
+            })
+            .then(() => {
+                getUsersRewards();
+                getUsersPoint();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            getUsersPoint();
+            getUsersRewards();
+        });
+    </script>
 </body>
 </html>

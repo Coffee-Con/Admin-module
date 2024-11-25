@@ -203,9 +203,9 @@ const updateOrCreateRewardPoint = (req, res) => {
     });
 };
 
-const getUsersReward = (req, res) => {
-    const query = 'SELECT * FROM `UserRewardPoint`;';
-    connection.query(query, [UserID], (err, results) => {
+const getUsersRewards = (req, res) => {
+    const query = 'SELECT * FROM `UserReward`;';
+    connection.query(query, (err, results) => {
         if (err) {
             console.error('Error querying data:', err);
             return res.status(500).json({ error: 'Database error' });
@@ -268,4 +268,4 @@ const getUsersPoint = (req, res) => {
 }
 
 // Export the functions
-module.exports = { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward, getUsersReward, markUserRewardCompleated, getUserPoint, getUsersPoint };
+module.exports = { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward, getUsersRewards, markUserRewardCompleated, getUserPoint, getUsersPoint };

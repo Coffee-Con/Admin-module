@@ -158,7 +158,7 @@ app.get('/template/:id', getTemplate);
 // Template end
 
 // Reward
-const { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward, getUsersReward, markUserRewardCompleated, getUserPoint, getUsersPoint } = require('./functions/api/reward');
+const { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward, getUsersRewards, markUserRewardCompleated, getUserPoint, getUsersPoint } = require('./functions/api/reward');
 app.post('/api/createReward', createReward);
 app.get('/api/getRewards', getRewards);
 app.delete('/api/deleteReward/:RewardID', deleteReward);
@@ -167,7 +167,7 @@ app.put('/api/updateReward/:RewardID', updateReward);
 app.get('/api/getUserPoint/:UserID', getUserPoint);
 app.get('/api/getUsersPoint', getUsersPoint);
 app.put('/api/updateOrCreateRewardPoint', updateOrCreateRewardPoint);
-app.get('/api/getUsersReward', getUsersReward);
+app.get('/api/getUsersRewards', getUsersRewards);
 app.post('/api/markUserRewardCompleated/:ID', markUserRewardCompleated);
 // Reward end
 
