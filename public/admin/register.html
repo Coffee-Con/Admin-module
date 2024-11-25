@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <title>Upload CSV</title>
     <style>
         body {
@@ -74,10 +75,6 @@
                 <div class="card-body">
                     <form id="registerForm" method="post">
                         <div class="mb-3">
-                            <label for="user" class="form-label">Username:</label>
-                            <input type="text" class="form-control" id="user" name="user" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="email" class="form-label">Email:</label>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
@@ -131,14 +128,27 @@
             </svg>
             Download Sample CSV
         </a>
-    </div>    
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <h1 style="margin-top: 1em;">User List</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">UserID</th>
+                <th scope="col">Email</th>
+                <th scope="col">Name</th>
+                <th scope="col">Role</th>
+                <th scope="col">Join Date</th>
+                <th scope="col">Education</th>
+                <th scope="col">IT Level</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+    </table>
 
     <script>
         async function register() {
             const formData = {
-                user: document.getElementById('user').value,
                 email: document.getElementById('email').value,
                 name: document.getElementById('name').value,
                 password: document.getElementById('password').value,
@@ -185,6 +195,108 @@
                 alert('Network error: ' + error.message);
             }
         }
+
+        function getUsers() {
+            // clear list
+            const table = document.querySelector('table');
+            table.querySelectorAll('tbody').forEach(tbody => tbody.remove());
+
+            fetch('/api/getUsers')
+                .then(response => response.json())
+                .then(data => {
+                    const table = document.querySelector('table');
+                    const tbody = document.createElement('tbody');
+                    data.forEach(user => {
+                        let date = new Date(user.JoinDate);
+                        let formattedDate = date.toISOString().split('T')[0]; // To YYYY-MM-DD
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                        <tr>
+                            <td>${user.UserID}</td>
+                            <td><input id="email-${user.UserID}" type="email" value="${user.Email}" /></td>
+                            <td><input id="name-${user.UserID}" type="text" value="${user.Name}" /></td>
+                            <td>
+                                <select id="role-${user.UserID}">
+                                    <option value="1" ${user.Role === 1 ? 'selected' : ''}>Admin</option>
+                                    <option value="2" ${user.Role === 2 ? 'selected' : ''}>Staff</option>
+                                </select>
+                            </td>
+                            <td><input id="date-${user.UserID}" type="date" value="${formattedDate}" /></td>
+                            <td><input id="education-${user.UserID}" type="text" value="${user.Education}" /></td>
+                            <td><input id="itLevel-${user.UserID}" type="text" value="${user.ITLevel}" /></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="updateUser('${user.UserID}')">Edit</button>
+                                <button class="btn btn-danger" onclick="deleteUser('${user.UserID}')">Delete</button>
+                            </td>
+                        </tr>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    table.appendChild(tbody);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function deleteUser(UserID) {
+            if (!confirm('Are you sure you want to delete this user?')) {
+                return;
+            }
+            fetch('/api/deleteUser', {
+                method: 'Delete',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ UserID }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('User deleted successfully');
+                        getUsers();
+                    } else {
+                        alert('Failed to delete user: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function updateUser(UserID) {
+            const Email = document.getElementById(`email-${UserID}`).value;
+            const Name = document.getElementById(`name-${UserID}`).value;
+            const Role = document.getElementById(`role-${UserID}`).value;
+            const JoinDate = document.getElementById(`date-${UserID}`).value;
+            const Education = document.getElementById(`education-${UserID}`).value;
+            const ITLevel = document.getElementById(`itLevel-${UserID}`).value;
+
+            fetch(`/api/updateUser/${UserID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ Email, Name, Role, JoinDate, Education, ITLevel }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('User updated successfully');
+                        getUsers();
+                    } else {
+                        alert('Failed to update user: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            getUsers();
+        });
     </script>
 </body>
 </html>

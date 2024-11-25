@@ -140,9 +140,12 @@ app.put('/api/updateQuestion/:QuestionID', updateQuestion);
 // Question end
 
 // User
-const { addUser } = require('./functions/api/user');
+const { addUser, getUsers, deleteUser, updateUser } = require('./functions/api/user');
 app.post('/addUser', addUser);
 app.post('/addUsers', upload.single('csvfile'), addUsers);
+app.get('/api/getUsers', getUsers);
+app.delete('/api/deleteUser', deleteUser);
+app.put('/api/updateUser/:UserID', updateUser);
 // User end
 
 // Template

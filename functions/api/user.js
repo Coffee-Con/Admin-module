@@ -76,8 +76,8 @@ const readCSVAndInsertUsers = (filePath, connection, callback) => {
             const salt = crypto.randomBytes(16).toString('hex');
             const hashedPW = crypto.createHash('md5').update(user.password + salt).digest('hex');
 
-            const query = 'INSERT INTO User (User, Email, Name, Role, Salt, HashedPW, JoinDate, Education, ITLevel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-            connection.query(query, [user.user, user.email, user.name, user.role, salt, hashedPW, user.JoinDate, user.Education, user.ITLevel], (err) => {
+            const query = 'INSERT INTO User (Email, Name, Role, Salt, HashedPW, JoinDate, Education, ITLevel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+            connection.query(query, [user.email, user.name, user.role, salt, hashedPW, user.JoinDate, user.Education, user.ITLevel], (err) => {
               if (err) {
                 console.error('Error inserting data:', err.stack);
                 hasError = true;
@@ -114,7 +114,7 @@ const readCSVAndInsertUsers = (filePath, connection, callback) => {
 
 // Register a new user
 const register = (req, res) => {
-  const { user, email, name, password, role } = req.body;
+  const { email, name, password, role } = req.body;
 
   // Password strength regular expression: at least 8 characters, including uppercase letters, lowercase letters, numbers, and special characters
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -136,8 +136,8 @@ const register = (req, res) => {
       const salt = crypto.randomBytes(16).toString('hex');
       const hashedPW = crypto.createHash('md5').update(password + salt).digest('hex');
 
-      const query = 'INSERT INTO User (User, Email, Name, Role, Salt, HashedPW) VALUES (?, ?, ?, ?, ?, ?)';
-      connection.query(query, [user, email, name, role, salt, hashedPW], (err) => {
+      const query = 'INSERT INTO User (Email, Name, Role, Salt, HashedPW) VALUES (?, ?, ?, ?, ?)';
+      connection.query(query, [email, name, role, salt, hashedPW], (err) => {
         if (err) {
           console.error('Error inserting data:', err.stack);
           return res.status(500).send('Error inserting data');
@@ -190,7 +190,7 @@ function getUserInfo(req, res) {
 }
 
 const getUsers = (req, res) => {
-    const query = 'SELECT UserID, Email, Name, Role FROM User;';
+    const query = 'SELECT UserID, Email, Name, Role, JoinDate, Education, ITLevel FROM User;';
     connection.query(query, (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
@@ -202,9 +202,14 @@ const getUsers = (req, res) => {
 }
 
 const deleteUser = (req, res) => {
-    const userID = req.params.userID;
+    const UserID = req.body.UserID;
+
+    if (!UserID) {
+      return res.status(400).send('UserID is required');
+    }
+
     const query = 'DELETE FROM User WHERE UserID = ?';
-    connection.query(query, [userID], (err, results) => {
+    connection.query(query, [UserID], (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
             res.status(500).send('Internal server error');
@@ -215,10 +220,19 @@ const deleteUser = (req, res) => {
 }
 
 const updateUser = (req, res) => {
-    const userID = req.params.userID;
-    const { email, name, role } = req.body;
-    const query = 'UPDATE User SET Email = ?, Name = ?, Role = ? WHERE UserID = ?';
-    connection.query(query, [email, name, role, userID], (err, results) => {
+    const UserID = req.params.UserID;
+
+    if (!UserID) {
+      return res.status(400).send('UserID is required');
+    }
+
+    const { Email, Name, Role, JoinDate, Education, ITLevel } = req.body;
+    if (!Email || !Name || !Role || !JoinDate || !Education || !ITLevel) {
+      return res.status(400).send('Email, Name, Role, JoinDate, Education and ITLEvel are required');
+    }
+
+    const query = 'UPDATE User SET Email = ?, Name = ?, Role = ?, JoinDate = ?, Education = ?, ITLevel = ? WHERE UserID = ?';
+    connection.query(query, [Email, Name, Role, JoinDate, Education, ITLevel, UserID], (err, results) => {
         if (err) {
             console.error('Error querying the database:', err.stack);
             res.status(500).send('Internal server error');
