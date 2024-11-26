@@ -114,7 +114,6 @@ const requireAuth = (req, res, next) => {
     }
 
     try {
-
         const decoded = jwt.verify(token, SECRET_KEY);
         req.user = decoded; 
         next();
@@ -131,34 +130,27 @@ const captcha = (req, res) => {
         ignoreChars: '0o1i', 
     });
 
-
     req.session.captcha = captcha.text;
-
 
     res.type('svg');
     res.status(200).send(captcha.data);
 }
 
 const authenticate = (req, res, next) => {
-
     const authHeader = req.headers['authorization'];
     const headerToken = authHeader && authHeader.split(' ')[1];
 
-
     const cookieToken = req.cookies.token;
-
 
     const token = headerToken || cookieToken;
 
     if (!token) {
-
         if (!cookieToken) {
             return res.redirect('/login.html');
         } else {
             return res.status(401).json({ message: 'No token provided' });
         }
     }
-
 
     jwt.verify(token, SECRET_KEY, (err, user) => {
         if (err) {
@@ -170,12 +162,27 @@ const authenticate = (req, res, next) => {
             return res.status(403).json({ message: 'Invalid token' });
         }
 
-
         req.user = user;
-
 
         next();
     });
 };
 
-module.exports = { authenticateToken, login, requireAuth, webLogin, logout, captcha, authenticate };
+const checkAdmin = (req, res) => {
+    console.log('Request User:', req.user); 
+    if (req.user && req.user.Role === 1) {
+        res.status(200).send('User is an admin');
+    } else {
+        res.status(403).send('User is not an admin');
+    }
+}
+
+const authRequireAdmin = (req, res, next) => {
+    if (req.user && req.user.Role === 1) {
+        next();
+    } else {
+        res.status(403).send('User is not an admin');
+    }
+}
+
+module.exports = { authenticateToken, login, requireAuth, webLogin, logout, captcha, authenticate, checkAdmin, authRequireAdmin };

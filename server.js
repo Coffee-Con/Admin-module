@@ -17,9 +17,8 @@ const options = {
   cert: fs.readFileSync(process.env.SSL_Cert)
 };
 const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler, markEmailEventAsCompleted } = require('./functions/api/mail'); // 导入邮件发送模块
-const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate } = require('./functions/api/auth');
+const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate, checkAdmin, authRequireAdmin } = require('./functions/api/auth');
 const { addUsers } = require('./functions/api/user'); // 导入添加用户模块
-const { checkAdmin } = require('./functions/api/checkAdmin');
 const { getUserInfo } = require('./functions/api/user');
 
 const app = express();
@@ -64,6 +63,7 @@ app.post('/reset-password', resetPassword);
 
 // 以下功能需要登录后才能访问
 app.use(authenticate);
+app.use(authRequireAdmin);
 
 // Email
 app.post('/send', sendMailHandler); // 处理发送邮件请求
