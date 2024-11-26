@@ -218,8 +218,8 @@
                             <td><input id="name-${user.UserID}" type="text" value="${user.Name}" /></td>
                             <td>
                                 <select id="role-${user.UserID}">
+                                    <option value="0" ${user.Role === 0 ? 'selected' : ''}>Staff</option>
                                     <option value="1" ${user.Role === 1 ? 'selected' : ''}>Admin</option>
-                                    <option value="2" ${user.Role === 2 ? 'selected' : ''}>Staff</option>
                                 </select>
                             </td>
                             <td><input id="date-${user.UserID}" type="date" value="${formattedDate}" /></td>
