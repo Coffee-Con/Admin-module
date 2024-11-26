@@ -75,7 +75,7 @@ const removeGroupMember = (req, res) => {
 const getGroupMembers = (req, res) => {
   const { groupId } = req.params;
   const query = `
-      SELECT u.UserID, u.User, u.Email, u.Name 
+      SELECT u.UserID, u.Email, u.Name 
       FROM User u 
       JOIN GroupUser gu ON u.UserID = gu.UserID 
       WHERE gu.GroupID = ?;`;
@@ -92,7 +92,7 @@ const getGroupMembers = (req, res) => {
 const getAvailableUsers = (req, res) => {
   const { groupId } = req.params;
   const query = `
-      SELECT u.UserID, u.User, u.Email, u.Name 
+      SELECT u.UserID, u.Email, u.Name 
       FROM User u 
       WHERE u.UserID NOT IN (
           SELECT gu.UserID 
