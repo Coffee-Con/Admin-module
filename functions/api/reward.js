@@ -253,7 +253,28 @@ const getUserPoint = (req, res) => {
             console.error('Error querying data:', err);
             return res.status(500).json({ error: 'Database error' });
         }
-        res.json(results[0]);
+        if (results.length === 0) {
+            queryUser = 'SELECT UserID FROM `User` WHERE UserID = ?;';
+            connection.query(queryUser, [UserID], (err, results) => {
+                if (err) {
+                    console.error('Error querying data:', err);
+                    return res.status(500).json({ error: 'Database error' });
+                }
+                if (results.length === 0) {
+                    return res.status(404).json({ error: 'User not found' });
+                }
+                const query = 'INSERT INTO `UserRewardPoint` (UserID, RewardPoint) VALUES (?, 0);';
+                connection.query(query, [UserID], (err, results) => {
+                    if (err) {
+                        console.error('Error inserting data:', err);
+                        return res.status(500).json({ error: 'Database error' });
+                    }
+                    res.json({ RewardPoint: 0 });
+                });
+            });
+        } else {
+            res.json(results[0]);
+        }
     });
 }
 
@@ -269,6 +290,64 @@ const getUsersPoint = (req, res) => {
             return res.status(500).json({ error: 'Database error' });
         }
         res.json(results);
+    });
+}
+
+const userRedeemReward = (req, res) => {
+    const { UserID, RewardID } = req.body;
+
+    // Validate required fields
+    if (!UserID || !RewardID) {
+        console.log('Error: Invalid input data.');
+        return res.status(400).json({ error: 'Invalid input data.' });
+    }
+    // query reward points
+    const queryReward = 'SELECT RewardPoint FROM `Reward` WHERE RewardID = ?;';
+    connection.query(queryReward, [RewardID], (err, results) => {
+        if (err) {
+            console.error('Error querying data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Reward not found' });
+        }
+    });
+    const RewardPoint = results[0].RewardPoint;
+
+    // query userpoints
+    const queryPoint = 'SELECT RewardPoint AS Point FROM `UserRewardPoint` WHERE UserID = ?;';
+    connection.query(queryPoint, [UserID], (err, results) => {
+        if (err) {
+            console.error('Error querying data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        if (results[0].Point < RewardPoint) {
+            return res.status(400).json({ error: 'Not enough points' });
+        }
+    });
+
+    // update user points
+    const queryUpdate = 'UPDATE `UserRewardPoint` SET RewardPoint = RewardPoint - ? WHERE UserID = ?;';
+    connection.query(queryUpdate, [RewardPoint, UserID], (err) => {
+        if (err) {
+            console.error('Error updating data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+    });
+
+    const query = `
+        INSERT INTO UserReward (UserID, RewardID, Status)
+        VALUES (?, ?, 1);
+    `;
+    connection.query(query, [UserID, RewardID], (err) => {
+        if (err) {
+            console.error('Error inserting data:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json({ success: true, message: 'Reward redeemed successfully.' });
     });
 }
 

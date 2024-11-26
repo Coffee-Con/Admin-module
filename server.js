@@ -229,15 +229,9 @@ mobile.get('/api/getRewards', getRewards);
 mobile.get('/api/getReward/:RewardID', getReward);
 mobile.get('/api/getCourseMaterials/:CourseID', getCourseMaterials);
 mobile.get('/api/getCourseQuizRank', getLeaderboard);
+mobile.get('/api/getUserPoint/:UserID', getUserPoint);
 
-// HTTPS API 4001
-https.createServer(options, (req, res) => {
-  res.writeHead(200);
-  res.end('Hello HTTPS!');
-}).listen(4001, () => {
-  console.log('HTTPS server listening on port 4001');
-});
-
-mobile.listen(4000, () => {
-  console.log('Mobile Api listening on port 4000');
+https.createServer(options, mobile).listen(4001, () => {
+  const host = new URL(process.env.BASE_URL).host;
+  console.log(`Mobile API: https://${host}:4001`);
 });

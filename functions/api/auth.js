@@ -52,7 +52,6 @@ const login = (req, res) => {
         if (hashedPW !== user.HashedPW) {
             return res.status(401).send('Password error'); // change to email and password error
         } else {
-
             const token = jwt.sign({ id: user.UserID, email: user.Email, Role: user.Role }, SECRET_KEY, { expiresIn: '8h' });
             res.json({ token });
         }
