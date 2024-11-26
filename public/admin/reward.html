@@ -39,52 +39,16 @@
             font-weight: bold;
         }
 
-        .back-button {
-          position: absolute; /* Change to absolute positioning */
-          top: 12px; /* Maintain distance from the top */
-          left: 10px; /* Align to the left */
-          background-color: transparent; /* Button background color */
-          color: black; /* Button text color */
-          border: none !important;
-          border-radius: 5px;
-          padding: 10px 15px;
-          cursor: pointer;
-        }
-
-        .back-button i {
-            margin-right: 5px;
-            font-size: 1.2em; /* Adjust icon size for consistency */
-        }
-
-        .back-button {
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            z-index: 1000;
-        }
-
-        .back-button:hover {
-            background-color: lightgray; 
-            transform: translateY(-2px); 
-        }
-
-        .back-button:active {
-            transform: scale(0.95); 
-        }
-
-        .button-Animation {
-            border: none;
-            cursor: pointer;
-            transition: transform 0.3s ease; 
-        }
-
-        .button-Animation:hover {
-            transform: scale(1.1);
-        }
     </style>
 </head>
 <body>
     <button class="back-button" onclick="window.location.href='index.html'">
         <i class="fa-solid fa-arrow-left"></i> 
         <span>Back</span>
+    </button>
+    <button class="reward-button" onclick="window.location.href='rewardPoint.html'">
+        <span>Reward Point Page</span>
+        <i class="fa-solid fa-arrow-right"></i> 
     </button>
     <header class="header">
         <h1>Reward Management

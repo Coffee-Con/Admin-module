@@ -11,22 +11,22 @@
     <script src="./RewardPoint.js"></script>
 </head>
 <body>
-    <button class="back-button" onclick="window.location.href='index.html'">
+    <button class="back-button" onclick="window.location.href='reward.html'">
         <i class="fa-solid fa-arrow-left"></i> 
         <span>Back</span>
     </button>
       <header class="header">
-        <h1>Give Rewards
-            <i class="fas fa-user" style="color: #007bff;"></i>
+        <h1>Reward Point Management
+            <i class="fas fa-trophy" style="color: #007bff;"></i>
         </h1>
     </header>
     <div class="container">
-        <h2>Give Points</h2>
+        <h2 style="margin-bottom: 5px;" class="subHeader">Give Points</h2>
         <label for="selectCourseQuiz">Quiz</label>
-        <select name="selectCourseQuiz" id="selectCourseQuiz" onchange="getUserQuizRank(this.value)">
+        <select class="form-control" name="selectCourseQuiz" id="selectCourseQuiz" onchange="getUserQuizRank(this.value)">
             <option value="">Please select a quiz</option>
         </select>
-        <button onclick="addUsersPoints()">Add Points</button>
+        <button class="btn btn-primary button-Animation" style="margin-top: 15px;" onclick="addUsersPoints()">Add Points</button>
         <table id="UserQuizScore">
             <thead>
                 <tr>
@@ -40,7 +40,7 @@
             </thead>
         </table>
 
-        <h2>Reward Requirements</h2>
+        <h2 style="margin-bottom: 5px; margin-top: 2em;" class="subHeader">Reward Requirements</h2>
         <table id="UsersRewards">
             <thead>
                 <tr>
@@ -53,7 +53,7 @@
             </thead>
         </table>
 
-        <h2>Point Rank</h2>
+        <h2 style="margin-bottom: 5px; margin-top: 2em;" class="subHeader">Point Rank</h2>
         <table id="UsersPoint">
             <thead>
                 <tr>
