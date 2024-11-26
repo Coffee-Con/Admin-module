@@ -56,3 +56,86 @@ th, td {
 th {
     background-color: #f4f4f4;
 }
+
+
+.back-button {
+    position: absolute; /* Change to absolute positioning */
+    top: 12px; /* Maintain distance from the top */
+    left: 10px; /* Align to the left */
+    background-color: transparent; /* Button background color */
+    color: black; /* Button text color */
+    border: none !important;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+
+  .back-button i {
+      margin-right: 5px;
+      font-size: 1.2em; /* Adjust icon size for consistency */
+  }
+
+  .back-button {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      z-index: 1000;
+  }
+
+  .back-button:hover {
+      background-color: lightgray; 
+      transform: translateY(-2px); 
+  }
+
+  .back-button:active {
+      transform: scale(0.95); 
+  }
+
+  .button-Animation {
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease; 
+  }
+
+  .button-Animation:hover {
+      transform: scale(1.1);
+  }
+
+  .reward-button {
+    position: absolute; /* Change to absolute positioning */
+    top: 12px; /* Maintain distance from the top */
+    right: 10px; /* Align to the left */
+    background-color: transparent; /* Button background color */
+    color: black; /* Button text color */
+    border: none !important;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+
+  .reward-button i {
+      margin-left: 5px;
+      font-size: 1.2em; /* Adjust icon size for consistency */
+  }
+
+  .reward-button {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      z-index: 1000;
+  }
+
+  .reward-button:hover {
+      background-color: lightgray; 
+      transform: translateY(-2px); 
+  }
+
+  .reward-button:active {
+      transform: scale(0.95); 
+  }
+
+  .button-Animation {
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease; 
+  }
+
+  .button-Animation:hover {
+      transform: scale(1.1);
+  }

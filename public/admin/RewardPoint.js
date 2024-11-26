@@ -27,7 +27,7 @@ function getUsersRewards() {
                 <td>${reward.RewardID}</td>
                 <td>${reward.Status === 2 ? 'Completed' : 'In Progress'}</td>
                 <td>
-                    <button onclick="markCompleted(${reward.RewardID})" ${reward.Status === 2 ? 'disabled' : ''}>Completed</button>
+                    <button class="btn btn-success button-Animation" onclick="markCompleted(${reward.RewardID})" ${reward.Status === 2 ? 'disabled' : ''}>Completed</button>
                 </td>
             `;
         });
