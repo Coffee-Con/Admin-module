@@ -159,7 +159,7 @@ app.get('/template/:id', getTemplate);
 // Template end
 
 // Reward
-const { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward, getUsersRewards, markUserRewardCompleated, getUserPoint, getUsersPoint } = require('./functions/api/reward');
+const { createReward, deleteReward, updateReward, getRewards, updateOrCreateRewardPoint, getReward, getUsersRewards, markUserRewardCompleated, getUserPoint, getUsersPoint, redeemReward } = require('./functions/api/reward');
 app.post('/api/createReward', createReward);
 app.get('/api/getRewards', getRewards);
 app.delete('/api/deleteReward/:RewardID', deleteReward);
@@ -230,6 +230,7 @@ mobile.get('/api/getReward/:RewardID', getReward);
 mobile.get('/api/getCourseMaterials/:CourseID', getCourseMaterials);
 mobile.get('/api/getCourseQuizRank', getLeaderboard);
 mobile.get('/api/getUserPoint/:UserID', getUserPoint);
+mobile.post('/api/redeemReward/:RewardID', redeemReward);
 
 https.createServer(options, mobile).listen(4001, () => {
   const host = new URL(process.env.BASE_URL).host;
