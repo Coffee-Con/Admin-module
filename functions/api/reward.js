@@ -403,7 +403,7 @@ const redeemReward = (req, res) => {
                     // update user points history
                     const queryHistory = `
                         INSERT INTO UserRewardPointHistory (UserID, Action, ActionDetail, RewardPoint)
-                        VALUES (?, 'Decrease', 'Redeem Reward ${RewardID}', ?);
+                        VALUES (?, 'decrease', 'Redeem Reward ${RewardID}', ?);
                     `;
                     connection.query(queryHistory, [userID, RewardPoint], (err) => {
                         if (err) {
