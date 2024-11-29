@@ -146,7 +146,7 @@ const verifyCaptcha = async (req, res) => {
 
           // Send email
           const mailOptions = {
-            from: 'no-reply@staffcanvas.com',
+            from: `no-reply@${host}`,
             to: email,
             subject: 'Password reset request',
             text: `Please click on the link below to reset your password: \n\n${resetLink}\n\nThis link will expire in 1 hour.`,
@@ -208,7 +208,7 @@ const verifyCaptcha2 = async (req, res) => {
 
         // Send email
         const mailOptions = {
-          from: 'no-reply@staffcanvas.com',
+          from: `no-reply@${host}`,
           to: email,
           subject: 'Password reset request',
           text: `Please click on the link below to reset your password: \n\n${resetLink}\n\nThis link will expire in 1 hour.`,
