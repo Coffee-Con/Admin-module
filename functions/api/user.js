@@ -210,6 +210,7 @@ const deleteUser = (req, res) => {
     }
 
     if (UserID == selfID) {
+      res.json({ success: false, message: 'Cannot delete yourself'});
       return res.status(400).send('Cannot delete yourself');
     } else {
       const query = 'DELETE FROM User WHERE UserID = ?';

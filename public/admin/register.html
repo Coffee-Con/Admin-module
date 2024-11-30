@@ -260,18 +260,18 @@
                 },
                 body: JSON.stringify({ UserID }),
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('User deleted successfully');
-                        getUsers();
-                    } else {
-                        alert('Failed to delete user: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('User deleted successfully');
+                    getUsers();
+                } else {
+                    alert('Failed to delete user: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Error:', error);
+            });
         }
 
         function updateUser(UserID) {
