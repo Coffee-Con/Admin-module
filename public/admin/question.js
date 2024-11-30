@@ -6,12 +6,24 @@ function addAnswer() {
     newAnswerDiv.innerHTML = `
       <button class="btn btn-danger button-Animation" style="margin-right:10px; "type="button" class="delete-button" onclick="deleteAnswer(this)">Delete</button>
       <input type="text" class="answer" placeholder="Enter question answer">
-      <input type="checkbox" class="correct-answer" onclick="toggleSingleCheck(this)"> Correct
+      <input type="checkbox" class="correct-answer answer1" onclick="toggleSingleCheck(this)"> Correct
   `;
     container.insertBefore(newAnswerDiv, container.lastElementChild);
         const questionTypeSelect = document.getElementById('questionType');
-        const correctCheckboxes = document.querySelectorAll('.correct-answer');
+        const correctCheckboxes = document.querySelectorAll('.answer1');
     
+        questionTypeSelect.addEventListener('change', function() {
+            if (questionTypeSelect.value === '2') {
+                correctCheckboxes.forEach(checkbox => {
+                    checkbox.style.display = 'none';
+                });
+            } else {
+                correctCheckboxes.forEach(checkbox => {
+                    checkbox.style.display = 'inline-block';
+                });
+            }
+        });
+        
         if (questionTypeSelect.value === '2') { // Fill in the Blank
             correctCheckboxes.forEach(checkbox => {
                 checkbox.style.display = 'none';
@@ -21,18 +33,36 @@ function addAnswer() {
                 checkbox.style.display = 'inline-block';
             });
         }
+
+
 }
 
 function toggleSingleCheck(checkbox) {
-    if (checkbox.checked) {
-        // Uncheck all other checkboxes
-        document.querySelectorAll('.correct-answer').forEach(cb => {
-            if (cb !== checkbox) {
-                cb.checked = false;
-            }
-        });
+    const questionId = checkbox.getAttribute('data-question-id');  // 获取问题ID
+    
+    // 对于 correct-answer4 组，确保同一问题ID下只有一个复选框可以被选中
+    if (checkbox.classList.contains('correct-answer4')) {
+        if (checkbox.checked) {
+            document.querySelectorAll(`.correct-answer4[data-question-id="${questionId}"]`).forEach(cb => {
+                if (cb !== checkbox) {
+                    cb.checked = false;  // 取消其他复选框的选中
+                }
+            });
+        }
+    }
+    // 对于 correct-answer 组，确保同一问题ID下只有一个复选框可以被选中
+    else if (checkbox.classList.contains('correct-answer')) {
+        if (checkbox.checked) {
+            document.querySelectorAll(`.correct-answer`).forEach(cb => {
+                if (cb !== checkbox) {
+                    cb.checked = false;  // 取消其他复选框的选中
+                }
+            });
+        }
     }
 }
+
+
 
 function createQuestion() {
     const questionType = document.getElementById("questionType").value;
@@ -144,7 +174,7 @@ function fetchQuestions() {
                                     <div class="answer-input">
                                         <input type="text" id="editAnswerText-${question.QuestionID}-${index}" value="${answer.text}" placeholder="Edit answer ${index + 1}">
                                         <label style="margin-left:10px;" >
-                                            <input type="checkbox" class="correct-answer" onclick="toggleSingleCheck(this)" id="correct-${question.QuestionID}-${index}" ${answer.correct ? 'checked' : ''}>
+                                            <input type="checkbox" class="correct-answer4" onclick="toggleSingleCheck(this)" id="correct-${question.QuestionID}-${index}"  data-question-id="${question.QuestionID}" ${answer.correct ? 'checked' : ''}>
                                             Correct
                                         </label>
                                         <button class="deleteButton btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${question.QuestionID}, ${index})">Delete</button>
@@ -191,6 +221,15 @@ function fetchQuestions() {
                     }
                 });
             });
+
+            if (checkbox.checked) {
+                // 取消当前问题的其他复选框的选中状态
+                document.querySelectorAll(`.correct-answer[data-question-id="${questionId}"]`).forEach(cb => {
+                    if (cb !== checkbox) {
+                        cb.checked = false;
+                    }
+                });
+            }
         })
         .catch(error => console.error('Error fetching questions:', error));
 }
@@ -227,7 +266,7 @@ function addEditAnswer(questionID) {
     newAnswerDiv.innerHTML = `
         <input type="text" placeholder="Enter question answer">
         <label style="margin-left:10px;">
-            <input class="checkBox correct-answer"  type="checkbox" onclick="toggleSingleCheck(this)">
+            <input class="checkBox correct-answer4" type="checkbox" onclick="toggleSingleCheck(this)" name="correct-answer4-${questionID}"  data-question-id="${questionID}">
             Correct
         </label>
         <button class="btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${questionID}, ${container.children.length})">Delete</button>
@@ -297,7 +336,7 @@ function saveQuestion(questionID) {
 // 通过修改class="correct-answer"的css，实现根据选择的问题类型隐藏/显示<input type="checkbox" class="correct-answer">
 function questionTypecss() {
     var questionType = document.getElementById("questionType").value;
-    var correctAnswer = document.getElementsByClassName("correct-answer");
+    var correctAnswer = document.getElementsByClassName("correct-answer2");
     if (questionType == 2) {
         for (var i = 0; i < correctAnswer.length; i++) {
             correctAnswer[i].style.display = "none";

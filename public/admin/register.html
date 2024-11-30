@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <title>Upload CSV</title>
+    <title>Register</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <style>
         body {
@@ -17,6 +17,7 @@
             padding: 0;
             background-color: #f4f4f4;
         }
+        
         .back-button {
           position: absolute; /* Change to absolute positioning */
           top: 12px; /* Maintain distance from the top */
@@ -114,7 +115,7 @@
             </div>
         </div>
 
-        <h1 style="margin-top: 1em;">Upload CSV File</h1>
+        <h1 style="margin-top: 1em; margin-bottom: 15px;">Upload CSV File</h1>
         <form id="uploadForm" enctype="multipart/form-data" method="POST" action="/addUsers">
             <div class="input-group mb-3">
                 <input type="file" name="csvfile" accept=".csv" class="form-control" required>
@@ -129,23 +130,26 @@
             </svg>
             Download Sample CSV
         </a>
+        <div style="padding-bottom:2em;">
+            <h1 style="margin-top: 0.5em;">User List</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">UserID</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Join Date</th>
+                        <th scope="col">Education</th>
+                        <th scope="col">IT Level</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 
-    <h1 style="margin-top: 1em;">User List</h1>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">UserID</th>
-                <th scope="col">Email</th>
-                <th scope="col">Name</th>
-                <th scope="col">Role</th>
-                <th scope="col">Join Date</th>
-                <th scope="col">Education</th>
-                <th scope="col">IT Level</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-    </table>
+
 
     <script>
         async function register() {
@@ -226,9 +230,13 @@
                             <td><input id="date-${user.UserID}" type="date" value="${formattedDate}" /></td>
                             <td><input id="education-${user.UserID}" type="text" value="${user.Education}" /></td>
                             <td><input id="itLevel-${user.UserID}" type="text" value="${user.ITLevel}" /></td>
-                            <td>
-                                <button class="btn btn-primary" onclick="updateUser('${user.UserID}')">Edit</button>
-                                <button class="btn btn-danger" onclick="deleteUser('${user.UserID}')">Delete</button>
+                            <td style="display:flex">
+                                <button  class="btn btn-success button-Animation" style="padding:5px 10px; font-size:12px;" title="Edit" onclick="updateUser('${user.UserID}')">
+                                    <i class="fa fa-edit" style="font-size:12px;"></i>
+                                </button>
+                                <button  class="btn btn-danger button-Animation" style="padding:5px 10px; font-size:12px; margin-left:10px;" title="Delete" onclick="deleteUser('${user.UserID}')">
+                                     <i  class="fa fa-trash" style="font-size:12px;"></i>
+                                </button>
                             </td>
                         </tr>
                         `;
