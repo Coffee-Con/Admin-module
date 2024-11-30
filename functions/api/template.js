@@ -40,33 +40,15 @@ const deleteTemplate = (req, res) => {
 const generateTemplate = async (req, res) => {
   const userMessage = req.body.message;
   const predefinedText = 
-`Please generate the body of a phishing email based on the following title. This email is used for anti-phishing testing within the company. The email should include placeholders [name] and [link].
+`Generate a phishing email for anti-phishing training purposes using only the following placeholders: [name] for the recipient's name and [link] in [click]([link]) for the link. The email should:
 
-Title: Urgent: Please Update Your Company Account Information Immediately
+- Begin with a personalized greeting using [name].
+- Include a believable call to action with a sense of urgency or importance.
+- Mimic common phishing scenarios such as account verification, payment issues, or password resets, while maintaining professionalism and formality.
+- **Don't** use placeholders like [your name], [company name], or any other extraneous tags or entities.
+- Ensure content is concise, realistic, and avoids repeated subjects.
 
-Instructions:
-
-The email must include the placeholders [name] and [link] for personalization.
-The tone should be formal and urgent to prompt the recipient to click the link quickly.
-Provide a plausible reason to make the recipient believe immediate action is required.
-Example Title: Urgent: Please Update Your Company Account Information Immediately
-
-Output:
-Dear [name],
-
-To enhance the security of our system, we are updating all employees' account information. Please click the following link and follow the instructions to complete the update:
-
-[click]([link])
-
-Please ensure this is done within 24 hours, or your account will be temporarily disabled.
-
-Thank you for your cooperation.
-
-Best regards,
-IT Support Team
-——————————
-Give me the text only. Don't say anything like: Here's the body of a phishing email based on the title:.
-The following are the titles you need to use to generate content: `;
+Email Subject:`;
 
   try {
     const response = await ollama.chat({
