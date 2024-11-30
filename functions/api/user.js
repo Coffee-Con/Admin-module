@@ -203,20 +203,24 @@ const getUsers = (req, res) => {
 
 const deleteUser = (req, res) => {
     const UserID = req.body.UserID;
+    const selfID = req.user.id;
 
     if (!UserID) {
       return res.status(400).send('UserID is required');
     }
 
-    const query = 'DELETE FROM User WHERE UserID = ?';
-    connection.query(query, [UserID], (err, results) => {
-        if (err) {
-            console.error('Error querying the database:', err.stack);
-            res.status(500).send('Internal server error');
-            return;
-        }
-        res.json({ success: true, message: 'User deleted successfully'});
-    });
+    if (UserID == selfID) {
+      return res.status(400).send('Cannot delete yourself');
+    } else {
+      const query = 'DELETE FROM User WHERE UserID = ?';
+      connection.query(query, [UserID], (err, results) => {
+          if (err) {
+              console.error('Error querying the database:', err.stack);
+              return res.status(500).send('Internal server error');
+          }
+          res.json({ success: true, message: 'User deleted successfully'});
+      });
+    }
 }
 
 const updateUser = (req, res) => {
