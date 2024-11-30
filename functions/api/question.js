@@ -183,7 +183,6 @@ const updateQuestion = (req, res) => {
 
     const query = 'UPDATE `Question` SET Question = ?, QuestionType = ?, Answer = ? WHERE QuestionID = ?;';
     connection.query(query, [topic, type, JSON.stringify(answers), QuestionID], (err, results) => {
-        console.log('Query:', query);
         if (err) {
             console.error('Error updating data:', err);
             return res.status(500).json({ error: 'Database error' });
