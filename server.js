@@ -11,14 +11,14 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const dbConfig = require('./functions/dbConfig'); // 导入数据库配置
-const options = {
+const dbConfig = require('./functions/dbConfig'); // Import database config
+const options = { // SSL certificate
   key: fs.readFileSync(process.env.SSL_Key),
   cert: fs.readFileSync(process.env.SSL_Cert)
 };
-const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler, markEmailEventAsCompleted } = require('./functions/api/mail'); // 导入邮件发送模块
+const { verifyCaptcha, verifyCaptcha2, resetPassword, sendMailHandler, generateLink, clickLinkHandler, markEmailEventAsCompleted } = require('./functions/api/mail'); // import mail functions
 const { requireAuth, webLogin, logout, authenticateToken, login, captcha, authenticate, checkAdmin, authRequireAdmin } = require('./functions/api/auth');
-const { addUsers } = require('./functions/api/user'); // 导入添加用户模块
+const { addUsers } = require('./functions/api/user'); // import user functions
 const { getUserInfo } = require('./functions/api/user');
 
 const app = express();
@@ -27,13 +27,13 @@ const port = process.env.PORT || 80;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser()); // cookie
-app.use(session({ secret: process.env.Secret, resave: false, saveUninitialized: true, cookie: { secure: false } })); // 使用 session 中间件，在开发环境下可以不使用 https
+app.use(session({ secret: process.env.Secret, resave: false, saveUninitialized: true, cookie: { secure: false } })); // use session to store user info, secret is used to sign the session ID cookie
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use('/admin', authenticate, express.static(path.join(__dirname, 'public/admin'))); // 需要登录的静态资源目录（使用 authenticate 中间件）
-app.use(express.static(path.join(__dirname, 'public'))); // 无需登录的静态资源目录
-// 连接到MySQL数据库，如果连接失败则会报错
+app.use('/admin', authenticate, express.static(path.join(__dirname, 'public/admin'))); // login to access admin page (authenticate)
+app.use(express.static(path.join(__dirname, 'public'))); // no need to login to access other pages
+// connect to the database
 console.log("Try to connect the databse");
 const connection = mysql.createConnection(dbConfig);
 connection.connect((err) => {
@@ -44,31 +44,31 @@ connection.connect((err) => {
   console.log('Connected to the database.');
 });
 
-// 登录页面
+// login page
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/login.html');
 });
 
 // Auth
-app.post('/login', webLogin); // 处理登录请求
+app.post('/login', webLogin); // process login
 app.post('/api/login', login);
 app.post('/logout', logout); // logout
 // Auth end
 
-// 创建验证码路由
+// Captcha
 app.get('/captcha', captcha);
 app.post('/verify-captcha', verifyCaptcha);
-app.post('/api/verify-captcha', verifyCaptcha2); // 无需图形验证码的验证
+app.post('/api/verify-captcha', verifyCaptcha2); // no need to verify captcha for mobile app
 app.post('/reset-password', resetPassword);
 
-// 以下功能需要登录后才能访问
+// Below this line, all requests require authentication
 app.use(authenticate);
 app.use(authRequireAdmin);
 
 // Email
-app.post('/send', sendMailHandler); // 处理发送邮件请求
+app.post('/send', sendMailHandler); // handle email sending
 app.post('/generate-link', generateLink);
-app.get("/click/:key", clickLinkHandler); // 记录点击事件
+app.get("/click/:key", clickLinkHandler); // record click event
 app.post('/api/markEmailEventAsCompleted/:ID', markEmailEventAsCompleted); // Email
 // Email end
 
@@ -186,19 +186,19 @@ app.put('/api/updateMaterial/:MaterialID', updateMaterial);
 // Material end
 
 // Extra
-app.get('/api/check-admin', checkAdmin); // 管理员判断
-app.get('/api/getUserInfo', getUserInfo); // 获取用户信息
+app.get('/api/check-admin', checkAdmin); // check if admin
+app.get('/api/getUserInfo', getUserInfo); // get user info
 // Extra end
 
-app.use((req, res) => { res.status(404).sendFile(path.join(__dirname, 'public/404.html')); }); // 404 页面
+app.use((req, res) => { res.status(404).sendFile(path.join(__dirname, 'public/404.html')); }); // 404 page
 
 http.createServer((req, res) => {
-  const host = req.headers.host.split(':')[0];  // 获取不带端口的主机名
+  const host = req.headers.host.split(':')[0];  // get host without port
   const redirectUrl = `https://${host}${req.url}`;
   
   res.writeHead(301, { "Location": redirectUrl });
   res.end();
-}).listen(port);  // 监听端口
+}).listen(port);  // listen to port
 
 // Create HTTPS server
 https.createServer(options, app).listen(443, () => {
