@@ -38,24 +38,24 @@ function addAnswer() {
 }
 
 function toggleSingleCheck(checkbox) {
-    const questionId = checkbox.getAttribute('data-question-id');  // 获取问题ID
+    const questionId = checkbox.getAttribute('data-question-id');  // Get the question ID
     
-    // 对于 correct-answer4 组，确保同一问题ID下只有一个复选框可以被选中
+    // For the correct-answer4 group, ensure that only one checkbox can be selected for the same question ID
     if (checkbox.classList.contains('correct-answer4')) {
         if (checkbox.checked) {
             document.querySelectorAll(`.correct-answer4[data-question-id="${questionId}"]`).forEach(cb => {
                 if (cb !== checkbox) {
-                    cb.checked = false;  // 取消其他复选框的选中
+                    cb.checked = false;  // Uncheck all other checkboxes
                 }
             });
         }
     }
-    // 对于 correct-answer 组，确保同一问题ID下只有一个复选框可以被选中
+    // For the correct-answer group, ensure that only one checkbox can be selected for the same question ID
     else if (checkbox.classList.contains('correct-answer')) {
         if (checkbox.checked) {
             document.querySelectorAll(`.correct-answer`).forEach(cb => {
                 if (cb !== checkbox) {
-                    cb.checked = false;  // 取消其他复选框的选中
+                    cb.checked = false;  // Uncheck all other checkboxes
                 }
             });
         }
@@ -136,7 +136,7 @@ function fetchQuestions() {
                 const questionDiv = document.createElement('div');
                 questionDiv.classList.add('question-item');
 
-                // 新的 answers 解析，包含 text 和 correct
+                // New answers parsing, including text and correct
                 const answers = Array.isArray(question.Answer) ?
                     question.Answer.map(answer => `${answer.text} (${answer.correct ? 'Correct' : 'Incorrect'})`).join(', ') :
                     'No answers available';
@@ -193,7 +193,7 @@ function fetchQuestions() {
                     </div>
                 `;
                 questionList.appendChild(questionDiv);
-                // 在这里添加事件监听器
+                // Add event listeners here
                 const questionTypeSelect2 = document.getElementById(`editType-${question.QuestionID}`);
                 const questionTypeSelect3 = questionTypeSelect2.options[questionTypeSelect2.selectedIndex].text;
                 const addAnswerButton2 = questionDiv.querySelector('.btn.btn-primary.button-Animation');
@@ -223,7 +223,7 @@ function fetchQuestions() {
             });
 
             if (checkbox.checked) {
-                // 取消当前问题的其他复选框的选中状态
+                // Uncheck all other checkboxes for the current question
                 document.querySelectorAll(`.correct-answer[data-question-id="${questionId}"]`).forEach(cb => {
                     if (cb !== checkbox) {
                         cb.checked = false;
@@ -272,7 +272,7 @@ function addEditAnswer(questionID) {
         <button class="btn btn-danger button-Animation" style="margin-left: 10px;" type="button" onclick="deleteEditAnswer(${questionID}, ${container.children.length})">Delete</button>
     `;
     container.appendChild(newAnswerDiv);
-    // 检查问题类型并隐藏/显示“Correct”复选框
+    // Check the problem type and hide/show the "Correct" checkbox
     const questionTypeSelect = document.getElementById(`editType-${questionID}`);
     const correctCheckboxes = container.querySelectorAll('.checkBox');
 
@@ -333,7 +333,7 @@ function saveQuestion(questionID) {
         .catch(error => console.error('Error updating question:', error));
 }
 
-// 通过修改class="correct-answer"的css，实现根据选择的问题类型隐藏/显示<input type="checkbox" class="correct-answer">
+// By modifying the css of class="correct-answer", you can hide/show <input type="checkbox" class="correct-answer"> according to the selected question type
 function questionTypecss() {
     var questionType = document.getElementById("questionType").value;
     var correctAnswer = document.getElementsByClassName("correct-answer2");

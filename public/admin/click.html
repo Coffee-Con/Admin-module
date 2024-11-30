@@ -114,21 +114,21 @@
   </div>
 
   <script>
-    // 获取点击数据和风险等级
+    // Get click data and risk level
     async function fetchClickData() {
       try {
-        // 获取点击历史数据
+        // Get click history data
         const eventsResponse = await fetch('/click-events-history');
         const events = await eventsResponse.json();
 
-        // 获取风险等级数据
+        // Get risk level data
         const riskResponse = await fetch('/click-risk');
         const riskData = await riskResponse.json();
 
-        // 渲染点击次数
+        // Render Clicks
         document.getElementById('click-count').textContent = riskData[0]?.click_count_last_month || 0;
 
-        // 判断风险等级并渲染
+        // Determine the risk level and render
         const clickCount = riskData[0]?.click_count_last_month || 0;
         let riskLevel = '';
         let riskClass = '';
@@ -148,9 +148,9 @@
         riskElement.innerHTML = `Current risk level: <strong>${riskLevel}</strong>`;
         riskElement.classList.add(riskClass);
 
-        // 渲染事件历史记录
+        // Rendering Event History
         const eventHistoryElement = document.getElementById('event-history');
-        eventHistoryElement.innerHTML = ''; // 清空加载提示
+        eventHistoryElement.innerHTML = ''; // Clear loading prompt
 
         if (events.length > 0) {
           events.forEach((event) => {
@@ -309,7 +309,6 @@
         .catch(err => console.error('Error adding event to course:', err));
     }
 
-    // 页面加载时调用 fetchClickData
     document.addEventListener('DOMContentLoaded', function() {
       fetchClickData();
       getAllEmailEvents();

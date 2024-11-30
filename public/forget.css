@@ -12,11 +12,11 @@
 
   body {
     font-family: 'Arial', sans-serif;
-    background-image: url('image/loginBackground.avif'); /* 背景图路径 */
-    background-size: cover; /* 让背景图覆盖整个页面 */
-    background-repeat: no-repeat; /* 防止背景图重复 */
-    background-position: center center; /* 将背景图置于页面中央 */
-    background-attachment: fixed; /* 背景图固定，不随页面滚动 */
+    background-image: url('image/loginBackground.avif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
     display: flex;
@@ -37,7 +37,7 @@ h1 {
     margin-bottom: 1em;
     margin-top: 1em;
     display: flex;
-    align-items: flex-start; /* 垂直居中 */
+    align-items: flex-start;
     flex-direction: column; 
   }
   
@@ -45,12 +45,12 @@ h1 {
     margin-bottom: 1em;
     margin-top: 3em;
     display: flex;
-    align-items: flex-start; /* 垂直居中 */
+    align-items: flex-start;
     flex-direction: column; 
   }
 
 .form-group2 img{
-    width: 100px; /* 设置宽度 */
+    width: 100px;
     height: auto; 
     margin-top: 2em;
 }

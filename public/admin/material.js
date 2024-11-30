@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadMaterialList();
 });
 
-// 切换材料输入框
+// Toggle material input box
 function toggleMaterialInput() {
     const materialType = document.getElementById("materialType").value;
     const videoLinkContainer = document.getElementById("videoLinkContainer");
@@ -21,7 +21,7 @@ function toggleMaterialInput() {
     }
 }
 
-// 加载课程选项
+// Loading Course Options
 function loadCourseOptions() {
     fetch("/getCourses")
     .then((response) => response.json())
@@ -45,7 +45,7 @@ function loadCourseOptions() {
     .catch((error) => console.error("Error loading courses:", error));
 }
 
-// 添加材料
+// Add Material
 function addMaterial() {
     const materialName = document.getElementById("materialName").value;
     const materialDescription = document.getElementById("materialDescription").value;
@@ -53,13 +53,13 @@ function addMaterial() {
     const materialLink = document.getElementById("materialLink").value;
     const materialFile = document.getElementById("materialFile").files[0];
 
-    // 验证输入
+    // Validating Input
     if (!materialName || !materialType) {
         alert("Please fill in all required fields.");
         return;
     }
 
-    // 使用对象存储输入数据
+    // Save the material data
     const materialData = {
         MaterialName: materialName,
         MaterialDescription: materialDescription,
@@ -67,11 +67,11 @@ function addMaterial() {
         MaterialLink: materialType === "1" ? materialLink : null,
     };
 
-    // 使用 FormData 发送数据，特别是包含文件时
+    // Use FormData to send data, especially when including files
     const formData = new FormData();
     formData.append("materialData", JSON.stringify(materialData));
 
-    // 如果是上传 PDF 文件
+    // If you upload a PDF file
     if (materialType === "2" && materialFile) {
         formData.append("file", materialFile);
     }
@@ -92,7 +92,7 @@ function addMaterial() {
     .catch((error) => console.error("Error:", error));
 }
 
-// 删除材料
+// Delete Material
 function deleteMaterial(MaterialID) {
     fetch(`/api/deleteMaterial/${MaterialID}`, {
         method: 'DELETE',
@@ -110,7 +110,7 @@ function deleteMaterial(MaterialID) {
     .catch(err => console.error('Error deleting material:', err));
 }
 
-// 加载材料列表
+// Load Course Material
 function loadMaterialList() {
     fetch("/api/getMaterials")
     .then((response) => response.json())
