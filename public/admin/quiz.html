@@ -303,6 +303,10 @@
                 });
 
                 const quizSelect = document.getElementById('quizSelect');
+                quizSelect.innerHTML = '<option value="">Select a quiz</option>'; // Clear the select options
+                document.getElementById('updateQuizName').value = '';
+                document.getElementById('updateQuizDescription').value = '';
+
                 quizs.forEach(quiz => {
                     const option = document.createElement('option');
                     option.value = quiz.QuizID;
