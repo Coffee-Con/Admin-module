@@ -354,7 +354,7 @@ const addUserQuizScore = (req, res) => {
         let correctAnswersCount = 0;
 
         // Step 1: Get all QuestionIDs for the Quiz
-        const getQuestionsQuery = 'SELECT QuestionID FROM `QuizQuestions` WHERE QuizID = ?;';
+        const getQuestionsQuery = 'SELECT QuestionID FROM `QuizQuestion` WHERE QuizID = ?;';
         connection.query(getQuestionsQuery, [QuizID], (err, results) => {
             if (err) {
                 console.error('Error querying the database for questions:', err.stack);
