@@ -117,6 +117,7 @@ function createQuestion() {
     .catch(error => console.error('Error:', error));
 
     fetchQuestions(); // Refresh list
+    loadAddQuestionToQuiz();
 }
 
 function deleteAnswer(button) {
