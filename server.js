@@ -61,6 +61,10 @@ app.post('/verify-captcha', verifyCaptcha);
 app.post('/api/verify-captcha', verifyCaptcha2); // no need to verify captcha for mobile app
 app.post('/reset-password', resetPassword);
 
+// Click link
+app.get("/click/:key", clickLinkHandler); // record click event
+// Click link end
+
 // Below this line, all requests require authentication
 app.use(authenticate);
 app.use(authRequireAdmin);
@@ -68,7 +72,6 @@ app.use(authRequireAdmin);
 // Email
 app.post('/send', sendMailHandler); // handle email sending
 app.post('/generate-link', generateLink);
-app.get("/click/:key", clickLinkHandler); // record click event
 app.post('/api/markEmailEventAsCompleted/:ID', markEmailEventAsCompleted); // Email
 // Email end
 
