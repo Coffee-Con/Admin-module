@@ -40,7 +40,7 @@ const getClicksRisk = (req, res) => {
 
 // Get all email events
 const getAllEmailEvents = (req, res) => {
-  connection.query('SELECT * FROM MailEvent', (err, results) => {
+  connection.query('SELECT * FROM MailEvent ORDER BY ID DESC', (err, results) => {
     if (err) {
       console.error('Error querying the database:', err.stack);
       return res.status(500).json({ error: 'Internal server error' });
