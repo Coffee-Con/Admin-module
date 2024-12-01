@@ -388,8 +388,59 @@ function removeQuestionFromQuiz() {
         .catch(error => console.error('Error removing question from quiz:', error));
 }
 
-// Initialize question list on page load
-window.onload = fetchQuestions;
+// load quizzes
+function loadQuizzes() {
+    fetch('/getQuizzes')
+        .then(response => response.json())
+        .then(data => {
+            const quizSelects = document.querySelectorAll('select[id^="addQuestionToQuizQuizID"], select[id^="removeQuestionFromQuizQuizID"]');
+            quizSelects.forEach(select => {
+                select.innerHTML = '<option value="" selected>Select a quiz</option>';
+                data.forEach(quiz => {
+                    const option = document.createElement('option');
+                    option.value = quiz.QuizID;
+                    option.textContent = quiz.QuizName;
+                    select.appendChild(option);
+                });
+            });
+        });
+}
+
+function loadAddQuestionToQuiz(quizID) {
+    fetch(`/api/getQuestionsNotInQuiz/${quizID}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            const select = document.getElementById('addQuestionToQuizQuestionID');
+            select.innerHTML = '<option value="" selected>Select a question</option>';
+            data.forEach(question => {
+                const option = document.createElement('option');
+                option.value = question.QuestionID;
+                option.innerText = question.Question;
+                select.appendChild(option);
+            });
+        });
+}
+
+function loadRemoveQuestionFromQuiz(quizID) {
+    fetch(`/api/getQuestions/${quizID}`)
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('removeQuestionFromQuizQuestionID');
+            select.innerHTML = '<option value="" selected>Select a question</option>';
+            data.forEach(question => {
+                const option = document.createElement('option');
+                option.value = question.QuestionID;
+                option.innerText = question.Question;
+                select.appendChild(option);
+            });
+        });
+    }
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchQuestions();
+    loadQuizzes();
+});
 
 
 

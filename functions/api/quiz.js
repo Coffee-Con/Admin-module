@@ -344,94 +344,97 @@ const addUserQuizAnswer = async (req, res) => {
 const addUserQuizScore = (req, res) => {
     return new Promise((resolve, reject) => {
         const { UserID, QuizID, Answer } = req.body;
-    
+
         if (!UserID || !QuizID || !Answer || !Array.isArray(Answer)) {
             console.log('Error: User ID, Quiz ID, and Answer array are required.');
             return res.status(400).json({ error: 'User ID, Quiz ID, and Answer array are required.' });
         }
 
-        /*
-        const query = 'SELECT * FROM `UserQuizScore` WHERE UserID = ? AND QuizID = ?;';
-        connection.query(query, [UserID, QuizID], (err, results) => {
-            if (err) {
-                console.error('Error querying the database:', err.stack);
-                return res.status(500).send('Internal server error');
-            }
-
-            if (results.length > 0) {
-                console.log('User already has a score for this quiz.');
-                return res.status(400).json({ error: 'User already has a score for this quiz.' });
-            }
-        });
-        */
-
-
         let totalScore = 0;
         let correctAnswersCount = 0;
 
+        // Step 1: Get all QuestionIDs for the Quiz
+        const getQuestionsQuery = 'SELECT QuestionID FROM `QuizQuestions` WHERE QuizID = ?;';
+        connection.query(getQuestionsQuery, [QuizID], (err, results) => {
+            if (err) {
+                console.error('Error querying the database for questions:', err.stack);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
 
-        const checkAnswerPromises = Answer.map(({ QuestionID, Answer: userAnswer }) => {
-            return new Promise((resolve, reject) => {
+            if (results.length === 0) {
+                console.log('No questions found for this quiz.');
+                return res.status(404).json({ error: 'No questions found for this quiz.' });
+            }
 
-                const query = 'SELECT Answer, QuestionType FROM `Question` WHERE QuestionID = ?;';
-                connection.query(query, [QuestionID], (err, results) => {
-                    if (err) {
-                        console.error('Error querying the database:', err.stack);
-                        return reject('Internal server error');
-                    }
+            const allQuestionIDs = results.map((row) => row.QuestionID);
 
-                    if (results.length === 0) {
-                        console.log(`No question found for QuestionID: ${QuestionID}`);
-                        return resolve(false);
-                    }
+            // Step 2: Map user answers to QuestionIDs
+            const userAnswersMap = new Map(Answer.map(({ QuestionID, Answer }) => [QuestionID, Answer]));
 
-                 
-                    const answerData = results[0].Answer;
-                    const questionType = results[0].QuestionType;
+            const checkAnswerPromises = allQuestionIDs.map((QuestionID) => {
+                return new Promise((resolve, reject) => {
+                    const query = 'SELECT Answer, QuestionType FROM `Question` WHERE QuestionID = ?;';
+                    connection.query(query, [QuestionID], (err, results) => {
+                        if (err) {
+                            console.error('Error querying the database:', err.stack);
+                            return reject('Internal server error');
+                        }
 
-                   
-                    const correctAnswers = answerData
-                        .filter((option) => option.correct)
-                        .map((option) => option.text);
+                        if (results.length === 0) {
+                            console.log(`No question found for QuestionID: ${QuestionID}`);
+                            return resolve(false);
+                        }
 
-                   
-                    let isCorrect = false;
-                    if (questionType === 2) { 
-                        
-                        isCorrect = correctAnswers.includes(userAnswer);
-                    } else if (questionType === 1) { 
-                        
-                        isCorrect = correctAnswers.includes(userAnswer);
-                    }
+                        const answerData = results[0].Answer;
+                        const questionType = results[0].QuestionType;
 
-   
-                    if (isCorrect) {
-                        correctAnswersCount += 1;
-                    }
+                        // Parse correct answers
+                        const correctAnswers = answerData
+                            .filter((option) => option.correct)
+                            .map((option) => option.text);
 
-                    resolve(true);
+                        // Check if the user answered this question
+                        const userAnswer = userAnswersMap.get(QuestionID);
+
+                        let isCorrect = false;
+                        if (userAnswer) {
+                            if (questionType === 2) { 
+                                isCorrect = correctAnswers.includes(userAnswer);
+                            } else if (questionType === 1) { 
+                                isCorrect = correctAnswers.includes(userAnswer);
+                            }
+                        }
+
+                        // Increment correct count if correct
+                        if (isCorrect) {
+                            correctAnswersCount += 1;
+                        }
+
+                        resolve(true);
+                    });
                 });
             });
-        });
 
-        Promise.all(checkAnswerPromises)
-            .then(() => {
-              
-                totalScore = Math.round((correctAnswersCount / Answer.length) * 100);
+            Promise.all(checkAnswerPromises)
+                .then(() => {
+                    // Step 3: Calculate the total score
+                    totalScore = Math.round((correctAnswersCount / allQuestionIDs.length) * 100);
 
-             
-                const insertQuery = 'INSERT INTO `UserQuizScore` (UserID, QuizID, Score) VALUES (?, ?, ?);';
-                connection.query(insertQuery, [UserID, QuizID, totalScore], (err, results) => {
-                    if (err) {
-                        console.error('Error inserting score into the database:', err.stack);
-                        return res.status(500).send('Internal server error');
-                    }
-                    const insertedId = results.insertId;
-                    resolve({ ID: insertedId, UserID, QuizID, Score: totalScore });
-                });
-            })
-            .catch((error) => reject(error));
+                    // Step 4: Insert the score into the database
+                    const insertQuery = 'INSERT INTO `UserQuizScore` (UserID, QuizID, Score) VALUES (?, ?, ?);';
+                    connection.query(insertQuery, [UserID, QuizID, totalScore], (err, results) => {
+                        if (err) {
+                            console.error('Error inserting score into the database:', err.stack);
+                            return res.status(500).send('Internal server error');
+                        }
+
+                        const insertedId = results.insertId;
+                        resolve({ ID: insertedId, UserID, QuizID, Score: totalScore });
+                    });
+                })
+                .catch((error) => reject(error));
         });
+    });
 };
 
 // Mark as completed

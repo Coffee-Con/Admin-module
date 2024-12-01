@@ -214,11 +214,15 @@
         <h2 style=" margin-bottom: 5px;" class="subHeader">Add Question to Quiz</h2>
         <div class="form-group">
             <label for="addQuestionToQuizQuizID">Quiz ID</label>
-            <input type="text" id="addQuestionToQuizQuizID" placeholder="Enter quiz ID" required>
+            <select id="addQuestionToQuizQuizID" onchange="loadAddQuestionToQuiz(this.value)" required>
+                <option value="" selected>Select a quiz</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="addQuestionToQuizQuestionID">Question ID</label>
-            <input type="text" id="addQuestionToQuizQuestionID" placeholder="Enter question ID" required>
+            <select id="addQuestionToQuizQuestionID" required>
+                <option value="" selected>Select a question</option>
+            </select>
         </div>
         <button style="margin-bottom: 2em;" class="btn btn-primary button-Animation" onclick="addQuestionToQuiz()">Add Question to Quiz</button>
 
@@ -226,11 +230,15 @@
         <h2 style=" margin-bottom: 5px;" class="subHeader">Remove Question from Quiz</h2>
         <div class="form-group">
             <label for="removeQuestionFromQuizQuizID">Quiz ID</label>
-            <input type="text" id="removeQuestionFromQuizQuizID" placeholder="Enter quiz ID" required>
+            <select id="removeQuestionFromQuizQuizID" onchange="loadRemoveQuestionFromQuiz(this.value)" required>
+                <option value="" selected>Select a quiz</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="removeQuestionFromQuizQuestionID">Question ID</label>
-            <input type="text" id="removeQuestionFromQuizQuestionID" placeholder="Enter question ID" required>
+            <select id="removeQuestionFromQuizQuestionID" required>
+                <option value="" selected>Select a question</option>
+            </select>
         </div>
         <button style="margin-bottom: 2em;" class="btn btn-primary button-Animation" onclick="removeQuestionFromQuiz()">Remove Question from Quiz</button>
 

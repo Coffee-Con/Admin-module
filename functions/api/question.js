@@ -192,5 +192,64 @@ const updateQuestion = (req, res) => {
     });
 }
 
+const getQuestionsNotInQuiz = (req, res) => {
+    const { QuizID } = req.params;
+
+    const query = `
+        SELECT DISTINCT 
+            Question.QuestionID AS QuestionID,
+            Question.Question AS Question,
+            Question.QuestionType AS QuestionType,
+            Question.Answer AS Answer
+        FROM Question
+        WHERE Question.QuestionID NOT IN (
+            SELECT QuestionID FROM QuizQuestion WHERE QuizID = ?
+        );
+    `;
+
+    connection.query(query, [QuizID], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err.stack);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        
+        // Initialize an array to store formatted questions
+        const formattedQuestions = results.map((question) => {
+            // Initialize an empty array to store answer texts
+            let answersList = [];
+
+            try {
+                // Check if Answer is a string; if not, convert it to a JSON string
+                let answerData = question.Answer;
+                if (typeof answerData !== 'string') {
+                    answerData = JSON.stringify(answerData); // Convert object to JSON string
+                }
+
+                // Parse the Answer field
+                const answers = JSON.parse(answerData);
+
+                // Extract the text field to generate a list of strings
+                if (Array.isArray(answers)) {
+                    answersList = answers.map(answer => answer.text);
+                }
+            } catch (parseError) {
+                console.error('Error parsing Answer JSON:', parseError);
+            }
+
+            // Return the formatted question object
+            return {
+                QuestionID: question.QuestionID,
+                QuestionType: question.QuestionType,
+                Question: question.Question,
+                Answer: answersList, // Return [] if parsing fails or no answers found
+            };
+        });
+
+        // Send the formatted questions as a response
+        res.json(formattedQuestions);
+    });
+}
+
 // Export API
-module.exports = { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions, updateQuestion };
+module.exports = { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions, updateQuestion, getQuestionsNotInQuiz };

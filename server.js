@@ -133,11 +133,12 @@ app.get('/api/getAllCourseQuizzes', getAllCourseQuizzes);
 // Quiz end
 
 // Question
-const { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions, updateQuestion } = require('./functions/api/question');
+const { createQuestion, getQuizQuestions, getQuestion, getQuestions, deleteQuestion, getAllQuestions, updateQuestion, getQuestionsNotInQuiz } = require('./functions/api/question');
 app.post('/api/createQuestion', createQuestion);
 app.get('/api/getQuizQuestions/:QuizID', getQuizQuestions);
 app.get('/api/getQuestion/:QuestionID', getQuestion);
 app.get('/api/getQuestions/:QuizID', getQuestions);
+app.get('/api/getQuestionsNotInQuiz/:QuizID', getQuestionsNotInQuiz);
 app.delete('/api/delete-question/:QuestionID', deleteQuestion);
 app.get('/api/getAllQuestions', getAllQuestions);
 app.put('/api/updateQuestion/:QuestionID', updateQuestion);
