@@ -207,7 +207,8 @@ const addToCourseByEvent = (req, res) => {
                     from: 'no-reply@staffcanvas.com',
                     to: emails,
                     subject: 'Enroll in a course',
-                    text: `Please check your mobile app to learn more about the course.`,
+                    text: `Please check your mobile app to learn more about the course. If you do not have the Mobile Application Downloaded, Please Access https://github.com/Coffee-Con/Staff-Canvas`,
+                    html: `<p>Please check your mobile app to learn more about the course. If you do not have the Mobile Application Downloaded, Please Access <a href="https://github.com/Coffee-Con/Staff-Canvas">Staff Canvas</a></p>`
                 };
                 transporter.sendMail(mailOptions, (err, info) => {
                     if (err) {
