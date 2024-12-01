@@ -191,8 +191,8 @@
               <h3>${event.Content.subject || 'No Subject'}</h3>
               <p><strong>Time:</strong> ${new Date(event.Time).toLocaleString()}</p>
               <div style="display:flex; margin-bottom:15px">
-                <button class="btn btn-primary button-Animation" title="Sent Course/Email to Everyone for Studying Materials and Notification" onclick="AddToCourse(${event.ID}, 'All')">Send to All</button>
-                <button style="margin-left:20px;" class="btn btn-success button-Animation" title="Only Sent Course/Email to Member's Clicked" onclick="AddToCourse(${event.ID}, 'Clicked')">Send to Specific Member</button>
+                <button class="btn btn-primary button-Animation" title="Sent Course/Email to Everyone for Studying Materials and Notification" onclick="AddToCourse(${event.ID}, 'All'), markEmailEventAsCompleted(${event.ID})">Send to All</button>
+                <button style="margin-left:20px;" class="btn btn-success button-Animation" title="Only Sent Course/Email to Member's Clicked" onclick="AddToCourse(${event.ID}, 'Clicked'), markEmailEventAsCompleted(${event.ID})">Send to Specific Member</button>
               </div>
             `;
 
@@ -307,6 +307,10 @@
           }
         })
         .catch(err => console.error('Error adding event to course:', err));
+    }
+
+    function markEmailEventAsCompleted(EventID) {
+      fetch(`/api/markEmailEventAsCompleted/${EventID}`, { method: 'POST' });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
