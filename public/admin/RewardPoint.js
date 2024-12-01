@@ -52,7 +52,7 @@ function getCourseQuiz() {
         data.forEach(quiz => {
             const option = document.createElement('option');
             option.value = quiz.QuizID;
-            option.innerText = `${quiz.CourseName} - ${quiz.QuizName}`;
+            option.innerText = `${quiz.CourseName} - ${quiz.QuizName} - Status: ${quiz.Status === 1 ? 'Active' : 'Ended'}`;
             select.appendChild(option);
         });
     });
