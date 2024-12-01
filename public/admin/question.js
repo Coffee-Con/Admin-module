@@ -117,6 +117,7 @@ function createQuestion() {
     .catch(error => console.error('Error:', error));
 
     fetchQuestions(); // Refresh list
+    loadAddQuestionToQuiz();
 }
 
 function deleteAnswer(button) {
@@ -361,6 +362,7 @@ function addQuestionToQuiz() {
         .then(data => {
             if (data.success) {
                 alert('Question added to quiz');
+                location.reload(); 
             } else {
                 alert('Error adding question to quiz');
             }
@@ -381,11 +383,13 @@ function removeQuestionFromQuiz() {
         .then(data => {
             if (data.success) {
                 alert('Question removed from quiz');
+                location.reload(); 
             } else {
                 alert('Error removing question from quiz');
             }
         })
         .catch(error => console.error('Error removing question from quiz:', error));
+
 }
 
 // load quizzes
