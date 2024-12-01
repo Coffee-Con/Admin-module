@@ -151,7 +151,7 @@ const addToCourseByEvent = (req, res) => {
         query = `
             SELECT DISTINCT u.UserID
             FROM User u
-            JOIN ClickKey ck ON ck.Email = u.Email
+            JOIN ClickKey ck ON ck.Email COLLATE utf8mb4_unicode_ci = u.Email COLLATE utf8mb4_unicode_ci
             JOIN MailEvent me ON me.ID
             JOIN JSON_TABLE(
                 me.ClickKeys,
@@ -159,7 +159,8 @@ const addToCourseByEvent = (req, res) => {
                     email VARCHAR(45) PATH '$.email',
                     clickkey VARCHAR(45) PATH '$.clickkey'
                 )
-            ) AS jt ON jt.email = ck.Email AND jt.clickkey = ck.key
+            ) AS jt ON jt.email COLLATE utf8mb4_unicode_ci = ck.Email COLLATE utf8mb4_unicode_ci 
+                    AND jt.clickkey COLLATE utf8mb4_unicode_ci = ck.key COLLATE utf8mb4_unicode_ci
             WHERE me.ID = ?;`
     }
     if (Level == 'Clicked') {
@@ -167,7 +168,8 @@ const addToCourseByEvent = (req, res) => {
         query = `
             SELECT DISTINCT u.UserID
             FROM User u
-            JOIN ClickKey ck ON ck.Email = u.Email
+            JOIN ClickKey ck ON ck.Email COLLATE utf8mb4_unicode_ci = u.Email COLLATE utf8mb4_unicode_ci
+            JOIN ClickEvent ce ON ce.key COLLATE utf8mb4_unicode_ci = ck.key COLLATE utf8mb4_unicode_ci
             JOIN MailEvent me ON me.ID
             JOIN JSON_TABLE(
                 me.ClickKeys,
@@ -175,8 +177,10 @@ const addToCourseByEvent = (req, res) => {
                     email VARCHAR(45) PATH '$.email',
                     clickkey VARCHAR(45) PATH '$.clickkey'
                 )
-            ) AS jt ON jt.email = ck.Email AND jt.clickkey = ck.key
-            WHERE me.ID = ?;`
+            ) AS jt ON jt.email COLLATE utf8mb4_unicode_ci = ck.Email COLLATE utf8mb4_unicode_ci 
+                    AND jt.clickkey COLLATE utf8mb4_unicode_ci = ck.key COLLATE utf8mb4_unicode_ci
+            WHERE me.ID = ?
+            AND ce.time IS NOT NULL; -- Include only those users who have triggered a click event`
     }
     connection.query(query, [EventID], (err, results) => {
         if (err) {
@@ -207,8 +211,8 @@ const addToCourseByEvent = (req, res) => {
                     from: 'no-reply@staffcanvas.com',
                     to: emails,
                     subject: 'Enroll in a course',
-                    text: `Please check your mobile app to learn more about the course. If you do not have the Mobile Application Downloaded, Please Access https://github.com/Coffee-Con/Staff-Canvas`,
-                    html: `<p>Please check your mobile app to learn more about the course. If you do not have the Mobile Application Downloaded, Please Access <a href="https://github.com/Coffee-Con/Staff-Canvas">Staff Canvas</a></p>`
+                    text: `Please check your mobile app to learn more about the course. If you do not have the Mobile Application Downloaded, Please Access https://github.com/Coffee-Con/Staff-Canvas/releases`,
+                    html: `<p>Please check your mobile app to learn more about the course. If you do not have the Mobile Application Downloaded, Please Access <a href="https://github.com/Coffee-Con/Staff-Canvas/releases">Staff Canvas</a></p>`
                 };
                 transporter.sendMail(mailOptions, (err, info) => {
                     if (err) {
