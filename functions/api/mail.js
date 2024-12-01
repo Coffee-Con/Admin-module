@@ -174,7 +174,7 @@ const verifyCaptcha = async (req, res) => {
 // for mobile app
 // Verify the verification code and send an email with a token
 const verifyCaptcha2 = async (req, res) => {
-  const { email } = req.body;
+  const email = req.body.email;
 
   // Verify that the verification code is correct (ignore case)
   try {
@@ -196,7 +196,7 @@ const verifyCaptcha2 = async (req, res) => {
       const token = generateToken();
       const expiryTime = new Date(Date.now() + 60 * 60 * 1000); // Token is valid for 1 hour
 
-      const insertQuery = 'INSERT INTO reset_tokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
+      const insertQuery = 'INSERT INTO ResetTokens (user_id, token, token_expiry) VALUES (?, ?, ?)';
       connection.query(insertQuery, [userID, token, expiryTime], (err, results) => {
         if (err) {
           console.error('Token database insertion error:', err);
