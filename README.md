@@ -30,7 +30,7 @@ openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem
 
 ### Install mysql8.0
 
-> Install [MySQL](https://dev.mysql.com/downloads/mysql/)
+> Install [MySQL](https://dev.mysql.com/downloads/mysql/). It is recommended to [install using docker](https://gist.github.com/eric-do/b8cb9a901287f5f100f6f4541074a59f).
 
 Run [mysql.sql](https://github.com/Coffee-Con/Database/blob/main/mysql.sql) file.
 
