@@ -39,8 +39,11 @@ services:
       - db
     networks:
       - my-network
-    command: npm start
-
+    command: >
+          sh -c "
+            sleep 10 && 
+            npm start
+          "
   llm:
     image: ollama/ollama:latest
     container_name: ollama_service
