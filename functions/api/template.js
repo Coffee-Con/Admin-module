@@ -52,7 +52,7 @@ Email Subject:`;
 
   try {
     const response = await ollama.chat({
-      model: 'qwen2.5:0.5b', // change to 0.5b? to get info faster
+      model: process.env.LLM, // change to 0.5b? to get info faster
       messages: [{ role: 'user', content: predefinedText + userMessage }],
     });
     res.json({ message: response.message.content });
