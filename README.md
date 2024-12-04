@@ -55,9 +55,11 @@ Run via terminal:
 npm install  
 npm start
 
-## Use docker-compose
+## Use docker-compose(Recommend)
 
-Install docker and docker-compose
+> Install docker and docker-compose
+
+According to the previous description: Setup .env file. Put SSL Certificate file in to [ssl](./ssl/) folder.
 
 docker-compose build  
 docker-compose up -d
