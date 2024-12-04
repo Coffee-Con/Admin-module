@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DBPassword}
+      MYSQL_DATABASE: ${DBName}
+      # MYSQL_USER: 'root'
+      MYSQL_PASSWORD: ${DBPassword}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql  # Database data persistence
+    networks:
+      - my-network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
+      - "80:80"
+      - "4000:4000"
+      - "4001:4001"
+    environment:
+      # Load variables from .env file
+      - PORT=80
+      - DATABASE_URL=mysql://root:${DBPassword}@host.docker.internal:3306/${DBName} # docker use host.docker.internal
+      - LLM=${LLM}
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - material_data:/usr/src/app/public/user  # Save material file
+    depends_on:
+      - db
+    networks:
+      - my-network
+    command: npm start
+
+  llm:
+    image: ollama/ollama:latest
+    container_name: ollama_service
+    restart: always
+    ports:
+      - "11434:11434"
+    environment:
+      - LLM=${LLM}
+    networks:
+      - my-network
+
+networks:
+  my-network:
+
+volumes:
+  db_data:  # Volumes for database data
+  material_data:  # Volumes for material files
