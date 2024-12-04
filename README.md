@@ -1,8 +1,8 @@
 # Admin module
 
-## How to use
+## How to use (Basic Edition)
 
-### Create and edit [.env](.env) file:
+### Edit [.env](.env) file:
 
 > SMTP For testing: https://ethereal.email/
 
@@ -19,7 +19,14 @@ DBHost= Database host
 DBPort= Database port  
 DBUser= Database user  
 DBName= Database name(default CMOP)  
-DBPassword= Your database password  
+DBPassword= Your database password
+
+Secret=your-secret-key
+
+SSL_Key=ssl/key.pem  
+SSL_Cert=ssl/cert.pem
+
+LLM=LLAMA3.2:3b
 
 ### SSL Certificate
 
@@ -38,9 +45,19 @@ Run [mysql.sql](https://github.com/Coffee-Con/Database/blob/main/mysql.sql) file
 
 > Install [Ollama](https://ollama.com/)
 
-### Run via terminal:
+Run via terminal: ollama run LLAMA3.2:3b
+
+### Run web server:
 
 > Install [node.js v22.9.0](https://nodejs.org/en/download/package-manager)  
 
+Run via terminal:  
 npm install  
 npm start
+
+## Use docker-compose
+
+Install docker and docker-compose
+
+docker-compose build  
+docker-compose up -d
