@@ -11,7 +11,7 @@ services:
       # MYSQL_USER: 'root'
       MYSQL_PASSWORD: ${DBPassword}
     ports:
-      - "3306:3306"
+      - "3306:${DBPort}"
     volumes:
       - db_data:/var/lib/mysql  # Database data persistence
     networks:
@@ -29,7 +29,7 @@ services:
     environment:
       # Load variables from .env file
       - PORT=80
-      - DATABASE_URL=mysql://root:${DBPassword}@host.docker.internal:3306/${DBName} # docker use host.docker.internal
+      - DATABASE_URL=mysql://root:${DBPassword}@${DBPort}:${Port}/${DBName} # docker use host.docker.internal
       - LLM=${LLM}
     volumes:
       - .:/usr/src/app
