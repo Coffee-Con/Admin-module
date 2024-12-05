@@ -1,11 +1,11 @@
 {
   "name": "Admin module",
-  "version": "Release 1.0.0",
+  "version": "Release 1.1.0",
   "description": "Admin module for the project",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node functions/dbinit.js && node server.js"
+    "start": "node functions/dbinit.js && node functions/sslinit.js && node server.js"
   },
   "author": "Teacon-Con",
   "license": "ARR",
