@@ -6,14 +6,14 @@
 
 > SMTP For testing: https://ethereal.email/
 ```plaintext
-PORT= HTML port  
-BASEHOST= Server host/domain  
+PORT=HTML port  
+BASEHOST=Server host/domain  
 COMPANY_HOST=  
 
-SMTP_HOST = SMTP host  
-SMTP_PORT = SMTP port  
-ACCOUNT= E-mail address  
-PASS= E-mail pass  
+SMTP_HOST=SMTP host  
+SMTP_PORT=SMTP port  
+ACCOUNT=E-mail address  
+PASS=E-mail pass  
 
 DBHost= Database host  
 DBPort= Database port  
@@ -30,7 +30,8 @@ LLM=LLAMA3.2:3b
 ```
 ### SSL Certificate
 
-Run via terminal and put the file into [ssl](./ssl/) folder:  
+~~Run via terminal and put the file into [ssl](./ssl/) folder:~~  
+Now the server will determine whether the corresponding certificate exists. If not, it will automatically generate a test certificate. You can also generate it yourself using the following command or use other methods to obtain the ssl certificate:
 ```bash
 openssl genrsa -out key.pem 2048  
 openssl req -new -key key.pem -out csr.pem  
@@ -40,11 +41,12 @@ openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem
 
 > Install [MySQL](https://dev.mysql.com/downloads/mysql/). It is recommended to [install using docker](https://gist.github.com/eric-do/b8cb9a901287f5f100f6f4541074a59f).
 
-Run [mysql.sql](https://github.com/Coffee-Con/Database/blob/main/mysql.sql) file.
+~~Run [mysql.sql](https://github.com/Coffee-Con/Database/blob/main/mysql.sql) file.~~  
+Now, when you start the server for the first time, it will automatically determine whether the corresponding database is created. You just need to make sure that the database password is consistent with the one in .env
 
 ### Install Ollama
 
-> Install [Ollama](https://ollama.com/)
+> If you need to use AI to generate templates, please install [Ollama](https://ollama.com/).
 
 Run via terminal: ollama run LLAMA3.2:3b
 
@@ -61,7 +63,7 @@ npm start
 
 > Install docker and docker-compose
 
-According to the previous description: Setup .env file. Put SSL Certificate file in to [ssl](./ssl/) folder.
+According to the previous description: Setup .env file.
 ```bash
 docker-compose build  
 docker-compose up -d
