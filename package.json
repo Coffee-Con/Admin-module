@@ -23,7 +23,7 @@
     "multiparty": "^4.2.3",
     "mysql2": "^3.10.2",
     "nodemailer": "^6.9.14",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.22",
     "ollama": "^0.5.9",
     "svg-captcha": "^1.4.0"
   },
